@@ -1,0 +1,924 @@
+/* ============================================================
+   Ebenezer Day Star Academy
+   SUBJECTS MANAGEMENT
+   GLASS / TRANSPARENT DESIGN
+   BACKGROUND: book.jpg
+============================================================ */
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   BODY
+============================================================ */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 25, 60, 0.30),
+            rgba(0, 25, 60, 0.30)
+        ),
+        url("book.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   ADMIN LAYOUT
+============================================================ */
+
+.admin-layout {
+
+    min-height: 100vh;
+
+    background: transparent !important;
+
+}
+
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+.admin-sidebar {
+
+    background:
+        rgba(5, 25, 60, 0.70) !important;
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border-right:
+        1px solid rgba(255, 255, 255, 0.25);
+
+    color: #ffffff;
+
+}
+
+
+/* ============================================================
+   SIDEBAR BRAND
+============================================================ */
+
+.admin-brand {
+
+    color: #ffffff !important;
+
+}
+
+
+.admin-brand strong {
+
+    color: #ffffff !important;
+
+}
+
+
+.admin-brand small {
+
+    color:
+        rgba(255, 255, 255, 0.80) !important;
+
+}
+
+
+/* ============================================================
+   LOGO
+============================================================ */
+
+.admin-sidebar .logo-icon {
+
+    background:
+        rgba(255, 255, 255, 0.14) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.45);
+
+    color: #ffffff !important;
+
+    backdrop-filter:
+        blur(8px);
+
+}
+
+
+/* ============================================================
+   SIDEBAR NAVIGATION
+============================================================ */
+
+.admin-nav a,
+.admin-sidebar nav a {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    background:
+        transparent !important;
+
+    border-radius:
+        8px;
+
+    transition:
+        all 0.25s ease;
+
+}
+
+
+.admin-nav a:hover,
+.admin-sidebar nav a:hover {
+
+    background:
+        rgba(255, 255, 255, 0.15) !important;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.admin-nav a.active,
+.admin-sidebar nav a.active {
+
+    background:
+        rgba(255, 255, 255, 0.20) !important;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+.admin-main {
+
+    background:
+        transparent !important;
+
+}
+
+
+/* ============================================================
+   ADMIN HEADER
+============================================================ */
+
+.admin-header {
+
+    background:
+        rgba(5, 25, 60, 0.65) !important;
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.25);
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.admin-header strong,
+.admin-header span {
+
+    color:
+        #ffffff !important;
+
+}
+
+
+/* ============================================================
+   CONTENT
+============================================================ */
+
+.admin-content {
+
+    background:
+        transparent !important;
+
+    color:
+        #ffffff;
+
+}
+
+
+/* ============================================================
+   PAGE TITLE
+============================================================ */
+
+.admin-title h1 {
+
+    color:
+        #ffffff !important;
+
+    text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.35);
+
+}
+
+
+.admin-title p {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    text-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.30);
+
+}
+
+
+/* ============================================================
+   GLASS CONTENT CONTAINERS
+============================================================ */
+
+.student-toolbar,
+.admin-table-container {
+
+    background:
+        rgba(255, 255, 255, 0.13) !important;
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.40);
+
+    border-radius:
+        18px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.20);
+
+}
+
+
+/* ============================================================
+   FILTER AREA
+============================================================ */
+
+.student-toolbar {
+
+    padding:
+        18px;
+
+}
+
+
+/* ============================================================
+   INPUTS AND SELECTS
+============================================================ */
+
+.student-toolbar input,
+.student-toolbar select {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.55) !important;
+
+    color:
+        #ffffff !important;
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    backdrop-filter:
+        blur(5px);
+
+    -webkit-backdrop-filter:
+        blur(5px);
+
+    transition:
+        all 0.3s ease;
+
+}
+
+
+/* ============================================================
+   INPUT FOCUS
+============================================================ */
+
+.student-toolbar input:focus,
+.student-toolbar select:focus {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+    border-color:
+        #ffffff !important;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.12);
+
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+============================================================ */
+
+.student-toolbar input::placeholder {
+
+    color:
+        rgba(255, 255, 255, 0.80) !important;
+
+}
+
+
+/* ============================================================
+   SELECT OPTIONS
+============================================================ */
+
+.student-toolbar select option {
+
+    background:
+        #17345f;
+
+    color:
+        #ffffff;
+
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.admin-table-container {
+
+    overflow-x:
+        auto !important;
+
+    overflow-y:
+        hidden;
+
+    -webkit-overflow-scrolling:
+        touch;
+
+    touch-action:
+        pan-x pan-y;
+
+}
+
+
+/* ============================================================
+   TABLE WIDTH
+============================================================ */
+
+.admin-table {
+
+    min-width:
+        900px;
+
+    width:
+        max-content;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+/* ============================================================
+   TABLE HEADER
+============================================================ */
+
+.admin-table thead {
+
+    background:
+        rgba(15, 61, 145, 0.95) !important;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.admin-table thead th {
+
+    background:
+        rgba(15, 61, 145, 0.95) !important;
+
+    color:
+        #ffffff !important;
+
+    font-weight:
+        700;
+
+    font-size:
+        13px;
+
+    white-space:
+        nowrap;
+
+    padding:
+        15px 14px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.30);
+
+}
+
+
+/* ============================================================
+   TABLE BODY
+============================================================ */
+
+.admin-table tbody tr {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    color:
+        #ffffff !important;
+
+    transition:
+        background 0.25s ease;
+
+}
+
+
+.admin-table tbody tr:hover {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+}
+
+
+.admin-table tbody td {
+
+    color:
+        #ffffff !important;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.20);
+
+    white-space:
+        nowrap;
+
+    padding:
+        14px;
+
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state {
+
+    background:
+        transparent !important;
+
+    color:
+        #ffffff !important;
+
+    text-align:
+        center;
+
+    padding:
+        35px;
+
+}
+
+
+.empty-state h3 {
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.empty-state p {
+
+    color:
+        rgba(255, 255, 255, 0.80) !important;
+
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.btn-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 82, 180, 0.95),
+            rgba(0, 45, 120, 0.95)
+        ) !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        none !important;
+
+    border-radius:
+        10px;
+
+    box-shadow:
+        0 8px 20px rgba(0, 30, 100, 0.25);
+
+    transition:
+        all 0.3s ease;
+
+}
+
+
+.btn-primary:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(0, 30, 100, 0.35);
+
+}
+
+
+/* ============================================================
+   OUTLINE BUTTON
+============================================================ */
+
+.btn-outline {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.60) !important;
+
+    border-radius:
+        10px;
+
+}
+
+
+.btn-outline:hover {
+
+    background:
+        rgba(255, 255, 255, 0.20) !important;
+
+}
+
+
+/* ============================================================
+   MODAL BACKDROP
+============================================================ */
+
+.modal {
+
+    background:
+        rgba(0, 10, 30, 0.65) !important;
+
+    backdrop-filter:
+        blur(5px);
+
+    -webkit-backdrop-filter:
+        blur(5px);
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal-content {
+
+    background:
+        rgba(255, 255, 255, 0.13) !important;
+
+    backdrop-filter:
+        blur(15px);
+
+    -webkit-backdrop-filter:
+        blur(15px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.45);
+
+    border-radius:
+        20px;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.30);
+
+}
+
+
+/* ============================================================
+   MODAL TEXT
+============================================================ */
+
+.modal-header h2 {
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.modal-header p {
+
+    color:
+        rgba(255, 255, 255, 0.80) !important;
+
+}
+
+
+/* ============================================================
+   FORM LABELS
+============================================================ */
+
+.form-group label {
+
+    color:
+        #ffffff !important;
+
+    text-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.30);
+
+}
+
+
+/* ============================================================
+   FORM INPUTS
+============================================================ */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.55) !important;
+
+    color:
+        #ffffff !important;
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    transition:
+        all 0.3s ease;
+
+}
+
+
+/* ============================================================
+   FORM INPUT FOCUS
+============================================================ */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+    border-color:
+        #ffffff !important;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.12);
+
+}
+
+
+/* ============================================================
+   FORM PLACEHOLDER
+============================================================ */
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+
+    color:
+        rgba(255, 255, 255, 0.75) !important;
+
+}
+
+
+/* ============================================================
+   FORM SELECT OPTIONS
+============================================================ */
+
+.form-group select option {
+
+    background:
+        #17345f;
+
+    color:
+        #ffffff;
+
+}
+
+
+/* ============================================================
+   MODAL CLOSE BUTTON
+============================================================ */
+
+.modal-close {
+
+    color:
+        #ffffff !important;
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius:
+        50%;
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 700px) {
+
+    body {
+
+        background-attachment:
+            scroll;
+
+    }
+
+
+    .admin-header {
+
+        padding:
+            14px;
+
+    }
+
+
+    .admin-title h1 {
+
+        font-size:
+            28px;
+
+    }
+
+
+    .admin-title p {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .student-toolbar {
+
+        padding:
+            15px;
+
+        border-radius:
+            15px;
+
+    }
+
+
+    .student-toolbar input,
+    .student-toolbar select {
+
+        width:
+            100%;
+
+        min-height:
+            48px;
+
+    }
+
+
+    .admin-table-container {
+
+        border-radius:
+            15px;
+
+        padding:
+            0;
+
+    }
+
+
+    .admin-table {
+
+        min-width:
+            900px;
+
+    }
+
+
+    .admin-table th,
+    .admin-table td {
+
+        padding:
+            13px;
+
+    }
+
+
+    .modal-content {
+
+        width:
+            94%;
+
+        max-height:
+            90vh;
+
+        overflow-y:
+            auto;
+
+        border-radius:
+            18px;
+
+    }
+
+}
+
+
+/* ============================================================
+   SMALL PHONES
+============================================================ */
+
+@media (max-width: 380px) {
+
+    .admin-title h1 {
+
+        font-size:
+            24px;
+
+    }
+
+
+    .btn {
+
+        font-size:
+            13px;
+
+    }
+
+}

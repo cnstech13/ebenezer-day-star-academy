@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+<meta name="theme-color" content="lightblue">
+
+
+    <title>Subjects | Ebenezer Day Star Academy</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-login.css">
+    
+    <link rel="stylesheet" href="subjects.css">
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                PMS
+            </div>
+
+            <div>
+                <strong>Ebenezer Day Star</strong>
+                <small>Admin Portal</small>
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            
+
+            <a href="logout.html" id="logoutBtn">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+
+            <strong>
+                Subject Management
+            </strong>
+
+            <span id="adminUser">
+                Administrator
+            </span>
+
+        </header>
+
+
+        <section class="admin-content">
+
+            <div class="page-header-row">
+
+                <div class="admin-title">
+
+                    <h1>
+                        Subjects
+                    </h1>
+
+                    <p>
+                        Manage subjects taught in the school.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    id="addSubjectBtn"
+                >
+                    + Add Subject
+                </button>
+
+            </div>
+
+
+            <!-- FILTER -->
+
+            <div class="student-toolbar">
+
+                <input
+                    type="search"
+                    id="subjectSearch"
+                    placeholder="Search subjects..."
+                >
+
+
+                <select id="subjectLevelFilter">
+
+                            <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                            <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                            <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                            <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                </select>
+
+
+                <select id="subjectStatusFilter">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TABLE -->
+
+            <div class="admin-table-container">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Subject ID
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Code
+                            </th>
+
+                            <th>
+                                Level
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="subjectsTableBody">
+                    </tbody>
+
+                </table>
+
+
+                <div
+                    id="emptySubjects"
+                    class="empty-state"
+                >
+
+                    <div>
+                        📚
+                    </div>
+
+                    <h3>
+                        No subjects found
+                    </h3>
+
+                    <p>
+                        Add your first subject.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- SUBJECT MODAL -->
+
+<div
+    class="modal"
+    id="subjectModal"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="subjectModalTitle">
+                    Add Subject
+                </h2>
+
+                <p>
+                    Enter subject information.
+                </p>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="closeSubjectModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="subjectForm">
+
+            <input
+                type="hidden"
+                id="editingSubjectId"
+            >
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Subject Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="subjectName"
+                        placeholder="e.g. Mathematics"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Subject Code *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="subjectCode"
+                        placeholder="e.g. MTH"
+                        maxlength="10"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Level *
+                    </label>
+
+                    <select
+                        id="subjectLevel"
+                        required
+                    >
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Subject Type *
+                    </label>
+
+                    <select
+                        id="subjectType"
+                        required
+                    >
+
+                        <option value="Core">
+                            Core
+                        </option>
+
+                        <option value="Elective">
+                            Elective
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="subjectStatus">
+
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    style="grid-column: 1 / -1;"
+                >
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        id="subjectDescription"
+                        rows="3"
+                        placeholder="Optional subject description"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    id="cancelSubjectBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Subject
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert.js"></script>
+<script type="module" src="admin-login.js"></script>
+<script
+    type="module"
+    src="subjects.js"
+></script>
+
+</body>
+
+</html>

@@ -1,0 +1,1315 @@
+/* =========================================================
+   Ebenezer Day Star Academy
+   TEACHERS MANAGEMENT — PREMIUM UI
+========================================================= */
+
+
+/* =========================================================
+   PAGE BACKGROUND
+========================================================= */
+
+.admin-content {
+    min-height: calc(100vh - 70px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6 0%,
+            #f4d35e 45%,
+            #d4af37 100%
+        );
+
+    padding: 30px;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+.admin-title {
+    margin-bottom: 0;
+}
+
+.admin-title h1 {
+    margin: 0;
+
+    font-size: 32px;
+
+    font-weight: 800;
+
+    color: #18212f;
+
+    letter-spacing: -0.5px;
+}
+
+.admin-title p {
+    margin: 8px 0 0;
+
+    color: #5d6572;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   ADD TEACHER BUTTON
+========================================================= */
+
+#addTeacherBtn {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    min-height: 44px;
+
+    padding: 0 20px;
+
+    border-radius: 10px;
+
+    border: none;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.btn-primary {
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #b8860b
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 6px 15px rgba(184, 134, 11, 0.25);
+}
+
+.btn-primary:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #c9a52f,
+            #9f7208
+        );
+
+    box-shadow:
+        0 9px 20px rgba(184, 134, 11, 0.32);
+}
+
+
+/* =========================================================
+   OUTLINE BUTTON
+========================================================= */
+
+.btn-outline {
+    background: #ffffff;
+
+    color: #8a6900;
+
+    border: 1px solid #d4af37;
+}
+
+.btn-outline:hover {
+    background: #fff9df;
+
+    border-color: #b8860b;
+
+    color: #735600;
+}
+
+
+/* =========================================================
+   SEARCH / FILTER TOOLBAR
+========================================================= */
+
+.student-toolbar {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(180px, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.student-toolbar input,
+.student-toolbar select {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 0 14px;
+
+    border: 1px solid #dfe3e8;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #252b35;
+
+    font-size: 14px;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.student-toolbar input:hover,
+.student-toolbar select:hover {
+    border-color: #c5a227;
+}
+
+.student-toolbar input:focus,
+.student-toolbar select:focus {
+    border-color: #d4af37;
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.18);
+
+    transform: translateY(-1px);
+}
+
+.student-toolbar input::placeholder {
+    color: #9299a3;
+}
+
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.admin-table-container {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid #e9edf1;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.10),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+
+    scrollbar-width: thin;
+}
+
+
+/* =========================================================
+   TEACHERS TABLE
+========================================================= */
+
+.admin-table {
+    width: 100%;
+
+    min-width: 850px;
+
+    border-collapse: collapse;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.admin-table thead {
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6,
+            #f8e79a
+        );
+}
+
+.admin-table th {
+    padding: 16px 15px;
+
+    text-align: left;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    color: #604b00;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+
+    white-space: nowrap;
+
+    border-bottom: 1px solid #eadb91;
+}
+
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.admin-table td {
+    padding: 15px;
+
+    color: #39414d;
+
+    border-bottom: 1px solid #edf0f3;
+
+    vertical-align: middle;
+}
+
+.admin-table tbody tr {
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: #fffdf3;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   TEACHER ID
+========================================================= */
+
+.student-id {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    background: #fff8dc;
+
+    border: 1px solid #efdf9b;
+
+    color: #8a6900;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TEACHER NAME
+========================================================= */
+
+.student-name {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    font-weight: 700;
+
+    color: #242b35;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TEACHER AVATAR
+========================================================= */
+
+.student-avatar {
+    width: 40px;
+
+    height: 40px;
+
+    min-width: 40px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4d35e,
+            #b8860b
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+    border: 2px solid #ffffff;
+
+    box-shadow:
+        0 4px 10px rgba(184, 134, 11, 0.25);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 78px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ACTIVE STATUS
+========================================================= */
+
+.status-active {
+    background: #e8f8ee;
+
+    color: #16803c;
+
+    border: 1px solid #bce8cc;
+}
+
+
+/* =========================================================
+   INACTIVE STATUS
+========================================================= */
+
+.status-inactive {
+    background: #fff0f0;
+
+    color: #c62828;
+
+    border: 1px solid #f2c2c2;
+}
+
+
+/* =========================================================
+   TABLE ACTIONS
+========================================================= */
+
+.table-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    white-space: nowrap;
+}
+
+.table-action {
+    min-width: 36px;
+
+    height: 36px;
+
+    padding: 0 10px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    border: 1px solid #e0e4e8;
+
+    background: #ffffff;
+
+    color: #555e69;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.table-action:hover {
+    transform: translateY(-2px);
+
+    background: #fff9df;
+
+    border-color: #d4af37;
+
+    color: #8a6900;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    text-align: center;
+
+    padding: 60px 20px;
+
+    color: #707782;
+}
+
+.empty-state > div {
+    width: 70px;
+
+    height: 70px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6,
+            #f4d35e
+        );
+
+    font-size: 30px;
+
+    box-shadow:
+        0 8px 20px rgba(184, 134, 11, 0.15);
+}
+
+.empty-state h3 {
+    margin: 0;
+
+    font-size: 19px;
+
+    color: #303742;
+}
+
+.empty-state p {
+    margin: 8px 0 0;
+
+    font-size: 14px;
+
+    color: #7a818b;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(20, 24, 30, 0.65);
+
+    backdrop-filter: blur(5px);
+
+    overflow-y: auto;
+}
+
+.modal.show {
+    display: flex;
+}
+
+
+/* =========================================================
+   MODAL CONTENT
+========================================================= */
+
+.modal-content {
+    width: min(760px, 100%);
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.25);
+
+    padding: 28px;
+
+    position: relative;
+
+    animation: teacherModalIn 0.25s ease;
+}
+
+@keyframes teacherModalIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.modal-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 20px;
+
+    margin-bottom: 22px;
+
+    border-bottom: 1px solid #edf0f3;
+}
+
+.modal-header h2 {
+    margin: 0;
+
+    font-size: 23px;
+
+    font-weight: 800;
+
+    color: #202733;
+}
+
+.modal-header p {
+    margin: 6px 0 0;
+
+    font-size: 13px;
+
+    color: #737b87;
+}
+
+
+/* =========================================================
+   MODAL CLOSE BUTTON
+========================================================= */
+
+.modal-close {
+    width: 38px;
+
+    height: 38px;
+
+    min-width: 38px;
+
+    border-radius: 10px;
+
+    border: 1px solid #e1e4e8;
+
+    background: #f8f9fa;
+
+    color: #626a74;
+
+    font-size: 25px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.modal-close:hover {
+    background: #fff0f0;
+
+    color: #c62828;
+
+    transform: rotate(4deg);
+}
+
+
+/* =========================================================
+   TEACHER FORM
+========================================================= */
+
+#teacherForm {
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #303846;
+}
+
+
+/* =========================================================
+   FORM INPUTS
+========================================================= */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding: 11px 14px;
+
+    border: 1px solid #dfe3e8;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #252b35;
+
+    font-size: 14px;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.form-group textarea {
+    min-height: 100px;
+
+    resize: vertical;
+
+    line-height: 1.5;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: #c5a227;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #d4af37;
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.18);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DATE INPUT
+========================================================= */
+
+.form-group input[type="date"] {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
+
+.modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #edf0f3;
+}
+
+
+/* =========================================================
+   HIDDEN FIELDS
+========================================================= */
+
+#editingTeacherId {
+    display: none;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.admin-table-container::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+    width: 7px;
+
+    height: 7px;
+}
+
+.admin-table-container::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f2f4;
+
+    border-radius: 10px;
+}
+
+.admin-table-container::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+    background: #d4af37;
+
+    border-radius: 10px;
+}
+
+.admin-table-container::-webkit-scrollbar-thumb:hover,
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #b8860b;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark-mode .admin-content {
+    background:
+        linear-gradient(
+            135deg,
+            #302b16 0%,
+            #4b401b 50%,
+            #211f14 100%
+        );
+}
+
+body.dark-mode .admin-title h1 {
+    color: #ffffff;
+}
+
+body.dark-mode .admin-title p {
+    color: #d2d2d2;
+}
+
+
+/* =========================================================
+   DARK TOOLBAR
+========================================================= */
+
+body.dark-mode .student-toolbar input,
+body.dark-mode .student-toolbar select {
+    background: #242832;
+
+    color: #ffffff;
+
+    border-color: #3d434e;
+}
+
+body.dark-mode .student-toolbar input::placeholder {
+    color: #8f96a0;
+}
+
+body.dark-mode .student-toolbar input:focus,
+body.dark-mode .student-toolbar select:focus {
+    border-color: #d4af37;
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.16);
+}
+
+
+/* =========================================================
+   DARK TABLE
+========================================================= */
+
+body.dark-mode .admin-table-container {
+    background: #20242c;
+
+    border-color: #383d46;
+}
+
+body.dark-mode .admin-table thead {
+    background:
+        linear-gradient(
+            135deg,
+            #3c3418,
+            #51451d
+        );
+}
+
+body.dark-mode .admin-table th {
+    color: #f5df7a;
+
+    border-color: #66561d;
+}
+
+body.dark-mode .admin-table td {
+    color: #d8dbe0;
+
+    border-color: #383d46;
+}
+
+body.dark-mode .admin-table tbody tr:hover {
+    background: #2b2e35;
+}
+
+body.dark-mode .student-name {
+    color: #ffffff;
+}
+
+body.dark-mode .student-id {
+    background: #3a331b;
+
+    color: #f5df7a;
+
+    border-color: #66561d;
+}
+
+
+/* =========================================================
+   DARK ACTION BUTTONS
+========================================================= */
+
+body.dark-mode .table-action {
+    background: #242832;
+
+    color: #d0d4da;
+
+    border-color: #414650;
+}
+
+body.dark-mode .table-action:hover {
+    background: #3a331b;
+
+    color: #f5df7a;
+
+    border-color: #d4af37;
+}
+
+
+/* =========================================================
+   DARK EMPTY STATE
+========================================================= */
+
+body.dark-mode .empty-state h3 {
+    color: #ffffff;
+}
+
+body.dark-mode .empty-state p {
+    color: #bfc3ca;
+}
+
+body.dark-mode .empty-state > div {
+    background:
+        linear-gradient(
+            135deg,
+            #3c3418,
+            #51451d
+        );
+}
+
+
+/* =========================================================
+   DARK MODAL
+========================================================= */
+
+body.dark-mode .modal-content {
+    background: #1f232b;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.55);
+}
+
+body.dark-mode .modal-header {
+    border-color: #383d46;
+}
+
+body.dark-mode .modal-header h2 {
+    color: #ffffff;
+}
+
+body.dark-mode .modal-header p {
+    color: #bfc3ca;
+}
+
+body.dark-mode .modal-close {
+    background: #292d35;
+
+    color: #cbd0d6;
+
+    border-color: #414650;
+}
+
+body.dark-mode .modal-close:hover {
+    background: #3b2525;
+
+    color: #ff8080;
+}
+
+
+/* =========================================================
+   DARK FORM
+========================================================= */
+
+body.dark-mode .form-group label {
+    color: #eeeeee;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+    background: #242832;
+
+    color: #ffffff;
+
+    border-color: #3d434e;
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus,
+body.dark-mode .form-group textarea:focus {
+    border-color: #d4af37;
+
+    box-shadow:
+        0 0 0 3px rgba(212, 175, 55, 0.16);
+}
+
+body.dark-mode .modal-actions {
+    border-color: #383d46;
+}
+
+body.dark-mode .btn-outline {
+    background: #242832;
+
+    color: #f2d96b;
+
+    border-color: #d4af37;
+}
+
+body.dark-mode .btn-outline:hover {
+    background: #3a331b;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .page-header-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    #addTeacherBtn {
+        width: 100%;
+    }
+
+    .student-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .admin-content {
+        padding: 20px 15px;
+    }
+
+    .admin-title h1 {
+        font-size: 26px;
+    }
+
+    .admin-title p {
+        font-size: 14px;
+
+        line-height: 1.5;
+    }
+
+    .student-toolbar {
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+    .student-toolbar input,
+    .student-toolbar select {
+        min-height: 45px;
+    }
+
+    .admin-table-container {
+        border-radius: 12px;
+    }
+
+    .admin-table {
+        min-width: 850px;
+    }
+
+    .modal {
+        padding: 12px;
+    }
+
+    .modal-content {
+        padding: 20px;
+
+        max-height: calc(100vh - 24px);
+
+        border-radius: 16px;
+    }
+
+    .modal-header h2 {
+        font-size: 20px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .admin-content {
+        padding: 15px 10px;
+    }
+
+    .admin-title h1 {
+        font-size: 23px;
+    }
+
+    .admin-title p {
+        font-size: 13px;
+    }
+
+    .btn {
+        min-height: 45px;
+
+        font-size: 13px;
+    }
+
+    .modal-content {
+        padding: 16px;
+    }
+
+    .modal-header {
+        margin-bottom: 18px;
+
+        padding-bottom: 15px;
+    }
+
+    .modal-header h2 {
+        font-size: 18px;
+    }
+
+    .form-grid {
+        gap: 15px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(212, 175, 55, 0.35);
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+
+        animation: none !important;
+
+        scroll-behavior: auto !important;
+    }
+
+}
+
+body {
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6 0%,
+            #f4d35e 45%,
+            #d4af37 100%
+        ) !important;
+}

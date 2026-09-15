@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Teacher Results</title><link rel=stylesheet href=portal-dashboard.css><style>main{width:min(1000px,92%);margin:30px auto}.panel{background:#fff;padding:22px;border-radius:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;padding:0;width:auto}.grid input,.grid select,button{padding:11px;border:1px solid #ccd8e2;border-radius:8px}button{background:#123b66;color:#fff;border:0}.notice{margin-top:12px}</style></head><body><header><strong>Teacher • Results</strong><nav><a href=teacher-dashboard.html>Dashboard</a><a href=teacher-attendance.html>Attendance</a><button id=logout>Logout</button></nav></header><main><div class=panel><h2>Enter Student Result</h2><form id=form><div class=grid><select id=student required><option value="">Select student</option></select><input id=subject placeholder=Subject required><input id=session placeholder="Session e.g. 2026/2027" required><input id=term placeholder="Term e.g. First Term" required><input id=ca1 type=number min=0 placeholder=CA1><input id=ca2 type=number min=0 placeholder=CA2><input id=cw1 type=number min=0 placeholder="Class Work 1"><input id=cw2 type=number min=0 placeholder="Class Work 2"><input id=ass1 type=number min=0 placeholder="Assignment 1"><input id=ass2 type=number min=0 placeholder="Assignment 2"><input id=exam type=number min=0 placeholder=Exam></div><button style="margin-top:14px">Save Result</button><div id=msg class=notice></div></form></div></main><script type=module src=teacher-results.js></script><script type="module">
+import { goBackOr } from "./back-navigation.js";
+document.querySelectorAll("[data-smart-back]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goBackOr(el.dataset.smartBack || "portal-login.html");
+  });
+});
+</script>
+</body></html>

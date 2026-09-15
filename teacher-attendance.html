@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Teacher Attendance</title><link rel=stylesheet href=portal-dashboard.css><style>main{width:min(900px,92%);margin:30px auto}.panel{background:#fff;padding:22px;border-radius:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}.grid input,.grid select,button{padding:12px;border:1px solid #ccd8e2;border-radius:8px}button{background:#123b66;color:#fff;border:0}</style></head><body><header><strong>Teacher • Attendance</strong><nav><a href=teacher-dashboard.html>Dashboard</a><a href=teacher-results.html>Results</a><button id=logout>Logout</button></nav></header><main><div class=panel><h2>Mark Attendance</h2><form id=form><div class=grid><select id=student required><option value="">Select student</option></select><input id=date type=date required><select id=status><option>Present</option><option>Absent</option><option>Late</option><option>Excused</option></select><input id=remark placeholder="Remark (optional)"></div><button style="margin-top:14px">Save Attendance</button><p id=msg></p></form></div></main><script type=module src=teacher-attendance.js></script><script type="module">
+import { goBackOr } from "./back-navigation.js";
+document.querySelectorAll("[data-smart-back]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goBackOr(el.dataset.smartBack || "portal-login.html");
+  });
+});
+</script>
+</body></html>

@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teacher Portal</title><link rel="stylesheet" href="portal-dashboard.css"></head><body><header><strong>Ebenezer Day Star Academy</strong><nav><a href="teacher-dashboard.html">Dashboard</a><a href="teacher-results.html">Results</a><a href="teacher-attendance.html">Attendance</a><a href="#notifications">Notifications</a><button id="logout">Logout</button></nav></header><main><section class="hero"><h1 id="welcome">Teacher Portal</h1><p id="details">Loading your teaching profile...</p></section><section class="grid"><div class="card"><h2>Assigned Classes</h2><div id="classes">Loading...</div></div><div class="card"><h2>Students</h2><div id="students">Loading...</div></div><div class="card"><h2>Recent Results</h2><div id="results">Loading...</div></div><div class="card" id="notifications"><h2>Notifications</h2><div id="notices">Loading...</div></div></section></main><script type="module" src="teacher-dashboard.js"></script><script type="module">
+import { goBackOr } from "./back-navigation.js";
+document.querySelectorAll("[data-smart-back]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goBackOr(el.dataset.smartBack || "portal-login.html");
+  });
+});
+</script>
+</body></html>
