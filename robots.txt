@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# Private school administration and portal pages
+Disallow: /admin-login.html
+Disallow: /dashboard.html
+Disallow: /student.html
+Disallow: /students.html
+Disallow: /teachers.html
+Disallow: /classes.html
+Disallow: /subjects.html
+Disallow: /results.html
+Disallow: /report-card.html
+Disallow: /attendance.html
+Disallow: /parent-login.html
+Disallow: /parent-register.html
+Disallow: /parent-dashboard.html
+Disallow: /parent-results.html
+Disallow: /parent-attendance.html
+Disallow: /parent-report-cards.html
+Disallow: /parent-fees.html
+Disallow: /parents.html
+Disallow: /settings.html
+Disallow: /logout.html
+
+Sitemap: https://ebenezer-day-star-academy.vercel.app/sitemap.xml

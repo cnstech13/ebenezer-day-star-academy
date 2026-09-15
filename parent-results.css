@@ -1,0 +1,517 @@
+/* ============================================================
+   Ebenezer Day Star Academy
+   PARENT RESULTS PAGE
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+
+.topbar {
+    width: 100%;
+    background: #123c69;
+    color: white;
+
+    padding: 18px 6%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+.topbar h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+
+.topbar p {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+
+#backBtn {
+    border: none;
+    background: white;
+    color: #123c69;
+
+    padding: 11px 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+
+#backBtn:hover {
+    background: #e8f0f8;
+    transform: translateY(-2px);
+}
+
+
+/* ============================================================
+   MAIN CONTAINER
+   ============================================================ */
+
+.results-container {
+    width: 92%;
+    max-width: 1400px;
+
+    margin: 35px auto;
+
+}
+
+
+/* ============================================================
+   PAGE HEADING
+   ============================================================ */
+
+.page-heading {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+
+.page-heading h2 {
+    font-size: 24px;
+    color: #123c69;
+
+    margin-bottom: 8px;
+}
+
+
+.page-heading p {
+    color: #6b7280;
+    font-size: 15px;
+}
+
+
+/* ============================================================
+   ERROR MESSAGE
+   ============================================================ */
+
+.error-message {
+    display: none;
+
+    background: #fee2e2;
+    color: #991b1b;
+
+    border: 1px solid #fecaca;
+
+    padding: 14px 16px;
+
+    border-radius: 8px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading {
+    background: white;
+
+    padding: 35px;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    color: #6b7280;
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ============================================================
+   EMPTY RESULTS
+   ============================================================ */
+
+.empty-results {
+    background: white;
+
+    padding: 30px;
+
+    text-align: center;
+
+    color: #6b7280;
+
+    border-radius: 12px;
+
+    margin-top: 15px;
+
+    border: 1px dashed #d1d5db;
+}
+
+
+/* ============================================================
+   CHILD RESULT CARD
+   ============================================================ */
+
+.child-result-card {
+    background: white;
+
+    border-radius: 15px;
+
+    margin-bottom: 30px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.07);
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   CHILD HEADER
+   ============================================================ */
+
+.child-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 18px;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.child-header h2 {
+    color: #123c69;
+
+    font-size: 21px;
+
+    margin-bottom: 5px;
+}
+
+
+.child-header p {
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   RESULT PERIOD
+   ============================================================ */
+
+.result-period {
+    margin-bottom: 30px;
+}
+
+
+.result-period:last-child {
+    margin-bottom: 0;
+}
+
+
+.result-period h3 {
+    background: #eef5fb;
+
+    color: #123c69;
+
+    padding: 12px 15px;
+
+    border-left: 4px solid #123c69;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    margin-bottom: 12px;
+}
+
+
+/* ============================================================
+   TABLE WRAPPER
+   ============================================================ */
+
+.table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+table {
+    width: 100%;
+
+    min-width: 900px;
+
+    border-collapse: collapse;
+
+    background: white;
+}
+
+
+thead {
+    background: #123c69;
+
+    color: white;
+}
+
+
+th {
+    padding: 13px 10px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+td {
+    padding: 12px 10px;
+
+    font-size: 13px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    white-space: nowrap;
+}
+
+
+td:first-child {
+    text-align: left;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+tbody tr {
+    transition: background 0.2s ease;
+}
+
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ============================================================
+   TOTAL
+   ============================================================ */
+
+td strong {
+    color: #123c69;
+}
+
+
+/* ============================================================
+   GRADE
+   ============================================================ */
+
+td:nth-child(10) strong {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 32px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: #e8f0f8;
+
+    color: #123c69;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .topbar {
+        padding: 16px 5%;
+
+        gap: 15px;
+    }
+
+
+    .topbar h1 {
+        font-size: 20px;
+    }
+
+
+    .topbar p {
+        font-size: 12px;
+    }
+
+
+    #backBtn {
+        padding: 9px 12px;
+
+        font-size: 12px;
+    }
+
+
+    .results-container {
+        width: 94%;
+
+        margin: 22px auto;
+    }
+
+
+    .page-heading {
+        padding: 20px;
+    }
+
+
+    .page-heading h2 {
+        font-size: 20px;
+    }
+
+
+    .child-result-card {
+        padding: 15px;
+
+        border-radius: 12px;
+    }
+
+
+    .child-header h2 {
+        font-size: 18px;
+    }
+
+
+    .result-period h3 {
+        font-size: 14px;
+
+        padding: 11px 12px;
+    }
+
+
+    th {
+        font-size: 11px;
+
+        padding: 11px 8px;
+    }
+
+
+    td {
+        font-size: 12px;
+
+        padding: 10px 8px;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL PHONES
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+
+    .topbar h1 {
+        font-size: 18px;
+    }
+
+
+    #backBtn {
+        white-space: nowrap;
+
+        padding: 8px 10px;
+    }
+
+
+    .results-container {
+        margin-top: 18px;
+    }
+
+
+    .page-heading {
+        padding: 17px;
+    }
+
+
+    .page-heading h2 {
+        font-size: 18px;
+    }
+
+
+    .page-heading p {
+        font-size: 13px;
+    }
+
+
+    .child-result-card {
+        padding: 12px;
+    }
+
+}

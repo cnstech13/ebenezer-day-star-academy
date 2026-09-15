@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    
+    <meta name="theme-color" content="lightblue">
+
+    <title>
+        School Fees | Ebenezer Day Star Academy
+    </title>
+
+    <link rel="stylesheet" href="parent-portal.css">
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div>
+
+        <h1>
+            School Fees
+        </h1>
+
+        <p>
+            Ebenezer Day Star Academy
+        </p>
+
+    </div>
+
+
+    <button
+        id="backBtn"
+        type="button"
+    >
+        ← Dashboard
+    </button>
+
+</header>
+
+
+<main class="fees-container">
+
+    <section class="page-heading">
+
+        <h2>
+            My Children's Fees
+        </h2>
+
+        <p>
+            View school fee records and payment status.
+        </p>
+
+    </section>
+
+
+    <div
+        id="errorMessage"
+        class="error-message"
+    ></div>
+
+
+    <div
+        id="loadingMessage"
+        class="loading"
+    >
+        Loading fee records...
+    </div>
+
+
+    <div
+        id="childrenFeesContainer"
+    ></div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+    type="module"
+    src="parent-fees.js"
+></script>
+
+</body>
+
+</html>

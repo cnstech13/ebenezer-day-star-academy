@@ -1,0 +1,4 @@
+import { adminReady, withTimeout } from "./admin-guard.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";import { db } from "./firebase-config.js";import "./admin-login.js";const f=document.getElementById("form"),msg=document.getElementById("msg");f.onsubmit=async e=>{e.preventDefault();const audience=[...f.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value);if(!audience.length){msg.textContent="Select at least one audience.";return}try{await withTimeout(addDoc(collection(db,"notifications"),{title:title.value.trim(),message:message.value.trim(),audience,classId:classId.value.trim()||null,createdAt:serverTimestamp(),active:true}));msg.textContent="Notification published.";f.reset()}catch(e){msg.textContent=e.message}};
+
+await adminReady;

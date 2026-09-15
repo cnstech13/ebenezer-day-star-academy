@@ -1,0 +1,77 @@
+/* ============================================================
+   TRANSPARENT LOGIN CONTAINER
+============================================================ */
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.12)
+        ),
+        url("sky.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+.login-card {
+    background: rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    border: 1px solid rgba(255, 255, 255, 0.4);
+
+    border-radius: 20px;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+
+    color: #ffffff;
+}
+
+/* ============================================================
+   TRANSPARENT INPUT FIELDS
+============================================================ */
+
+.login-card input {
+    width: 100%;
+    padding: 13px 14px;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    transition: all 0.3s ease;
+}
+
+
+/* Placeholder text */
+.login-card input::placeholder {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+
+/* When user clicks the field */
+.login-card input:focus {
+    background: rgba(255, 255, 255, 0.18);
+
+    border-color: #ffffff;
+
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+}

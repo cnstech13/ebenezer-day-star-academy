@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    
+    <meta name="theme-color" content="lightblue">
+
+    <title>Results | Ebenezer Day Star Academy</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+    
+    
+
+    <link
+        rel="stylesheet"
+        href="results.css"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                PMS
+            </div>
+
+            <div>
+
+                <strong>
+                    Ebenezer Day Star Academy
+                </strong>
+
+                <small>
+                    Admin Portal
+                </small>
+
+            </div>
+
+        </div>
+
+
+        
+
+            <a
+                href="logout.html"
+                id="logoutBtn"
+            >
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- HEADER -->
+
+        <header class="admin-header">
+
+            <strong>
+                Results Management
+            </strong>
+
+            <span>
+                Administrator
+            </span>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="admin-content">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <div class="page-header-row">
+
+                <div class="admin-title">
+
+                    <h1>
+                        Results
+                    </h1>
+
+                    <p>
+                        Enter and manage students' academic results.
+                    </p>
+
+                </div>
+
+
+                <div
+                    style="
+                        display:flex;
+                        gap:10px;
+                        flex-wrap:wrap;
+                    "
+                >
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addResultBtn"
+                    >
+                        + Enter Result
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline"
+                        id="bulkResultBtn"
+                    >
+                        📋 Class Result Entry
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FILTERS
+            ================================================== -->
+
+            <div class="student-toolbar">
+
+
+                <!-- SESSION -->
+
+                <select id="resultSessionFilter">
+
+                    <option value="">
+                        All Sessions
+                    </option>
+
+                    <option value="2026/2027">
+                        2026/2027
+                    </option>
+
+                    <option value="2025/2026">
+                        2025/2026
+                    </option>
+
+                </select>
+
+
+
+                <!-- TERM -->
+
+                <select id="resultTermFilter">
+
+                    <option value="">
+                        All Terms
+                    </option>
+
+                    <option value="First Term">
+                        First Term
+                    </option>
+
+                    <option value="Second Term">
+                        Second Term
+                    </option>
+
+                    <option value="Third Term">
+                        Third Term
+                    </option>
+
+                </select>
+
+
+
+                <!-- CLASS -->
+
+                <select id="resultClassFilter">
+
+                            <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                </select>
+
+
+
+                <!-- SEARCH -->
+
+                <input
+                    type="search"
+                    id="resultSearch"
+                    placeholder="Search student or subject..."
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RESULTS TABLE
+            ================================================== -->
+
+            <div class="admin-table-container">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                CW 1
+                                <small>/5</small>
+                            </th>
+
+                            <th>
+                                CW 2
+                                <small>/5</small>
+                            </th>
+
+                            <th>
+                                Assignment 1
+                                <small>/5</small>
+                            </th>
+
+                            <th>
+                                Assignment 2
+                                <small>/5</small>
+                            </th>
+
+                            <th>
+                                CA 1
+                                <small>/10</small>
+                            </th>
+
+                            <th>
+                                CA 2
+                                <small>/10</small>
+                            </th>
+
+                            <th>
+                                Exam
+                                <small>/60</small>
+                            </th>
+
+                            <th>
+                                Total
+                                <small>/100</small>
+                            </th>
+
+                            <th>
+                                Grade
+                            </th>
+
+                            <th>
+                                Remark
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="resultsTableBody"
+                    >
+                    </tbody>
+
+                </table>
+
+
+
+                <!-- EMPTY STATE -->
+
+                <div
+                    id="emptyResults"
+                    class="empty-state"
+                >
+
+                    <div>
+                        📊
+                    </div>
+
+                    <h3>
+                        No results found
+                    </h3>
+
+                    <p>
+                        Enter a student's first result.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     INDIVIDUAL RESULT MODAL
+========================================================== -->
+
+<div
+    class="modal"
+    id="resultModal"
+>
+
+    <div class="modal-content">
+
+
+        <!-- MODAL HEADER -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="resultModalTitle">
+                    Enter Result
+                </h2>
+
+                <p>
+                    Enter the student's assessment scores.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeResultModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- FORM -->
+
+        <form id="resultForm">
+
+
+            <input
+                type="hidden"
+                id="editingResultId"
+            >
+
+
+
+            <div class="form-grid">
+
+
+                <!-- =================================================
+                     SESSION
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Academic Session *
+                    </label>
+
+                    <select
+                        id="resultSession"
+                        required
+                    >
+
+                        <option value="">
+                            Select Session
+                        </option>
+
+                        <option value="2026/2027">
+                            2026/2027
+                        </option>
+
+                        <option value="2025/2026">
+                            2025/2026
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TERM
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Term *
+                    </label>
+
+                    <select
+                        id="resultTerm"
+                        required
+                    >
+
+                        <option value="">
+                            Select Term
+                        </option>
+
+                        <option value="First Term">
+                            First Term
+                        </option>
+
+                        <option value="Second Term">
+                            Second Term
+                        </option>
+
+                        <option value="Third Term">
+                            Third Term
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CLASS
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Class *
+                    </label>
+
+                    <select
+                        id="resultClass"
+                        required
+                    >
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     STUDENT
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Student *
+                    </label>
+
+                    <select
+                        id="resultStudent"
+                        required
+                    >
+
+                        <option value="">
+                            Select Student
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SUBJECT
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Subject *
+                    </label>
+
+                    <select
+                        id="resultSubject"
+                        required
+                    >
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CLASS WORK 1
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Class Work 1 (5)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="classWork1"
+                        min="0"
+                        max="5"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CLASS WORK 2
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Class Work 2 (5)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="classWork2"
+                        min="0"
+                        max="5"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ASSIGNMENT 1
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Assignment 1 (5)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="assignment1"
+                        min="0"
+                        max="5"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ASSIGNMENT 2
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Assignment 2 (5)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="assignment2"
+                        min="0"
+                        max="5"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CA 1
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        CA 1 (10)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="ca1"
+                        min="0"
+                        max="10"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CA 2
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        CA 2 (10)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="ca2"
+                        min="0"
+                        max="10"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     EXAM
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Examination (60)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="exam"
+                        min="0"
+                        max="60"
+                        value="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TOTAL
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Total / 100
+                    </label>
+
+                    <input
+                        type="number"
+                        id="resultTotal"
+                        readonly
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     GRADE
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Grade
+                    </label>
+
+                    <input
+                        type="text"
+                        id="resultGrade"
+                        readonly
+                    >
+
+                </div>
+
+
+
+                <!-- =================================================
+                     REMARK
+                ================================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        Remark
+                    </label>
+
+                    <input
+                        type="text"
+                        id="resultRemark"
+                        readonly
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MODAL ACTIONS -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    id="cancelResultBtn"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Result
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     BULK RESULT MODAL
+========================================================== -->
+
+<div
+    class="modal"
+    id="bulkResultModal"
+>
+
+    <div
+        class="modal-content"
+        style="max-width:1200px;"
+    >
+
+
+        <!-- HEADER -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Class Result Entry
+                </h2>
+
+                <p>
+                    Enter results for an entire class.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeBulkResultModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BULK SELECTION
+        ================================================== -->
+
+        <div class="form-grid">
+
+
+            <!-- SESSION -->
+
+            <div class="form-group">
+
+                <label>
+                    Academic Session *
+                </label>
+
+                <select
+                    id="bulkSession"
+                    required
+                >
+
+                    <option value="">
+                        Select Session
+                    </option>
+
+                    <option value="2026/2027">
+                        2026/2027
+                    </option>
+
+                    <option value="2025/2026">
+                        2025/2026
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- TERM -->
+
+            <div class="form-group">
+
+                <label>
+                    Term *
+                </label>
+
+                <select
+                    id="bulkTerm"
+                    required
+                >
+
+                    <option value="">
+                        Select Term
+                    </option>
+
+                    <option value="First Term">
+                        First Term
+                    </option>
+
+                    <option value="Second Term">
+                        Second Term
+                    </option>
+
+                    <option value="Third Term">
+                        Third Term
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- CLASS -->
+
+            <div class="form-group">
+
+                <label>
+                    Class *
+                </label>
+
+                <select
+                    id="bulkClass"
+                    required
+                >
+
+                            <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- SUBJECT -->
+
+            <div class="form-group">
+
+                <label>
+                    Subject *
+                </label>
+
+                <select
+                    id="bulkSubject"
+                    required
+                >
+
+                    <option value="">
+                        Select Subject
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             LOAD STUDENTS
+        ================================================== -->
+
+        <div
+            style="
+                margin-top:20px;
+                margin-bottom:20px;
+            "
+        >
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="loadClassStudentsBtn"
+            >
+                Load Students
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BULK RESULT TABLE
+        ================================================== -->
+
+        <div
+            class="admin-table-container"
+            id="bulkResultTableContainer"
+            style="display:none;"
+        >
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            CW 1
+                            <small>/5</small>
+                        </th>
+
+                        <th>
+                            CW 2
+                            <small>/5</small>
+                        </th>
+
+                        <th>
+                            Assignment 1
+                            <small>/5</small>
+                        </th>
+
+                        <th>
+                            Assignment 2
+                            <small>/5</small>
+                        </th>
+
+                        <th>
+                            CA 1
+                            <small>/10</small>
+                        </th>
+
+                        <th>
+                            CA 2
+                            <small>/10</small>
+                        </th>
+
+                        <th>
+                            Exam
+                            <small>/60</small>
+                        </th>
+
+                        <th>
+                            Total
+                            <small>/100</small>
+                        </th>
+
+                        <th>
+                            Grade
+                        </th>
+
+                        <th>
+                            Remark
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="bulkResultTableBody"
+                >
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BULK ACTIONS
+        ================================================== -->
+
+        <div
+            class="modal-actions"
+            style="margin-top:20px;"
+        >
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                id="cancelBulkResultBtn"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="saveBulkResultsBtn"
+                style="display:none;"
+            >
+                Save All Results
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="admin-login.js"></script>
+
+<script
+    type="module"
+    src="results.js"
+></script>
+
+
+</body>
+
+</html>

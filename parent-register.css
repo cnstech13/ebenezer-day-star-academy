@@ -1,0 +1,513 @@
+/* ============================================================
+   Ebenezer Day Star Academy
+   PARENT REGISTRATION PAGE
+   MODERN GLASS DESIGN
+============================================================ */
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   BODY
+============================================================ */
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 35, 80, 0.18),
+            rgba(0, 35, 80, 0.18)
+        ),
+        url("sky.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   MAIN CONTAINER
+============================================================ */
+
+.register-container {
+    min-height: 100vh;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 15px;
+}
+
+
+/* ============================================================
+   REGISTRATION CARD
+============================================================ */
+
+.register-card {
+    width: 100%;
+    max-width: 460px;
+
+    padding: 38px 34px;
+
+    /* TRANSPARENT GLASS */
+    background: rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.45);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.25);
+
+    animation: cardAppear 0.7s ease;
+}
+
+
+/* ============================================================
+   CARD ANIMATION
+============================================================ */
+
+@keyframes cardAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.register-header {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+
+/* ============================================================
+   SCHOOL LOGO
+============================================================ */
+
+.school-logo {
+    width: 78px;
+    height: 78px;
+
+    margin: 0 auto 17px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.16);
+
+    border: 2px solid rgba(255, 255, 255, 0.65);
+
+    color: #ffffff;
+
+    font-size: 21px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.18);
+
+    transition: 0.3s ease;
+}
+
+
+.school-logo:hover {
+    transform: scale(1.05) rotate(2deg);
+
+    background: rgba(255, 255, 255, 0.22);
+}
+
+
+/* ============================================================
+   MAIN TITLE
+============================================================ */
+
+.register-header h1 {
+    font-size: 29px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+    margin-bottom: 7px;
+
+    text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ============================================================
+   SCHOOL NAME
+============================================================ */
+
+.register-header p {
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.3px;
+}
+
+
+/* ============================================================
+   FORM GROUP
+============================================================ */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   LABEL
+============================================================ */
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ============================================================
+   TRANSPARENT INPUT FIELDS
+============================================================ */
+
+.register-card input {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    transition: all 0.3s ease;
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+============================================================ */
+
+.register-card input::placeholder {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+
+/* ============================================================
+   INPUT FOCUS
+============================================================ */
+
+.register-card input:focus {
+    background: rgba(255, 255, 255, 0.18);
+
+    border-color: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.12);
+
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   INFORMATION TEXT
+============================================================ */
+
+.form-group small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+/* ============================================================
+   REGISTER BUTTON
+============================================================ */
+
+#registerBtn {
+    width: 100%;
+
+    padding: 14px 18px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 82, 180, 0.95),
+            rgba(0, 45, 120, 0.95)
+        );
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(0, 30, 100, 0.25);
+
+    transition: all 0.3s ease;
+}
+
+
+/* ============================================================
+   BUTTON HOVER
+============================================================ */
+
+#registerBtn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(0, 30, 100, 0.35);
+}
+
+
+/* ============================================================
+   BUTTON ACTIVE
+============================================================ */
+
+#registerBtn:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   DISABLED BUTTON
+============================================================ */
+
+#registerBtn:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* ============================================================
+   ERROR / SUCCESS MESSAGES
+============================================================ */
+
+.message {
+    display: none;
+
+    width: 100%;
+
+    padding: 12px 14px;
+
+    margin-bottom: 18px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+    text-align: center;
+
+    line-height: 1.4;
+
+    backdrop-filter: blur(5px);
+}
+
+
+/* ============================================================
+   ERROR
+============================================================ */
+
+.error-message {
+    background: rgba(220, 53, 69, 0.72);
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   SUCCESS
+============================================================ */
+
+.success-message {
+    background: rgba(25, 135, 84, 0.72);
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   LOGIN LINK
+============================================================ */
+
+.login-link {
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   LOGIN LINK
+============================================================ */
+
+.login-link a {
+    margin-left: 5px;
+
+    color: #ffffff;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: 0.3s ease;
+}
+
+
+.login-link a:hover {
+    color: #d9ebff;
+
+    text-decoration: underline;
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVENESS
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .register-container {
+        padding: 25px 15px;
+    }
+
+    .register-card {
+        padding: 30px 22px;
+
+        border-radius: 20px;
+    }
+
+    .school-logo {
+        width: 68px;
+        height: 68px;
+
+        font-size: 19px;
+    }
+
+    .register-header h1 {
+        font-size: 25px;
+    }
+
+    .register-header p {
+        font-size: 14px;
+    }
+
+    .register-card input {
+        padding: 13px;
+    }
+
+    #registerBtn {
+        padding: 13px;
+    }
+}
+
+
+/* ============================================================
+   SMALL PHONES
+============================================================ */
+
+@media (max-width: 380px) {
+
+    .register-card {
+        padding: 25px 18px;
+    }
+
+    .register-header h1 {
+        font-size: 22px;
+    }
+
+    .form-group {
+        margin-bottom: 17px;
+    }
+}

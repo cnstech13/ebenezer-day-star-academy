@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    
+    <meta name="theme-color" content="lightblue">
+
+    <title>
+        Parent Attendance | Ebenezer Day Star Academy
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="parent-attendance.css"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="school-info">
+
+        <h1>
+            Attendance
+        </h1>
+
+        <p>
+            Ebenezer Day Star Academy
+        </p>
+
+    </div>
+
+
+    <button
+        id="backBtn"
+        type="button"
+    >
+        ← Dashboard
+    </button>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="attendance-container">
+
+
+    <section class="page-heading">
+
+        <h2>
+            My Children's Attendance
+        </h2>
+
+        <p>
+            View attendance records for your children.
+        </p>
+
+    </section>
+
+
+
+    <!-- ERROR -->
+
+    <div
+        id="errorMessage"
+        class="error-message"
+    ></div>
+
+
+
+    <!-- LOADING -->
+
+    <div
+        id="loadingMessage"
+        class="loading-message"
+    >
+
+        <div class="loader"></div>
+
+        <p>
+            Loading attendance...
+        </p>
+
+    </div>
+
+
+
+    <!-- CHILDREN -->
+
+    <div
+        id="childrenAttendanceContainer"
+    ></div>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+    type="module"
+    src="parent-attendance.js"
+></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+/* =========================================
+   BRIGHT FUTURE ACADEMY
+   GLOBAL SCROLL SYSTEM
+========================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   ELEMENTS REVEALED WHILE SCROLLING
+========================================= */
+
+.scroll-element {
+    opacity: 0;
+    transform: translateY(50px);
+
+    transition:
+        opacity 1.2s ease,
+        transform 1.2s ease;
+}
+
+.scroll-element.scroll-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   STAGGERED ELEMENTS
+========================================= */
+
+.scroll-element .card,
+.scroll-element article,
+.scroll-element .quick-card,
+.scroll-element .academic-card,
+.scroll-element .news-card,
+.scroll-element .stat,
+.scroll-element .why-item {
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+
+/* =========================================
+   BUTTONS AND LINKS
+========================================= */
+
+a,
+button {
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease,
+        background 0.3s ease;
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+}

@@ -1,0 +1,997 @@
+/* ============================================================
+   Ebenezer Day Star Academy
+   ADMIN DASHBOARD
+   MODERN GLASS / EDUCATION DESIGN
+============================================================ */
+
+
+/* ============================================================
+   DASHBOARD WELCOME
+============================================================ */
+
+body {
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6 0%,
+            #f4d35e 45%,
+            #d4af37 100%
+        ) !important;
+}
+
+.dashboard-welcome {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 28px;
+
+    padding: 25px 28px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 82, 180, 0.95),
+            rgba(0, 45, 120, 0.92)
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 12px 30px rgba(0, 45, 120, 0.20);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* Decorative glow */
+
+.dashboard-welcome::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    right: -60px;
+    top: -80px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+
+}
+
+
+.dashboard-welcome h1 {
+
+    margin: 0 0 7px;
+
+    font-size: 28px;
+
+    font-weight: 750;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.dashboard-welcome p {
+
+    margin: 0;
+
+    color: rgba(255,255,255,0.85);
+
+    font-size: 14px;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   STATISTICS
+============================================================ */
+
+.dashboard-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+
+.stat-card {
+
+    position: relative;
+
+    background:
+        rgba(255,255,255,0.82);
+
+    backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,0.8);
+
+    border-radius: 17px;
+
+    padding: 21px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.07);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    overflow: hidden;
+}
+
+
+.stat-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 80px;
+    height: 80px;
+
+    right: -35px;
+    bottom: -35px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,82,180,0.06);
+}
+
+
+.stat-card:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 15px 32px rgba(0,0,0,0.11);
+}
+
+
+.stat-icon {
+
+    width: 55px;
+
+    height: 55px;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e8f2ff,
+            #dbeafe
+        );
+
+    color: #0052b4;
+
+    font-size: 25px;
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(0,82,180,0.08);
+}
+
+
+.stat-card span {
+
+    display: block;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+
+.stat-card strong {
+
+    display: block;
+
+    font-size: 27px;
+
+    color: #0f172a;
+
+    font-weight: 750;
+}
+
+
+/* ============================================================
+   GENERAL DASHBOARD CARDS
+============================================================ */
+
+.dashboard-grid > div,
+.dashboard-grid > section {
+
+    background:
+        rgba(255,255,255,0.82);
+
+    backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,0.8);
+
+    border-radius: 17px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.06);
+}
+
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1fr;
+
+    gap: 20px;
+
+    margin-bottom: 28px;
+}
+
+
+/* ============================================================
+   CARD HEADING
+============================================================ */
+
+.card-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.card-heading h2 {
+
+    margin: 0 0 5px;
+
+    font-size: 19px;
+
+    color: #0f172a;
+
+    font-weight: 750;
+}
+
+
+.card-heading p {
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.view-link {
+
+    text-decoration: none;
+
+    color: #0052b4;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+
+    transition: 0.25s ease;
+}
+
+
+.view-link:hover {
+
+    background: #dbeafe;
+
+    transform: translateX(2px);
+}
+
+
+/* ============================================================
+   QUICK ACTIONS
+============================================================ */
+
+.quick-actions {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+}
+
+
+.quick-action {
+
+    text-decoration: none;
+
+    color: inherit;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 13px;
+
+    padding: 16px;
+
+    background:
+        rgba(255,255,255,0.65);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.quick-action:hover {
+
+    transform: translateY(-4px);
+
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 9px 20px rgba(0,0,0,0.08);
+
+    background: #ffffff;
+}
+
+
+.quick-action span {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 43px;
+
+    height: 43px;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    font-size: 22px;
+
+    margin-bottom: 11px;
+}
+
+
+.quick-action strong {
+
+    font-size: 14px;
+
+    color: #1e293b;
+}
+
+
+/* ============================================================
+   OVERVIEW
+============================================================ */
+
+.overview-list > div {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 14px 5px;
+
+    border-bottom:
+        1px solid #edf0f3;
+}
+
+
+.overview-list > div:last-child {
+
+    border-bottom: none;
+}
+
+
+.overview-list span {
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+.overview-list strong {
+
+    color: #1e293b;
+}
+
+
+.status-active {
+
+    color: #15803d;
+
+    background: #dcfce7;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   ACTIVITIES
+============================================================ */
+
+.activity-list {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.activity-item {
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 13px 0;
+
+    border-bottom:
+        1px solid #edf0f3;
+}
+
+
+.activity-item:last-child {
+
+    border-bottom: none;
+}
+
+
+.activity-icon {
+
+    width: 38px;
+
+    height: 38px;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eff6ff;
+
+    color: #0052b4;
+
+    font-size: 17px;
+}
+
+
+.activity-item strong {
+
+    display: block;
+
+    font-size: 14px;
+
+    color: #1e293b;
+
+    margin-bottom: 3px;
+}
+
+
+.activity-item small {
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+.empty-activity {
+
+    color: #94a3b8;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+
+/* ============================================================
+   ATTENDANCE
+============================================================ */
+
+.attendance-dashboard {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+}
+
+
+.attendance-dashboard > div {
+
+    text-align: center;
+
+    padding: 20px 10px;
+
+    border:
+        1px solid #e5eaf0;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,0.65);
+
+    transition: 0.25s ease;
+}
+
+
+.attendance-dashboard > div:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,0.06);
+}
+
+
+.attendance-number {
+
+    display: block;
+
+    font-size: 26px;
+
+    font-weight: 750;
+
+    color: #0f172a;
+
+    margin-bottom: 4px;
+}
+
+
+.attendance-dashboard small {
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   MODULES
+============================================================ */
+
+.module-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+
+.module-grid a {
+
+    position: relative;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    border:
+        1px solid #e5eaf0;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    background:
+        rgba(255,255,255,0.68);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.module-grid a::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 70px;
+
+    right: -30px;
+    bottom: -30px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,82,180,0.06);
+}
+
+
+.module-grid a:hover {
+
+    transform: translateY(-5px);
+
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 10px 23px rgba(0,0,0,0.08);
+
+    background: #ffffff;
+}
+
+
+.module-grid span {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 13px;
+
+    background: #eff6ff;
+
+    font-size: 24px;
+
+    margin-bottom: 12px;
+}
+
+
+.module-grid strong {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #1e293b;
+
+    font-size: 14px;
+}
+
+
+.module-grid small {
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   GENERAL SMOOTHNESS
+============================================================ */
+
+.dashboard-grid,
+.dashboard-stats,
+.module-grid,
+.quick-actions {
+
+    animation:
+        dashboardAppear 0.6s ease both;
+}
+
+
+@keyframes dashboardAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(12px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+}
+
+
+/* ============================================================
+   MOBILE / TABLET
+============================================================ */
+
+@media (max-width: 1100px) {
+
+    .dashboard-stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .module-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 800px) {
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .quick-actions {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .dashboard-welcome {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 22px;
+
+        border-radius: 15px;
+
+    }
+
+
+    .dashboard-welcome h1 {
+
+        font-size: 23px;
+
+    }
+
+
+    .dashboard-welcome p {
+
+        font-size: 13px;
+
+    }
+
+
+    .dashboard-stats {
+
+        grid-template-columns: 1fr;
+
+        gap: 13px;
+
+    }
+
+
+    .stat-card {
+
+        padding: 17px;
+
+    }
+
+
+    .stat-icon {
+
+        width: 48px;
+
+        height: 48px;
+
+        font-size: 22px;
+
+    }
+
+
+    .stat-card strong {
+
+        font-size: 24px;
+
+    }
+
+
+    .dashboard-grid > div,
+    .dashboard-grid > section {
+
+        padding: 17px;
+
+        border-radius: 15px;
+
+    }
+
+
+    .quick-actions {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 10px;
+
+    }
+
+
+    .quick-action {
+
+        padding: 13px;
+
+    }
+
+
+    .module-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 10px;
+
+    }
+
+
+    .module-grid a {
+
+        padding: 15px;
+
+    }
+
+
+    .attendance-dashboard {
+
+        gap: 8px;
+
+    }
+
+
+    .attendance-dashboard > div {
+
+        padding: 16px 6px;
+
+    }
+
+}
+
+
+/* ============================================================
+   SMALL PHONES
+============================================================ */
+
+@media (max-width: 400px) {
+
+    .quick-actions {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .module-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .dashboard-welcome h1 {
+
+        font-size: 21px;
+
+    }
+
+
+    .card-heading {
+
+        flex-direction: column;
+
+    }
+
+}

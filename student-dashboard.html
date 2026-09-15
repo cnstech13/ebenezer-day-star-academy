@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Student Portal</title><link rel="stylesheet" href="portal-dashboard.css"></head><body><header><strong>Ebenezer Day Star Academy</strong><nav><a href="student-dashboard.html">Dashboard</a><a href="student-dashboard.html#results">Results</a><a href="student-dashboard.html#attendance">Attendance</a><a href="student-dashboard.html#fees">Fees</a><a href="student-dashboard.html#reports">Report Card</a><a href="#notifications">Notifications</a><button id="logout">Logout</button></nav></header><main><section class="hero"><h1 id="welcome">Student Portal</h1><p id="details">Loading...</p></section><section class="grid"><div class="card"><h2>Academic Results</h2><div id="results">Loading...</div></div><div class="card"><h2>Attendance</h2><div id="attendance">Loading...</div></div><div class="card"><h2>Fees</h2><div id="fees">Loading...</div></div><div class="card"><h2>Report Cards</h2><div id="reports">Loading...</div></div><div class="card" id="notifications"><h2>Notifications</h2><div id="notices">Loading...</div></div></section></main><script type="module" src="student-dashboard.js"></script><script type="module">
+import { goBackOr } from "./back-navigation.js";
+document.querySelectorAll("[data-smart-back]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goBackOr(el.dataset.smartBack || "portal-login.html");
+  });
+});
+</script>
+</body></html>

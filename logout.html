@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="lightblue"
+    >
+
+    <title>Logout | Ebenezer Day Star Academy</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin-login.css"
+    >
+
+    <style>
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(0, 20, 50, 0.35),
+                    rgba(0, 20, 50, 0.35)
+                ),
+                url("book.jpg");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-repeat: no-repeat;
+
+            background-attachment: fixed;
+
+            color: #ffffff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        .logout-card {
+
+            width: 90%;
+
+            max-width: 430px;
+
+            padding: 40px 30px;
+
+            text-align: center;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            backdrop-filter: blur(12px);
+
+            -webkit-backdrop-filter: blur(12px);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.45);
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0, 0, 0, 0.30);
+        }
+
+
+        .logout-icon {
+
+            width: 75px;
+
+            height: 75px;
+
+            margin:
+                0 auto 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.15);
+
+            border:
+                2px solid
+                rgba(255, 255, 255, 0.55);
+
+            font-size: 32px;
+        }
+
+
+        .logout-card h1 {
+
+            margin-bottom: 10px;
+
+            font-size: 28px;
+
+            color: #ffffff;
+        }
+
+
+        .logout-card p {
+
+            margin-bottom: 28px;
+
+            color:
+                rgba(255, 255, 255, 0.9);
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+
+        .logout-buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+        }
+
+
+        .logout-btn {
+
+            padding: 13px 22px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            transition: 0.3s ease;
+        }
+
+
+        .login-btn {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0, 82, 180, 0.95),
+                    rgba(0, 45, 120, 0.95)
+                );
+
+            color: #ffffff;
+
+            border: none;
+        }
+
+
+        .login-btn:hover {
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .home-btn {
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.5);
+
+            color: #ffffff;
+        }
+
+
+        .home-btn:hover {
+
+            background:
+                rgba(255, 255, 255, 0.22);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        @media (max-width: 500px) {
+
+            .logout-card {
+
+                padding: 32px 22px;
+            }
+
+            .logout-card h1 {
+
+                font-size: 24px;
+            }
+
+            .logout-buttons {
+
+                flex-direction: column;
+            }
+
+            .logout-btn {
+
+                width: 100%;
+
+                padding: 13px;
+            }
+
+        }
+
+    </style>
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+
+    <div class="logout-card">
+
+        <div class="logout-icon">
+            🚪
+        </div>
+
+
+        <h1>
+            Logging Out...
+        </h1>
+
+
+        <p id="logoutMessage">
+            Please wait while your administrator session is being ended.
+        </p>
+
+
+        <div class="logout-buttons">
+
+            <a
+                href="admin-login.html"
+                class="logout-btn login-btn"
+            >
+                🔐 Login Again
+            </a>
+
+
+            <a
+                href="index.html"
+                class="logout-btn home-btn"
+            >
+                🏠 Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- FIREBASE LOGOUT -->
+    <script type="module">
+        import { signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+        import { auth } from "./firebase-config.js";
+
+        const message = document.getElementById("logoutMessage");
+        const heading = document.querySelector(".logout-card h1");
+
+        signOut(auth)
+            .then(() => {
+                sessionStorage.clear();
+                message.textContent = "You have been logged out successfully.";
+                heading.textContent = "Logged Out Successfully";
+            })
+            .catch((error) => {
+                console.error("Logout error:", error);
+                message.textContent = "Unable to complete logout. Please try again.";
+                heading.textContent = "Logout Failed";
+            });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

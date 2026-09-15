@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    
+    <meta name="theme-color" content="lightblue">
+
+    <title>
+        Parent Dashboard | Ebenezer Day Star Academy
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="parent-dashboard.css"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+<body>
+
+
+<header class="topbar">
+
+    <div>
+
+        <h1>
+            Parent Portal
+        </h1>
+
+        <p>
+            Ebenezer Day Star Academy
+        </p>
+
+    </div>
+
+
+    <button id="logoutBtn">
+        Logout
+    </button>
+
+</header>
+
+
+
+<main class="dashboard-container">
+
+
+    <!-- =====================================================
+         WELCOME
+         ===================================================== -->
+
+    <section class="welcome-card">
+
+        <div>
+
+            <h2 id="welcomeText">
+                Welcome, Parent
+            </h2>
+
+            <p id="parentEmail">
+                Loading...
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ERROR
+         ===================================================== -->
+
+    <div
+        id="errorMessage"
+        class="error-message"
+    ></div>
+
+
+
+    <!-- =====================================================
+         CHILDREN
+         ===================================================== -->
+
+    <section>
+
+        <div class="section-heading">
+
+            <h2>
+                My Children
+            </h2>
+
+            <span id="childrenCount">
+                0
+            </span>
+
+        </div>
+
+
+        <div
+            id="childrenContainer"
+            class="children-grid"
+        >
+
+            <div class="loading">
+                Loading children's records...
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+<section class="services">
+
+    <h2>
+        Parent Services
+    </h2>
+
+
+    <div class="services-grid">
+
+
+        <button
+            type="button"
+            class="service-card"
+            data-service="results"
+        >
+
+            <span class="service-icon">
+                📊
+            </span>
+
+            <strong>
+                Results
+            </strong>
+
+            <small>
+                View academic results
+            </small>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            class="service-card"
+            data-service="attendance"
+        >
+
+            <span class="service-icon">
+                📅
+            </span>
+
+            <strong>
+                Attendance
+            </strong>
+
+            <small>
+                View attendance records
+            </small>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            class="service-card"
+            data-service="fees"
+        >
+
+            <span class="service-icon">
+                💰
+            </span>
+
+            <strong>
+                Fees
+            </strong>
+
+            <small>
+                View school fees
+            </small>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            class="service-card"
+            data-service="reportCards"
+        >
+
+            <span class="service-icon">
+                📄
+            </span>
+
+            <strong>
+                Report Cards
+            </strong>
+
+            <small>
+                View report cards
+            </small>
+
+        </button>
+
+
+    </div>
+
+</section>
+
+<section style="max-width:1100px;margin:20px auto;padding:20px;background:#fff;border-radius:16px"><h2>Notifications</h2><div id="portalNotifications">Loading notifications...</div></section></main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+    type="module"
+    src="parent-dashboard.js"
+></script>
+
+<script type="module">
+import { goBackOr } from "./back-navigation.js";
+document.querySelectorAll("[data-smart-back]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goBackOr(el.dataset.smartBack || "portal-login.html");
+  });
+});
+</script>
+</body>
+
+</html>

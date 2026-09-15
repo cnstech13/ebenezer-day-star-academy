@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+<meta name="theme-color" content="lightblue">
+
+    <title>Attendance | Ebenezer Day Star Academy</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin-login.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="attendance.css"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+<div class="admin-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                PMS
+            </div>
+
+            <div>
+
+                <strong>
+                   Ebenezer Day Star
+                </strong>
+
+                <small>
+                    Admin Portal
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav>
+
+           
+
+            <a href="#" id="logoutBtn">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="admin-main">
+
+
+        <header class="admin-header">
+
+            <strong>
+                Attendance
+            </strong>
+
+            <span>
+                Administrator
+            </span>
+
+        </header>
+
+
+        <section class="admin-content">
+
+
+            <div class="admin-title">
+
+                <h1>
+                    Attendance Management
+                </h1>
+
+                <p>
+                    Record and manage daily student attendance.
+                </p>
+
+            </div>
+
+
+            <!-- SELECTION -->
+
+            <div class="admin-card">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Academic Session
+                        </label>
+
+                        <select id="attendanceSession">
+
+                            <option value="">
+                                Select Session
+                            </option>
+
+                            <option value="2026/2027">
+                                2026/2027
+                            </option>
+
+                            <option value="2025/2026">
+                                2025/2026
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Term
+                        </label>
+
+                        <select id="attendanceTerm">
+
+                            <option value="">
+                                Select Term
+                            </option>
+
+                            <option value="First Term">
+                                First Term
+                            </option>
+
+                            <option value="Second Term">
+                                Second Term
+                            </option>
+
+                            <option value="Third Term">
+                                Third Term
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Class
+                        </label>
+
+                        <select id="attendanceClass">
+
+                                    <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="attendanceDate"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="attendance-actions">
+
+                    <button
+                        class="btn btn-primary"
+                        id="loadAttendanceBtn"
+                    >
+                        Load Students
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ATTENDANCE TABLE -->
+
+            <div
+                class="admin-card"
+                id="attendanceTableCard"
+                style="display:none;"
+            >
+
+                <div class="attendance-table-header">
+
+                    <div>
+
+                        <h2>
+                            Daily Attendance
+                        </h2>
+
+                        <p id="attendanceDateTitle">
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <button
+                            class="btn btn-outline"
+                            id="markAllPresentBtn"
+                        >
+                            ✓ Mark All Present
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-table-container">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Student
+                                </th>
+
+                                <th>
+                                    Admission No.
+                                </th>
+
+                                <th>
+                                    Present
+                                </th>
+
+                                <th>
+                                    Absent
+                                </th>
+
+                                <th>
+                                    Late
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="attendanceTableBody"
+                        >
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="attendance-save">
+
+                    <button
+                        class="btn btn-primary"
+                        id="saveAttendanceBtn"
+                    >
+                        Save Attendance
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <div
+                class="admin-card"
+                id="attendanceSummaryCard"
+                style="display:none;"
+            >
+
+                <h2>
+                    Attendance Summary
+                </h2>
+
+                <div class="attendance-summary">
+
+                    <div>
+
+                        <strong>
+                            Students
+                        </strong>
+
+                        <span id="summaryStudents">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Present
+                        </strong>
+
+                        <span id="summaryPresent">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Absent
+                        </strong>
+
+                        <span id="summaryAbsent">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Late
+                        </strong>
+
+                        <span id="summaryLate">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="admin-login.js"></script>
+
+<script type="module" src="attendance.js"></script>
+
+</body>
+
+</html>

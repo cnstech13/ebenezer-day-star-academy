@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="lightblue"
+    >
+
+    <title>Parent Management | Ebenezer Day Star Academy</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin-login.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="parents.css"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     ADMIN LAYOUT
+========================================================= -->
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                PMS
+            </div>
+
+            <div>
+
+                <strong>
+                    Ebenezer Day Star
+                </strong>
+
+                <small>
+                    Admin Portal
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="student.html">
+                👨‍🎓 Students
+            </a>
+
+            <a href="teachers.html">
+                👨‍🏫 Teachers
+            </a>
+
+            <a href="classes.html">
+                🏫 Classes
+            </a>
+
+            <a href="subjects.html">
+                📚 Subjects
+            </a>
+
+            <a
+                href="parents.html"
+                class="active"
+            >
+                👨‍👩‍👧 Parents
+            </a>
+
+            <a
+                href="logout.html"
+                id="logoutBtn"
+            >
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <header class="admin-header">
+
+            <strong>
+                Parent Management
+            </strong>
+
+            <span id="adminUser">
+                Administrator
+            </span>
+
+        </header>
+
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <section class="admin-content">
+
+
+            <!-- =============================================
+                 PAGE HEADER
+            ============================================== -->
+
+            <div class="page-header-row">
+
+                <div class="admin-title">
+
+                    <h1>
+                        Parents
+                    </h1>
+
+                    <p>
+                        View parents and the students linked to them.
+                    </p>
+
+                </div>
+
+
+                <div class="parent-total-card">
+
+                    <span>
+                        Total Parents
+                    </span>
+
+                    <strong id="totalParents">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 TOOLBAR
+            ============================================== -->
+
+            <div class="student-toolbar">
+
+                <div class="search-wrapper">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="search"
+                        id="parentSearch"
+                        placeholder="Search parent name, email or phone..."
+                    >
+
+                </div>
+
+
+                <select id="studentCountFilter">
+
+                    <option value="">
+                        All Parents
+                    </option>
+
+                    <option value="1">
+                        1 Student
+                    </option>
+
+                    <option value="2">
+                        2 Students
+                    </option>
+
+                    <option value="3+">
+                        3+ Students
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 PARENT TABLE
+            ============================================== -->
+
+            <div class="admin-table-container">
+
+
+                <table class="admin-table parent-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Parent
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Students
+                            </th>
+
+                            <th>
+                                Linked Classes
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="parentsTableBody"
+                    ></tbody>
+
+
+                </table>
+
+
+
+                <!-- =========================================
+                     EMPTY STATE
+                ========================================== -->
+
+                <div
+                    id="emptyParents"
+                    class="empty-state"
+                >
+
+                    <div>
+                        👨‍👩‍👧
+                    </div>
+
+                    <h3>
+                        No parents found
+                    </h3>
+
+                    <p>
+                        Parent information will appear here
+                        when students have parent details.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     PARENT DETAILS MODAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="parentModal"
+>
+
+
+    <div class="modal-content parent-modal-content">
+
+
+        <!-- =============================================
+             MODAL HEADER
+        ============================================== -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="parentModalTitle">
+                    Parent Details
+                </h2>
+
+                <p>
+                    Parent information and linked students.
+                </p>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="closeParentModal"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             PARENT INFORMATION
+        ============================================== -->
+
+        <div class="parent-profile">
+
+
+            <div
+                class="large-parent-avatar"
+                id="parentAvatar"
+            >
+                P
+            </div>
+
+
+            <div class="parent-profile-info">
+
+                <h3 id="detailParentName">
+                    Parent Name
+                </h3>
+
+                <p id="detailParentEmail">
+                    parent@example.com
+                </p>
+
+                <span id="detailParentPhone">
+                    08000000000
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =============================================
+             LINKED STUDENTS
+        ============================================== -->
+
+        <div class="linked-students-section">
+
+            <div class="linked-students-header">
+
+                <div>
+
+                    <h3>
+                        Linked Students
+                    </h3>
+
+                    <p>
+                        Students associated with this parent.
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="student-count-badge"
+                    id="detailStudentCount"
+                >
+                    0 Students
+                </span>
+
+            </div>
+
+
+            <div
+                id="linkedStudentsList"
+                class="linked-students-list"
+            ></div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             MODAL ACTIONS
+        ============================================== -->
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                id="cancelParentBtn"
+            >
+                Close
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="sweetalert.js"></script>
+
+<script type="module" src="admin-login.js"></script>
+
+<script
+    type="module"
+    src="parents.js"
+></script>
+
+
+</body>
+
+</html>

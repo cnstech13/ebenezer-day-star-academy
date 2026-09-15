@@ -1,0 +1,1033 @@
+/* =========================================================
+   PARENTS MANAGEMENT PAGE
+   Ebenezer Day Star Academy
+   Styled to match Students Page
+========================================================= */
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.admin-title h1 {
+
+    margin: 0;
+
+}
+
+
+.admin-title p {
+
+    margin-top: 6px;
+
+}
+
+
+
+/* =========================================================
+   TOTAL PARENTS CARD
+========================================================= */
+
+.parent-total-card {
+
+    min-width: 150px;
+
+    padding: 14px 20px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6,
+            #f4d35e
+        );
+
+    border: 1px solid
+        rgba(212, 175, 55, 0.35);
+
+    box-shadow:
+        0 6px 18px
+        rgba(0, 0, 0, 0.08);
+
+    text-align: center;
+
+}
+
+
+.parent-total-card span {
+
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #6f5a00;
+
+}
+
+
+.parent-total-card strong {
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 27px;
+
+    color: #8b6d00;
+
+}
+
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.student-toolbar {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.search-wrapper {
+
+    position: relative;
+
+    flex: 1;
+
+}
+
+
+.search-icon {
+
+    position: absolute;
+
+    left: 14px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    pointer-events: none;
+
+}
+
+
+.search-wrapper input {
+
+    width: 100%;
+
+    padding-left: 42px;
+
+}
+
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.admin-table-container {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+}
+
+
+.parent-table {
+
+    min-width: 900px;
+
+}
+
+
+.parent-table th {
+
+    white-space: nowrap;
+
+}
+
+
+.parent-table td {
+
+    vertical-align: middle;
+
+}
+
+
+
+/* =========================================================
+   PARENT NAME
+========================================================= */
+
+.parent-name {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 190px;
+
+}
+
+
+.parent-avatar {
+
+    width: 40px;
+
+    height: 40px;
+
+    min-width: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4d35e,
+            #d4af37
+        );
+
+    color: #5f4c00;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+.parent-name strong {
+
+    font-size: 14px;
+
+}
+
+
+
+/* =========================================================
+   EMAIL
+========================================================= */
+
+.parent-email {
+
+    font-size: 13px;
+
+    color: #315c91;
+
+    word-break: break-word;
+
+}
+
+
+.parent-email.empty {
+
+    color: #999;
+
+    font-style: italic;
+
+}
+
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+.parent-phone {
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* =========================================================
+   STUDENT COUNT
+========================================================= */
+
+.student-count {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(212, 175, 55, 0.15);
+
+    color: #806600;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* =========================================================
+   CLASS TAGS
+========================================================= */
+
+.class-list {
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+}
+
+
+.class-tag {
+
+    display: inline-block;
+
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: #f3f4f6;
+
+    color: #555;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+.class-more {
+
+    display: inline-block;
+
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: #e5e7eb;
+
+    color: #555;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
+
+.view-parent-btn {
+
+    border: none;
+
+    outline: none;
+
+    cursor: pointer;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #b8941f
+        );
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        all 0.2s ease;
+
+}
+
+
+.view-parent-btn:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 12px
+        rgba(0, 0, 0, 0.15);
+
+}
+
+
+.view-parent-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+
+/* =========================================================
+   PARENT MODAL
+========================================================= */
+
+.parent-modal-content {
+
+    width: min(
+        95vw,
+        650px
+    );
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+}
+
+
+
+/* =========================================================
+   PARENT PROFILE
+========================================================= */
+
+.parent-profile {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    margin-bottom: 22px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fffdf1,
+            #fff7d6
+        );
+
+    border: 1px solid
+        rgba(212, 175, 55, 0.25);
+
+}
+
+
+.large-parent-avatar {
+
+    width: 60px;
+
+    height: 60px;
+
+    min-width: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d4af37,
+            #a98000
+        );
+
+    color: white;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+}
+
+
+.parent-profile-info h3 {
+
+    margin: 0 0 4px;
+
+    font-size: 18px;
+
+}
+
+
+.parent-profile-info p {
+
+    margin: 0 0 4px;
+
+    color: #315c91;
+
+    font-size: 13px;
+
+    word-break: break-word;
+
+}
+
+
+.parent-profile-info span {
+
+    color: #666;
+
+    font-size: 13px;
+
+}
+
+
+
+/* =========================================================
+   LINKED STUDENTS HEADER
+========================================================= */
+
+.linked-students-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.linked-students-header h3 {
+
+    margin: 0;
+
+    font-size: 17px;
+
+}
+
+
+.linked-students-header p {
+
+    margin: 4px 0 0;
+
+    color: #777;
+
+    font-size: 12px;
+
+}
+
+
+.student-count-badge {
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(212, 175, 55, 0.15);
+
+    color: #806600;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* =========================================================
+   LINKED STUDENT CARDS
+========================================================= */
+
+.linked-students-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+
+.linked-student-card {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: #f8f9fb;
+
+    border: 1px solid #e6e7e9;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+
+}
+
+
+.linked-student-card:hover {
+
+    transform:
+        translateY(-1px);
+
+    background: #f5f6f8;
+
+}
+
+
+.linked-student-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.linked-student-avatar {
+
+    width: 38px;
+
+    height: 38px;
+
+    min-width: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dceeff,
+            #a9cff1
+        );
+
+    color: #24517e;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+}
+
+
+.linked-student-info strong {
+
+    display: block;
+
+    font-size: 13px;
+
+}
+
+
+.linked-student-info small {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #777;
+
+    font-size: 11px;
+
+}
+
+
+.linked-student-class {
+
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    color: #555;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* =========================================================
+   NO LINKED STUDENTS
+========================================================= */
+
+.no-linked-students {
+
+    padding: 25px;
+
+    text-align: center;
+
+    color: #777;
+
+    font-size: 13px;
+
+}
+
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark-mode .parent-total-card {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4b3f0d,
+            #6f5b15
+        );
+
+    border-color:
+        rgba(255, 215, 80, 0.2);
+
+}
+
+
+body.dark-mode
+.parent-total-card span {
+
+    color: #e8d37b;
+
+}
+
+
+body.dark-mode
+.parent-total-card strong {
+
+    color: #ffe98a;
+
+}
+
+
+body.dark-mode
+.parent-email {
+
+    color: #8fc5ff;
+
+}
+
+
+body.dark-mode
+.class-tag {
+
+    background: #292929;
+
+    color: #ddd;
+
+}
+
+
+body.dark-mode
+.class-more {
+
+    background: #333;
+
+    color: #ddd;
+
+}
+
+
+body.dark-mode
+.parent-profile {
+
+    background:
+        linear-gradient(
+            135deg,
+            #29250e,
+            #3b3211
+        );
+
+    border-color:
+        rgba(212, 175, 55, 0.25);
+
+}
+
+
+body.dark-mode
+.parent-profile-info p {
+
+    color: #8fc5ff;
+
+}
+
+
+body.dark-mode
+.parent-profile-info span {
+
+    color: #aaa;
+
+}
+
+
+body.dark-mode
+.linked-student-card {
+
+    background: #202020;
+
+    border-color: #333;
+
+}
+
+
+body.dark-mode
+.linked-student-card:hover {
+
+    background: #252525;
+
+}
+
+
+body.dark-mode
+.linked-student-class {
+
+    background: #292929;
+
+    border-color: #444;
+
+    color: #ddd;
+
+}
+
+
+body.dark-mode
+.linked-students-header p {
+
+    color: #aaa;
+
+}
+
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .page-header-row {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .parent-total-card {
+
+        width: 100%;
+
+    }
+
+
+    .student-toolbar {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .search-wrapper {
+
+        width: 100%;
+
+    }
+
+
+    .parent-table {
+
+        min-width: 850px;
+
+    }
+
+
+    .admin-table-container {
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+
+    }
+
+
+    .parent-modal-content {
+
+        width: calc(
+            100vw - 24px
+        );
+
+        max-height: calc(
+            100vh - 24px
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .parent-profile {
+
+        padding: 14px;
+
+        gap: 11px;
+
+    }
+
+
+    .large-parent-avatar {
+
+        width: 52px;
+
+        height: 52px;
+
+        min-width: 52px;
+
+        font-size: 18px;
+
+    }
+
+
+    .parent-profile-info h3 {
+
+        font-size: 16px;
+
+    }
+
+
+    .parent-profile-info p {
+
+        font-size: 11px;
+
+    }
+
+
+    .parent-profile-info span {
+
+        font-size: 11px;
+
+    }
+
+
+    .linked-student-card {
+
+        padding: 10px;
+
+    }
+
+
+    .linked-student-class {
+
+        font-size: 9px;
+
+    }
+
+}
+
+body {
+    background:
+        linear-gradient(
+            135deg,
+            #fff8d6 0%,
+            #f4d35e 45%,
+            #d4af37 100%
+        ) !important;
+}

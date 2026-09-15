@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    
+    <meta name="theme-color" content="lightblue">
+
+    <title>Classes | Ebenezer Day Star Academy</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="classes.css">
+    <link rel="stylesheet" href="admin-login.css">
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                PMS
+            </div>
+
+            <div>
+                <strong>Ebenezer Day Star</strong>
+                <small>Admin Portal</small>
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            
+
+            <a href="logout.html" id="logoutBtn">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+
+            <strong>
+                Class Management
+            </strong>
+
+            <span id="adminUser">
+                Administrator
+            </span>
+
+        </header>
+
+
+        <section class="admin-content">
+
+            <div class="page-header-row">
+
+                <div class="admin-title">
+
+                    <h1>
+                        Classes
+                    </h1>
+
+                    <p>
+                        Create classes and assign class teachers.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    id="addClassBtn"
+                >
+                    + Add Class
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="student-toolbar">
+
+                <input
+                    type="search"
+                    id="classSearch"
+                    placeholder="Search classes..."
+                >
+
+                <select id="sectionFilter">
+
+                    <option value="">
+                        All Sections
+                    </option>
+
+                    <option value="Primary">
+                        Primary
+                    </option>
+
+                    <option value="JSS">
+                        JSS
+                    </option>
+
+                    <option value="SS">
+                        SS
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CLASS TABLE -->
+
+            <div class="admin-table-container">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Class ID
+                            </th>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Section
+                            </th>
+
+                            <th>
+                                Class Teacher
+                            </th>
+
+                            <th>
+                                Students
+                            </th>
+
+                            <th>
+                                Academic Session
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="classesTableBody">
+                    </tbody>
+
+                </table>
+
+
+                <div
+                    id="emptyClasses"
+                    class="empty-state"
+                >
+
+                    <div>
+                        🏫
+                    </div>
+
+                    <h3>
+                        No classes found
+                    </h3>
+
+                    <p>
+                        Create your first class to begin
+                        organizing students.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- CLASS MODAL -->
+
+<div
+    class="modal"
+    id="classModal"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="classModalTitle">
+                    Add Class
+                </h2>
+
+                <p>
+                    Create a class and assign a class teacher.
+                </p>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="closeClassModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="classForm">
+
+            <input
+                type="hidden"
+                id="editingClassId"
+            >
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Class Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="className"
+                        placeholder="e.g. JSS 1"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Section *
+                    </label>
+
+                    <select
+                        id="classSection"
+                        required
+                    >
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Class Teacher
+                    </label>
+
+                    <select id="classTeacher">
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Academic Session *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="academicSession"
+                        value="2026/2027"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Maximum Students
+                    </label>
+
+                    <input
+                        type="number"
+                        id="maxStudents"
+                        value="40"
+                        min="1"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="classStatus">
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                                <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    id="cancelClassBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Class
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert.js"></script>
+<script type="module" src="admin-login.js"></script>
+<script type="module" src="classes.js"></script>
+
+</body>
+
+</html>

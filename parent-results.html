@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+<meta name="theme-color" content="lightblue">
+    <title>
+        My Children's Results | Ebenezer Day Star Academy
+    </title>
+
+    <link rel="stylesheet" href="parent-portal.css">
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div>
+
+        <h1>
+            Academic Results
+        </h1>
+
+        <p>
+            Ebenezer Day Star Academy
+        </p>
+
+    </div>
+
+
+    <button
+        id="backBtn"
+        type="button"
+    >
+        ← Dashboard
+    </button>
+
+</header>
+
+
+<main class="results-container">
+
+    <section class="page-heading">
+
+        <h2>
+            My Children's Results
+        </h2>
+
+        <p>
+            View academic performance for your children.
+        </p>
+
+    </section>
+
+
+    <div
+        id="errorMessage"
+        class="error-message"
+    ></div>
+
+
+    <div
+        id="loadingMessage"
+        class="loading"
+    >
+        Loading results...
+    </div>
+
+
+    <div
+        id="childrenResultsContainer"
+    ></div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+    type="module"
+    src="parent-results.js"
+></script>
+
+</body>
+
+</html>

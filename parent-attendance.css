@@ -1,0 +1,808 @@
+/* ============================================================
+   PARENT ATTENDANCE
+   Ebenezer Day Star Academy
+============================================================ */
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+/* ============================================================
+   BODY
+============================================================ */
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        #f4f7fb;
+
+    color:
+        #1f2937;
+
+    min-height:
+        100vh;
+
+}
+
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+
+.topbar {
+
+    width: 100%;
+
+    background:
+        #0f3d91;
+
+    color:
+        white;
+
+    padding:
+        18px 6%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    box-shadow:
+        0 3px 12px rgba(
+            0,
+            0,
+            0,
+            0.12
+        );
+
+}
+
+
+/* ============================================================
+   BRAND
+============================================================ */
+
+.brand h1 {
+
+    font-size:
+        25px;
+
+    margin-bottom:
+        4px;
+
+}
+
+
+.brand p {
+
+    font-size:
+        14px;
+
+    opacity:
+        0.85;
+
+}
+
+
+/* ============================================================
+   DASHBOARD BUTTON
+============================================================ */
+
+.dashboard-btn {
+
+    border:
+        none;
+
+    background:
+        white;
+
+    color:
+        #0f3d91;
+
+    padding:
+        11px 18px;
+
+    border-radius:
+        8px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        0.25s ease;
+
+}
+
+
+.dashboard-btn:hover {
+
+    background:
+        #eaf1ff;
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* ============================================================
+   MAIN CONTAINER
+============================================================ */
+
+.attendance-container {
+
+    width:
+        min(1100px, 92%);
+
+    margin:
+        35px auto;
+
+}
+
+
+/* ============================================================
+   PAGE HEADING
+============================================================ */
+
+.page-heading {
+
+    margin-bottom:
+        25px;
+
+}
+
+
+.page-heading h2 {
+
+    font-size:
+        26px;
+
+    margin-bottom:
+        7px;
+
+    color:
+        #111827;
+
+}
+
+
+.page-heading p {
+
+    color:
+        #6b7280;
+
+    font-size:
+        15px;
+
+}
+
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+.loading-message {
+
+    background:
+        white;
+
+    border-radius:
+        12px;
+
+    padding:
+        35px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 3px 15px rgba(
+            0,
+            0,
+            0,
+            0.06
+        );
+
+}
+
+
+.loading-message p {
+
+    margin-top:
+        12px;
+
+    color:
+        #6b7280;
+
+}
+
+
+/* ============================================================
+   LOADER
+============================================================ */
+
+.loader {
+
+    width:
+        35px;
+
+    height:
+        35px;
+
+    margin:
+        auto;
+
+    border:
+        4px solid #e5e7eb;
+
+    border-top-color:
+        #0f3d91;
+
+    border-radius:
+        50%;
+
+    animation:
+        spin 0.8s linear infinite;
+
+}
+
+
+@keyframes spin {
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* ============================================================
+   ERROR
+============================================================ */
+
+.error-message {
+
+    background:
+        #fee2e2;
+
+    color:
+        #991b1b;
+
+    border:
+        1px solid #fecaca;
+
+    padding:
+        15px;
+
+    border-radius:
+        9px;
+
+    margin-bottom:
+        20px;
+
+    font-size:
+        14px;
+
+}
+
+
+/* ============================================================
+   CHILD CONTAINER
+============================================================ */
+
+.children-container {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        25px;
+
+}
+
+
+/* ============================================================
+   CHILD CARD
+============================================================ */
+
+.child-attendance-card {
+
+    background:
+        white;
+
+    border-radius:
+        15px;
+
+    padding:
+        25px;
+
+    box-shadow:
+        0 5px 20px rgba(
+            0,
+            0,
+            0,
+            0.07
+        );
+
+    overflow:
+        hidden;
+
+}
+
+
+/* ============================================================
+   CHILD HEADER
+============================================================ */
+
+.child-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    margin-bottom:
+        22px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+
+    padding-bottom:
+        18px;
+
+}
+
+
+.child-header h2 {
+
+    color:
+        #0f3d91;
+
+    font-size:
+        22px;
+
+    margin-bottom:
+        6px;
+
+}
+
+
+.child-header p {
+
+    color:
+        #6b7280;
+
+    font-size:
+        14px;
+
+}
+
+
+/* ============================================================
+   SUMMARY
+============================================================ */
+
+.attendance-summary {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        15px;
+
+    margin-bottom:
+        25px;
+
+}
+
+
+/* ============================================================
+   SUMMARY CARD
+============================================================ */
+
+.summary-card {
+
+    padding:
+        20px;
+
+    border-radius:
+        11px;
+
+    background:
+        #f8fafc;
+
+    text-align:
+        center;
+
+    border:
+        1px solid #e5e7eb;
+
+}
+
+
+.summary-card strong {
+
+    display:
+        block;
+
+    font-size:
+        28px;
+
+    color:
+        #0f3d91;
+
+    margin-bottom:
+        5px;
+
+}
+
+
+.summary-card span {
+
+    font-size:
+        13px;
+
+    color:
+        #6b7280;
+
+}
+
+
+/* ============================================================
+   TABLE WRAPPER
+============================================================ */
+
+.table-wrapper {
+
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+table {
+
+    width:
+        100%;
+
+    border-collapse:
+        collapse;
+
+    min-width:
+        650px;
+
+}
+
+
+thead {
+
+    background:
+        #0f3d91;
+
+    color:
+        white;
+
+}
+
+
+th {
+
+    padding:
+        14px;
+
+    text-align:
+        left;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+}
+
+
+td {
+
+    padding:
+        14px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+
+    font-size:
+        14px;
+
+}
+
+
+tbody tr:hover {
+
+    background:
+        #f8fafc;
+
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.attendance-status {
+
+    display:
+        inline-block;
+
+    padding:
+        5px 11px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+}
+
+
+.attendance-status.present {
+
+    background:
+        #dcfce7;
+
+    color:
+        #166534;
+
+}
+
+
+.attendance-status.absent {
+
+    background:
+        #fee2e2;
+
+    color:
+        #991b1b;
+
+}
+
+
+.attendance-status.late {
+
+    background:
+        #fef3c7;
+
+    color:
+        #92400e;
+
+}
+
+
+.attendance-status.unknown {
+
+    background:
+        #e5e7eb;
+
+    color:
+        #374151;
+
+}
+
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+.empty-attendance {
+
+    background:
+        white;
+
+    border-radius:
+        12px;
+
+    padding:
+        35px;
+
+    text-align:
+        center;
+
+    color:
+        #6b7280;
+
+    box-shadow:
+        0 3px 15px rgba(
+            0,
+            0,
+            0,
+            0.05
+        );
+
+}
+
+
+.empty-attendance h3 {
+
+    color:
+        #374151;
+
+    margin-bottom:
+        8px;
+
+}
+
+
+.empty-attendance p {
+
+    font-size:
+        14px;
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (
+    max-width: 700px
+) {
+
+    .topbar {
+
+        padding:
+            16px 5%;
+
+    }
+
+
+    .brand h1 {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .brand p {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .dashboard-btn {
+
+        padding:
+            9px 12px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    .attendance-container {
+
+        width:
+            94%;
+
+        margin:
+            25px auto;
+
+    }
+
+
+    .page-heading h2 {
+
+        font-size:
+            22px;
+
+    }
+
+
+    .child-attendance-card {
+
+        padding:
+            17px;
+
+        border-radius:
+            12px;
+
+    }
+
+
+    .child-header h2 {
+
+        font-size:
+            19px;
+
+    }
+
+
+    .attendance-summary {
+
+        gap:
+            8px;
+
+    }
+
+
+    .summary-card {
+
+        padding:
+            15px 8px;
+
+    }
+
+
+    .summary-card strong {
+
+        font-size:
+            23px;
+
+    }
+
+
+    .summary-card span {
+
+        font-size:
+            11px;
+
+    }
+
+}

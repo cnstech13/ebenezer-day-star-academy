@@ -1,0 +1,708 @@
+/* ============================================================
+   PARENT REPORT CARDS
+   Ebenezer Day Star Academy
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        #f4f7fb;
+
+    color:
+        #1f2937;
+
+}
+
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+
+.topbar {
+
+    background:
+        #123c69;
+
+    color:
+        white;
+
+    padding:
+        20px 6%;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        20px;
+
+}
+
+
+.topbar h1 {
+
+    margin:
+        0 0 5px;
+
+    font-size:
+        26px;
+
+}
+
+
+.topbar p {
+
+    margin:
+        0;
+
+    opacity:
+        .85;
+
+}
+
+
+.back-btn {
+
+    text-decoration:
+        none;
+
+    color:
+        white;
+
+    background:
+        rgba(255,255,255,.15);
+
+    border:
+        1px solid
+        rgba(255,255,255,.3);
+
+    padding:
+        11px 18px;
+
+    border-radius:
+        8px;
+
+    font-weight:
+        600;
+
+}
+
+
+.back-btn:hover {
+
+    background:
+        rgba(255,255,255,.25);
+
+}
+
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+
+.report-container {
+
+    width:
+        92%;
+
+    max-width:
+        1200px;
+
+    margin:
+        35px auto;
+
+}
+
+
+.page-heading {
+
+    margin-bottom:
+        25px;
+
+}
+
+
+.page-heading h2 {
+
+    margin:
+        0 0 8px;
+
+    font-size:
+        28px;
+
+}
+
+
+.page-heading p {
+
+    margin:
+        0;
+
+    color:
+        #6b7280;
+
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading {
+
+    text-align:
+        center;
+
+    padding:
+        50px;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.error-message {
+
+    display:
+        none;
+
+    background:
+        #fee2e2;
+
+    color:
+        #991b1b;
+
+    padding:
+        15px;
+
+    border-radius:
+        8px;
+
+    margin-bottom:
+        20px;
+
+}
+
+
+/* ============================================================
+   REPORT CARD
+   ============================================================ */
+
+.report-card {
+
+    background:
+        white;
+
+    border-radius:
+        14px;
+
+    margin-bottom:
+        35px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,0,0,.08);
+
+}
+
+
+/* ============================================================
+   STUDENT HEADER
+   ============================================================ */
+
+.student-header {
+
+    padding:
+        25px;
+
+    background:
+        #eef4fb;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        20px;
+
+}
+
+
+.student-header h2 {
+
+    margin:
+        0 0 8px;
+
+    color:
+        #123c69;
+
+}
+
+
+.student-header p {
+
+    margin:
+        4px 0;
+
+    color:
+        #64748b;
+
+}
+
+
+.term-info {
+
+    text-align:
+        right;
+
+}
+
+
+.term-info span {
+
+    display:
+        block;
+
+    color:
+        #64748b;
+
+    margin-bottom:
+        6px;
+
+}
+
+
+.term-info strong {
+
+    display:
+        inline-block;
+
+    padding:
+        8px 14px;
+
+    background:
+        #123c69;
+
+    color:
+        white;
+
+    border-radius:
+        6px;
+
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+.table-wrapper {
+
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+
+}
+
+
+table {
+
+    width:
+        100%;
+
+    border-collapse:
+        collapse;
+
+    min-width:
+        750px;
+
+}
+
+
+th {
+
+    background:
+        #123c69;
+
+    color:
+        white;
+
+    padding:
+        14px;
+
+    text-align:
+        left;
+
+    font-size:
+        14px;
+
+}
+
+
+td {
+
+    padding:
+        13px 14px;
+
+    border-bottom:
+        1px solid
+        #e5e7eb;
+
+    font-size:
+        14px;
+
+}
+
+
+tbody tr:hover {
+
+    background:
+        #f8fafc;
+
+}
+
+
+.subject-name {
+
+    font-weight:
+        600;
+
+}
+
+
+/* ============================================================
+   GRADES
+   ============================================================ */
+
+.grade {
+
+    display:
+        inline-flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    border-radius:
+        50%;
+
+    font-weight:
+        700;
+
+}
+
+
+.grade-A {
+
+    background:
+        #dcfce7;
+
+    color:
+        #166534;
+
+}
+
+
+.grade-B {
+
+    background:
+        #dbeafe;
+
+    color:
+        #1d4ed8;
+
+}
+
+
+.grade-C {
+
+    background:
+        #fef3c7;
+
+    color:
+        #92400e;
+
+}
+
+
+.grade-D {
+
+    background:
+        #ffedd5;
+
+    color:
+        #9a3412;
+
+}
+
+
+.grade-E {
+
+    background:
+        #f3e8ff;
+
+    color:
+        #7e22ce;
+
+}
+
+
+.grade-F {
+
+    background:
+        #fee2e2;
+
+    color:
+        #b91c1c;
+
+}
+
+
+/* ============================================================
+   SUMMARY
+   ============================================================ */
+
+.result-summary {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap:
+        15px;
+
+    padding:
+        25px;
+
+}
+
+
+.result-box {
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e5e7eb;
+
+    border-radius:
+        10px;
+
+    padding:
+        18px;
+
+    text-align:
+        center;
+
+}
+
+
+.result-box span {
+
+    display:
+        block;
+
+    font-size:
+        13px;
+
+    color:
+        #64748b;
+
+    margin-bottom:
+        7px;
+
+}
+
+
+.result-box strong {
+
+    font-size:
+        23px;
+
+    color:
+        #123c69;
+
+}
+
+
+/* ============================================================
+   EMPTY REPORT
+   ============================================================ */
+
+.empty-report {
+
+    padding:
+        50px 25px;
+
+    text-align:
+        center;
+
+}
+
+
+.empty-report h3 {
+
+    margin:
+        0 0 10px;
+
+    color:
+        #334155;
+
+}
+
+
+.empty-report p {
+
+    margin:
+        0;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (
+    max-width: 700px
+) {
+
+    .topbar {
+
+        padding:
+            18px;
+
+    }
+
+
+    .topbar h1 {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .back-btn {
+
+        padding:
+            9px 12px;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .report-container {
+
+        width:
+            94%;
+
+        margin:
+            25px auto;
+
+    }
+
+
+    .page-heading h2 {
+
+        font-size:
+            22px;
+
+    }
+
+
+    .student-header {
+
+        padding:
+            20px;
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .term-info {
+
+        text-align:
+            left;
+
+    }
+
+
+    .result-summary {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        padding:
+            18px;
+
+    }
+
+}
+
+
+@media (
+    max-width: 400px
+) {
+
+    .result-summary {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}

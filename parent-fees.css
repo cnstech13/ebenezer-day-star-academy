@@ -1,0 +1,303 @@
+* {
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f4f7fb;
+
+    color: #1f2937;
+}
+
+
+.topbar {
+    background: #123c69;
+
+    color: white;
+
+    padding: 18px 6%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+.topbar h1 {
+    font-size: 24px;
+
+    margin-bottom: 5px;
+}
+
+
+.topbar p {
+    font-size: 14px;
+
+    opacity: .85;
+}
+
+
+#backBtn {
+    border: none;
+
+    background: white;
+
+    color: #123c69;
+
+    padding: 11px 18px;
+
+    border-radius: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.fees-container {
+    width: 92%;
+
+    max-width: 1200px;
+
+    margin: 35px auto;
+}
+
+
+.page-heading {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, .06);
+}
+
+
+.page-heading h2 {
+    color: #123c69;
+
+    margin-bottom: 8px;
+}
+
+
+.page-heading p {
+    color: #6b7280;
+}
+
+
+.loading {
+    background: white;
+
+    padding: 35px;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    color: #6b7280;
+}
+
+
+.error-message {
+    display: none;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    padding: 14px;
+
+    border-radius: 8px;
+
+    margin-bottom: 20px;
+}
+
+
+.child-fees-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 15px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, .07);
+}
+
+
+.child-header {
+    border-bottom: 1px solid #e5e7eb;
+
+    padding-bottom: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.child-header h2 {
+    color: #123c69;
+
+    margin-bottom: 5px;
+}
+
+
+.child-header p {
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.fee-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.fee-box {
+    padding: 18px;
+
+    background: #f5f8fc;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+
+.fee-box strong {
+    display: block;
+
+    color: #123c69;
+
+    font-size: 22px;
+
+    margin-bottom: 5px;
+}
+
+
+.fee-box span {
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+.table-wrapper {
+    overflow-x: auto;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+table {
+    width: 100%;
+
+    min-width: 650px;
+
+    border-collapse: collapse;
+}
+
+
+thead {
+    background: #123c69;
+
+    color: white;
+}
+
+
+th,
+td {
+    padding: 13px;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.paid {
+    color: #15803d;
+
+    font-weight: bold;
+}
+
+
+.pending {
+    color: #d97706;
+
+    font-weight: bold;
+}
+
+
+.unpaid {
+    color: #dc2626;
+
+    font-weight: bold;
+}
+
+
+.empty-fees {
+    padding: 30px;
+
+    text-align: center;
+
+    color: #6b7280;
+
+    border: 1px dashed #d1d5db;
+
+    border-radius: 10px;
+}
+
+
+@media (max-width: 700px) {
+
+    .fee-summary {
+        grid-template-columns: 1fr;
+    }
+
+
+    .fees-container {
+        width: 94%;
+
+        margin: 22px auto;
+    }
+
+
+    .child-fees-card {
+        padding: 15px;
+    }
+
+
+    .topbar h1 {
+        font-size: 20px;
+    }
+
+}

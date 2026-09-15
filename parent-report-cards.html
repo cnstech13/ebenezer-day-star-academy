@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    
+    <meta name="theme-color" content="lightblue">
+
+    <title>
+        Report Cards | Ebenezer Day Star Academy
+    </title>
+
+    <link rel="stylesheet" href="parent-portal.css">
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div>
+
+        <h1>
+            Report Cards
+        </h1>
+
+        <p>
+            Ebenezer Day Star Academy
+        </p>
+
+    </div>
+
+
+    <!-- NORMAL LINK - DOES NOT DEPEND ON FIREBASE -->
+
+    <a
+        href="parent-dashboard.html"
+        class="back-btn"
+        id="backBtn"
+    >
+        ← Back
+    </a>
+
+</header>
+
+
+<main class="report-container">
+
+    <section class="page-heading">
+
+        <h2>
+            My Children's Report Cards
+        </h2>
+
+        <p>
+            View your children's academic performance.
+        </p>
+
+    </section>
+
+
+    <div
+        id="errorMessage"
+        class="error-message"
+    ></div>
+
+
+    <div
+        id="loadingMessage"
+        class="loading"
+    >
+        Loading report cards...
+    </div>
+
+
+    <div
+        id="childrenReportContainer"
+    ></div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+    type="module"
+    src="parent-report-cards.js"
+></script>
+
+<script type="module">
+import { goBackOr } from "./back-navigation.js";
+document.getElementById("backBtn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  goBackOr("parent-dashboard.html");
+});
+</script>
+</body>
+
+</html>

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <meta name="theme-color" content="lightblue">
+
+    <title>
+        Report Cards | Ebenezer Day Star Academy
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="report-card.css"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                BF
+            </div>
+
+            <div>
+
+                <strong>
+                    Ebenezer Day Star
+                </strong>
+
+                <small>
+                    Admin Portal
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav>
+            <a
+                href="logout.html"
+                id="logoutBtn"
+            >
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- HEADER -->
+
+        <header class="admin-header">
+
+            <strong>
+                Report Cards
+            </strong>
+
+            <span>
+                Administrator
+            </span>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="admin-content">
+
+
+            <!-- PAGE TITLE -->
+
+            <div class="admin-title">
+
+                <h1>
+                    Student Report Card
+                </h1>
+
+                <p>
+                    Generate and print academic report cards.
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SELECTION CARD
+            ================================================== -->
+
+            <div class="admin-card">
+
+
+                <div class="form-grid">
+
+
+                    <!-- SESSION -->
+
+                    <div class="form-group">
+
+                        <label for="reportSession">
+                            Academic Session
+                        </label>
+
+                        <select
+                            id="reportSession"
+                        >
+
+                            <option value="">
+                                Select Session
+                            </option>
+
+                            <option value="2026/2027">
+                                2026/2027
+                            </option>
+
+                            <option value="2025/2026">
+                                2025/2026
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- TERM -->
+
+                    <div class="form-group">
+
+                        <label for="reportTerm">
+                            Term
+                        </label>
+
+                        <select
+                            id="reportTerm"
+                        >
+
+                            <option value="">
+                                Select Term
+                            </option>
+
+                            <option value="First Term">
+                                First Term
+                            </option>
+
+                            <option value="Second Term">
+                                Second Term
+                            </option>
+
+                            <option value="Third Term">
+                                Third Term
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- CLASS -->
+
+                    <div class="form-group">
+
+                        <label for="reportClass">
+                            Class
+                        </label>
+
+                        <select
+                            id="reportClass"
+                        >
+
+                                    <option value="Nursery">Nursery</option>
+        <option value="Primary 1">Primary 1</option>
+        <option value="Primary 2">Primary 2</option>
+        <option value="Primary 3">Primary 3</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="JSS 1">JSS 1</option>
+        <option value="JSS 2">JSS 2</option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- STUDENT -->
+
+                    <div class="form-group">
+
+                        <label for="reportStudent">
+                            Student
+                        </label>
+
+                        <select
+                            id="reportStudent"
+                        >
+
+                            <option value="">
+                                Select Student
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- GENERATE -->
+
+                <div
+                    style="
+                        margin-top:20px;
+                    "
+                >
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="generateReportBtn"
+                    >
+                        Generate Report Card
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 REPORT CARD
+            ================================================== -->
+
+            <div
+                id="reportCard"
+                class="report-card"
+                style="display:none;"
+            >
+
+
+                <!-- SCHOOL HEADER -->
+
+                <div class="report-school-header">
+
+                    <div class="school-logo">
+                        BF
+                    </div>
+
+
+                    <div>
+
+                        <h1>
+                            Ebenezer Day Star Academy
+                        </h1>
+
+                        <p>
+                            Excellence • Discipline • Knowledge
+                        </p>
+
+                        <p>
+                            123 School Road, Olubojo, Ikeje-Igah, Olamaboro LGA, Kogi State
+                        </p>
+
+                        <p>
+                            Tel: +2348078046655
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REPORT TITLE -->
+
+                <div class="report-title">
+
+                    <h2>
+                        STUDENT TERMINAL REPORT
+                    </h2>
+
+                    <p id="reportTermTitle">
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     STUDENT INFORMATION
+                ================================================== -->
+
+                <div class="student-report-info">
+
+
+                    <div>
+
+                        <strong>
+                            Student Name:
+                        </strong>
+
+                        <span
+                            id="reportStudentName"
+                        >
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Admission No:
+                        </strong>
+
+                        <span
+                            id="reportAdmissionNo"
+                        >
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Class:
+                        </strong>
+
+                        <span
+                            id="reportClassName"
+                        >
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Session:
+                        </strong>
+
+                        <span
+                            id="reportSessionName"
+                        >
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     RESULTS TABLE
+                ================================================== -->
+
+                <div class="report-table-wrapper">
+
+                    <table class="report-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Subject
+                                </th>
+
+                                <th>
+                                    CW 1
+                                    <br>
+                                    <small>/5</small>
+                                </th>
+
+                                <th>
+                                    CW 2
+                                    <br>
+                                    <small>/5</small>
+                                </th>
+
+                                <th>
+                                    Assignment 1
+                                    <br>
+                                    <small>/5</small>
+                                </th>
+
+                                <th>
+                                    Assignment 2
+                                    <br>
+                                    <small>/5</small>
+                                </th>
+
+                                <th>
+                                    CA 1
+                                    <br>
+                                    <small>/10</small>
+                                </th>
+
+                                <th>
+                                    CA 2
+                                    <br>
+                                    <small>/10</small>
+                                </th>
+
+                                <th>
+                                    Exam
+                                    <br>
+                                    <small>/60</small>
+                                </th>
+
+                                <th>
+                                    Total
+                                    <br>
+                                    <small>/100</small>
+                                </th>
+
+                                <th>
+                                    Grade
+                                </th>
+
+                                <th>
+                                    Remark
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="reportResultsBody"
+                        >
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SUMMARY
+                ================================================== -->
+
+                <div class="report-summary">
+
+
+                    <div>
+
+                        <strong>
+                            Subjects Offered
+                        </strong>
+
+                        <span
+                            id="subjectsOffered"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Total Score
+                        </strong>
+
+                        <span
+                            id="totalScore"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Average
+                        </strong>
+
+                        <span
+                            id="averageScore"
+                        >
+                            0%
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Position
+                        </strong>
+
+                        <span
+                            id="studentPosition"
+                        >
+                            -
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ATTENDANCE
+                ================================================== -->
+
+                <div class="report-section">
+
+                    <h3>
+                        Attendance Record
+                    </h3>
+
+
+                    <div class="attendance-grid">
+
+
+                        <div>
+
+                            <strong>
+                                School Days
+                            </strong>
+
+                            <span
+                                id="schoolDays"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Days Present
+                            </strong>
+
+                            <span
+                                id="daysPresent"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Days Absent
+                            </strong>
+
+                            <span
+                                id="daysAbsent"
+                            >
+                                0
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CONDUCT
+                ================================================== -->
+
+                <div class="report-section">
+
+                    <h3>
+                        Psychomotor & Behavioural Assessment
+                    </h3>
+
+
+                    <table class="conduct-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Trait
+                                </th>
+
+                                <th>
+                                    Rating
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="conductBody"
+                        >
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     COMMENTS
+                ================================================== -->
+
+                <div class="comments-section">
+
+
+                    <div class="comment-box">
+
+                        <label for="teacherComment">
+                            Class Teacher's Comment
+                        </label>
+
+                        <textarea
+                            id="teacherComment"
+                            placeholder="Enter teacher's comment..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="comment-box">
+
+                        <label for="principalComment">
+                            Principal's Comment
+                        </label>
+
+                        <textarea
+                            id="principalComment"
+                            placeholder="Enter principal's comment..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SIGNATURES
+                ================================================== -->
+
+                <div class="signature-section">
+
+
+                    <div>
+
+                        <div
+                            class="signature-line"
+                        >
+                        </div>
+
+                        <span>
+                            Class Teacher
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <div
+                            class="signature-line"
+                        >
+                        </div>
+
+                        <span>
+                            Principal
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PROMOTION
+                ================================================== -->
+
+                <div class="promotion-box">
+
+                    <label for="promotionStatus">
+                        Promotion Status
+                    </label>
+
+
+                    <select
+                        id="promotionStatus"
+                    >
+
+                        <option value="Promoted">
+                            Promoted
+                        </option>
+
+                        <option value="Promoted on Trial">
+                            Promoted on Trial
+                        </option>
+
+                        <option value="Repeat">
+                            Repeat
+                        </option>
+
+                        <option value="Graduated">
+                            Graduated
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================== -->
+
+                <div class="report-actions">
+
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="saveReportCardBtn"
+                    >
+                        💾 Save Report Card
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="printReportBtn"
+                    >
+                        🖨️ Print Report
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     ADMIN LOGIN
+========================================================= -->
+
+<script
+    src="admin-login.js"
+></script>
+
+
+
+<!-- =========================================================
+     REPORT CARD JAVASCRIPT
+========================================================= -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+    type="module"
+    src="report-card.js"
+></script>
+
+</body>
+
+</html>

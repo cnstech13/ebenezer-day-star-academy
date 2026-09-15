@@ -1,0 +1,814 @@
+/* ============================================================
+   Ebenezer Day Star Academy
+   SETTINGS PAGE
+   MODERN TRANSPARENT GLASS DESIGN
+============================================================ */
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   BODY
+============================================================ */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 35, 80, 0.25),
+            rgba(0, 35, 80, 0.25)
+        ),
+        url("book.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   MAIN ADMIN LAYOUT
+============================================================ */
+
+.admin-layout {
+
+    min-height: 100vh;
+
+    background: transparent !important;
+}
+
+
+/* ============================================================
+   MAIN CONTENT
+============================================================ */
+
+.admin-main {
+
+    background: transparent !important;
+
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   ADMIN HEADER
+============================================================ */
+
+.admin-header {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.30);
+
+    color: #ffffff !important;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.12);
+}
+
+
+/* ============================================================
+   ADMIN CONTENT
+============================================================ */
+
+.admin-content {
+
+    background: transparent !important;
+
+    color: #ffffff;
+
+    padding: 30px;
+}
+
+
+/* ============================================================
+   PAGE TITLE
+============================================================ */
+
+.admin-title h1 {
+
+    color: #ffffff !important;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+
+    text-shadow:
+        0 2px 6px
+        rgba(0, 0, 0, 0.35);
+}
+
+
+.admin-title p {
+
+    color:
+        rgba(255, 255, 255, 0.88) !important;
+
+    font-size: 14px;
+
+    text-shadow:
+        0 1px 4px
+        rgba(0, 0, 0, 0.25);
+}
+
+
+/* ============================================================
+   SETTINGS GRID
+============================================================ */
+
+.settings-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px, 1fr)
+        );
+
+    gap: 22px;
+
+    margin-top: 25px;
+}
+
+
+/* ============================================================
+   SETTINGS CARD
+============================================================ */
+
+.settings-card {
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255, 255, 255, 0.12) !important;
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.40);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.18);
+
+    color: #ffffff;
+
+    animation:
+        settingsCardAppear
+        0.6s ease;
+}
+
+
+/* ============================================================
+   CARD ANIMATION
+============================================================ */
+
+@keyframes settingsCardAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* ============================================================
+   CARD HOVER
+============================================================ */
+
+.settings-card {
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.settings-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 20px 45px
+        rgba(0, 0, 0, 0.25);
+}
+
+
+/* ============================================================
+   CARD HEADINGS
+============================================================ */
+
+.settings-card h2 {
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+
+    text-shadow:
+        0 2px 5px
+        rgba(0, 0, 0, 0.30);
+}
+
+
+/* ============================================================
+   CARD DESCRIPTION
+============================================================ */
+
+.settings-card > p {
+
+    color:
+        rgba(255, 255, 255, 0.85);
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    margin-bottom: 22px;
+}
+
+
+/* ============================================================
+   FORM GROUP
+============================================================ */
+
+.settings-card .form-group {
+
+    margin-bottom: 18px;
+}
+
+
+/* ============================================================
+   LABEL
+============================================================ */
+
+.settings-card label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-shadow:
+        0 1px 4px
+        rgba(0, 0, 0, 0.35);
+}
+
+
+/* ============================================================
+   INPUTS
+============================================================ */
+
+.settings-card input,
+.settings-card select,
+.settings-card textarea {
+
+    width: 100%;
+
+    padding: 13px 14px;
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.50);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+============================================================ */
+
+.settings-card input::placeholder,
+.settings-card textarea::placeholder {
+
+    color:
+        rgba(255, 255, 255, 0.75);
+}
+
+
+/* ============================================================
+   SELECT OPTIONS
+============================================================ */
+
+.settings-card select option {
+
+    background: #ffffff;
+
+    color: #111111;
+}
+
+
+/* ============================================================
+   INPUT FOCUS
+============================================================ */
+
+.settings-card input:focus,
+.settings-card select:focus,
+.settings-card textarea:focus {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+    border-color:
+        #ffffff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255, 255, 255, 0.12);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* ============================================================
+   TEXTAREA
+============================================================ */
+
+.settings-card textarea {
+
+    resize: vertical;
+
+    min-height: 90px;
+
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   ACCOUNT EMAIL
+============================================================ */
+
+.account-email {
+
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.40);
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    word-break: break-word;
+
+    box-shadow:
+        inset 0 1px 2px
+        rgba(255, 255, 255, 0.05);
+}
+
+
+/* ============================================================
+   SETTINGS ACTIONS
+============================================================ */
+
+.settings-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 20px;
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.settings-card .btn {
+
+    border-radius: 10px;
+
+    padding: 12px 17px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+/* ============================================================
+   PRIMARY BUTTON
+============================================================ */
+
+.settings-card .btn-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 82, 180, 0.95),
+            rgba(0, 45, 120, 0.95)
+        );
+
+    color: #ffffff;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0, 30, 100, 0.25);
+}
+
+
+/* ============================================================
+   PRIMARY BUTTON HOVER
+============================================================ */
+
+.settings-card .btn-primary:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(0, 30, 100, 0.35);
+}
+
+
+/* ============================================================
+   OUTLINE BUTTON
+============================================================ */
+
+.settings-card .btn-outline {
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.55);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   OUTLINE BUTTON HOVER
+============================================================ */
+
+.settings-card .btn-outline:hover {
+
+    background:
+        rgba(255, 255, 255, 0.18);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* ============================================================
+   SETTINGS MESSAGE
+============================================================ */
+
+.settings-message {
+
+    display: none;
+
+    width: 100%;
+
+    padding: 12px 14px;
+
+    margin-top: 16px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   SUCCESS MESSAGE
+============================================================ */
+
+.settings-message.success {
+
+    display: block;
+
+    background:
+        rgba(25, 135, 84, 0.75);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.30);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   ERROR MESSAGE
+============================================================ */
+
+.settings-message.error {
+
+    display: block;
+
+    background:
+        rgba(220, 53, 69, 0.75);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.30);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   SECURITY / DANGER ZONE
+============================================================ */
+
+.settings-card.danger-zone {
+
+    border:
+        1px solid
+        rgba(255, 100, 100, 0.50);
+
+    background:
+        rgba(120, 20, 30, 0.15) !important;
+}
+
+
+/* ============================================================
+   DANGER ZONE HOVER
+============================================================ */
+
+.settings-card.danger-zone:hover {
+
+    box-shadow:
+        0 20px 45px
+        rgba(100, 0, 0, 0.25);
+}
+
+
+/* ============================================================
+   SIDEBAR GLASS EFFECT
+============================================================ */
+
+.admin-sidebar {
+
+    background:
+        rgba(0, 25, 60, 0.55) !important;
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    border-right:
+        1px solid
+        rgba(255, 255, 255, 0.20);
+
+    box-shadow:
+        5px 0 25px
+        rgba(0, 0, 0, 0.15);
+}
+
+
+/* ============================================================
+   SIDEBAR TEXT
+============================================================ */
+
+.admin-sidebar strong,
+.admin-sidebar small {
+
+    color: #ffffff !important;
+
+}
+
+
+/* ============================================================
+   SIDEBAR LINKS
+============================================================ */
+
+.admin-sidebar a {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+/* ============================================================
+   SIDEBAR LINK HOVER
+============================================================ */
+
+.admin-sidebar a:hover {
+
+    background:
+        rgba(255, 255, 255, 0.12) !important;
+
+    color: #ffffff !important;
+
+}
+
+
+/* ============================================================
+   ACTIVE SIDEBAR LINK
+============================================================ */
+
+.admin-sidebar a.active {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+    color: #ffffff !important;
+
+    border-left:
+        3px solid #ffffff;
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVENESS
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .admin-content {
+
+        padding: 20px 15px;
+
+    }
+
+
+    .settings-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+
+    }
+
+
+    .settings-card {
+
+        padding: 21px;
+
+        border-radius: 17px;
+
+    }
+
+
+    .settings-card h2 {
+
+        font-size: 18px;
+
+    }
+
+}
+
+
+/* ============================================================
+   SMALL PHONES
+============================================================ */
+
+@media (max-width: 480px) {
+
+    .admin-content {
+
+        padding: 17px 12px;
+
+    }
+
+
+    .settings-card {
+
+        padding: 18px;
+
+    }
+
+
+    .settings-card h2 {
+
+        font-size: 17px;
+
+    }
+
+
+    .settings-card input,
+    .settings-card select,
+    .settings-card textarea {
+
+        padding: 12px;
+
+    }
+
+
+    .settings-actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .settings-card .btn {
+
+        width: 100%;
+
+    }
+
+}

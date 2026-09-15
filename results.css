@@ -1,0 +1,914 @@
+/* ============================================================
+   Ebenezer Day Star Academy
+   RESULTS MANAGEMENT
+   TRANSPARENT GLASS DESIGN
+============================================================ */
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   BODY
+============================================================ */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 35, 80, 0.1),
+            rgba(0, 35, 80, 0.1)
+        ),
+        url("book.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+
+}
+
+
+/* ============================================================
+   ADMIN LAYOUT
+============================================================ */
+
+.admin-layout {
+
+    min-height: 100vh;
+
+    background: transparent !important;
+
+}
+
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+.admin-sidebar {
+
+    background:
+        rgba(0, 30, 70, 0.55) !important;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    border-right:
+        1px solid rgba(255, 255, 255, 0.25);
+
+}
+
+
+/* ============================================================
+   SIDEBAR BRAND
+============================================================ */
+
+.admin-brand {
+
+    color: #ffffff !important;
+
+}
+
+
+/* ============================================================
+   SIDEBAR NAVIGATION
+============================================================ */
+
+.admin-nav a {
+
+    color:
+        rgba(255, 255, 255, 0.9) !important;
+
+    background:
+        transparent !important;
+
+    transition:
+        0.3s ease;
+
+}
+
+
+.admin-nav a:hover {
+
+    background:
+        rgba(255, 255, 255, 0.14) !important;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.admin-nav a.active {
+
+    background:
+        rgba(255, 255, 255, 0.20) !important;
+
+    color:
+        #ffffff !important;
+
+    border-left:
+        3px solid #ffffff;
+
+}
+
+
+/* ============================================================
+   MAIN AREA
+============================================================ */
+
+.admin-main {
+
+    background:
+        transparent !important;
+
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.admin-header {
+
+    background:
+        rgba(0, 30, 70, 0.48) !important;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    color:
+        #ffffff !important;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.25);
+
+}
+
+
+/* ============================================================
+   CONTENT
+============================================================ */
+
+.admin-content {
+
+    background:
+        transparent !important;
+
+}
+
+
+/* ============================================================
+   PAGE TITLE
+============================================================ */
+
+.admin-title h1 {
+
+    color:
+        #ffffff !important;
+
+    text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.35);
+
+}
+
+
+.admin-title p {
+
+    color:
+        rgba(255, 255, 255, 0.88) !important;
+
+    text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.3);
+
+}
+
+
+/* ============================================================
+   PAGE HEADER
+============================================================ */
+
+.page-header-row {
+
+    color:
+        #ffffff;
+
+}
+
+
+/* ============================================================
+   FILTER TOOLBAR
+============================================================ */
+
+.student-toolbar {
+
+    background:
+        rgba(255, 255, 255, 0.12) !important;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius:
+        16px;
+
+    padding:
+        18px;
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.20);
+
+}
+
+
+/* ============================================================
+   FILTER INPUTS
+============================================================ */
+
+.student-toolbar input,
+.student-toolbar select {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.50) !important;
+
+    color:
+        #ffffff !important;
+
+    outline:
+        none;
+
+    border-radius:
+        10px;
+
+    backdrop-filter:
+        blur(5px);
+
+    -webkit-backdrop-filter:
+        blur(5px);
+
+    transition:
+        0.3s ease;
+
+}
+
+
+.student-toolbar input::placeholder {
+
+    color:
+        rgba(255, 255, 255, 0.80) !important;
+
+}
+
+
+.student-toolbar input:focus,
+.student-toolbar select:focus {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+    border-color:
+        #ffffff !important;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.12);
+
+}
+
+
+/* ============================================================
+   SELECT OPTIONS
+============================================================ */
+
+.student-toolbar select option {
+
+    background:
+        #0f3d91;
+
+    color:
+        #ffffff;
+
+}
+
+
+/* ============================================================
+   RESULTS TABLE CONTAINER
+============================================================ */
+
+.admin-table-container {
+
+    background:
+        rgba(255, 255, 255, 0.12) !important;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius:
+        18px;
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.22);
+
+    overflow:
+        hidden;
+
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.admin-table {
+
+    color:
+        #ffffff !important;
+
+}
+
+
+/* ============================================================
+   TABLE HEADER
+============================================================ */
+
+.admin-table thead {
+
+    background:
+        rgba(0, 45, 120, 0.80) !important;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.admin-table th {
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        rgba(255, 255, 255, 0.20) !important;
+
+}
+
+
+/* ============================================================
+   TABLE BODY
+============================================================ */
+
+.admin-table td {
+
+    color:
+        #ffffff !important;
+
+    background:
+        rgba(255, 255, 255, 0.05) !important;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.18) !important;
+
+}
+
+
+.admin-table tbody tr {
+
+    background:
+        transparent !important;
+
+    transition:
+        0.25s ease;
+
+}
+
+
+.admin-table tbody tr:hover {
+
+    background:
+        rgba(255, 255, 255, 0.12) !important;
+
+}
+
+
+/* ============================================================
+   TABLE SMALL TEXT
+============================================================ */
+
+.admin-table small {
+
+    color:
+        rgba(255, 255, 255, 0.75);
+
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        none !important;
+
+}
+
+
+.empty-state h3 {
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.empty-state p {
+
+    color:
+        rgba(255, 255, 255, 0.82) !important;
+
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.btn-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 82, 180, 0.95),
+            rgba(0, 45, 120, 0.95)
+        ) !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.25);
+
+}
+
+
+.btn-outline {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.55) !important;
+
+    backdrop-filter:
+        blur(5px);
+
+}
+
+
+.btn-outline:hover {
+
+    background:
+        rgba(255, 255, 255, 0.20) !important;
+
+}
+
+
+/* ============================================================
+   MODAL BACKDROP
+============================================================ */
+
+.modal {
+
+    background:
+        rgba(0, 15, 40, 0.60) !important;
+
+    backdrop-filter:
+        blur(6px);
+
+    -webkit-backdrop-filter:
+        blur(6px);
+
+}
+
+
+/* ============================================================
+   MODAL CONTENT
+============================================================ */
+
+.modal-content {
+
+    background:
+        rgba(255, 255, 255, 0.13) !important;
+
+    backdrop-filter:
+        blur(15px);
+
+    -webkit-backdrop-filter:
+        blur(15px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.40);
+
+    border-radius:
+        20px;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35);
+
+}
+
+
+/* ============================================================
+   MODAL HEADER
+============================================================ */
+
+.modal-header {
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.25) !important;
+
+}
+
+
+.modal-header h2 {
+
+    color:
+        #ffffff !important;
+
+}
+
+
+.modal-header p {
+
+    color:
+        rgba(255, 255, 255, 0.82) !important;
+
+}
+
+
+/* ============================================================
+   FORM LABELS
+============================================================ */
+
+.form-group label {
+
+    color:
+        #ffffff !important;
+
+    text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.35);
+
+}
+
+
+/* ============================================================
+   FORM INPUTS
+============================================================ */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.50) !important;
+
+    color:
+        #ffffff !important;
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    backdrop-filter:
+        blur(5px);
+
+    -webkit-backdrop-filter:
+        blur(5px);
+
+    transition:
+        0.3s ease;
+
+}
+
+
+/* ============================================================
+   INPUT FOCUS
+============================================================ */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+
+    background:
+        rgba(255, 255, 255, 0.18) !important;
+
+    border-color:
+        #ffffff !important;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.12);
+
+}
+
+
+/* ============================================================
+   INPUT PLACEHOLDER
+============================================================ */
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+
+    color:
+        rgba(255, 255, 255, 0.78) !important;
+
+}
+
+
+/* ============================================================
+   SELECT OPTIONS
+============================================================ */
+
+.form-group select option {
+
+    background:
+        #0f3d91;
+
+    color:
+        #ffffff;
+
+}
+
+
+/* ============================================================
+   READONLY FIELDS
+============================================================ */
+
+.form-group input[readonly] {
+
+    background:
+        rgba(255, 255, 255, 0.16) !important;
+
+    color:
+        #ffffff !important;
+
+}
+
+
+/* ============================================================
+   CLOSE BUTTON
+============================================================ */
+
+.modal-close {
+
+    color:
+        #ffffff !important;
+
+    background:
+        rgba(255, 255, 255, 0.10) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius:
+        50%;
+
+}
+
+
+.modal-close:hover {
+
+    background:
+        rgba(255, 255, 255, 0.22) !important;
+
+}
+
+
+/* ============================================================
+   MODAL ACTIONS
+============================================================ */
+
+.modal-actions {
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.20);
+
+}
+
+
+/* ============================================================
+   CARD / CONTAINER ANIMATION
+============================================================ */
+
+.admin-table-container,
+.student-toolbar {
+
+    animation:
+        resultContainerAppear 0.6s ease;
+
+}
+
+
+@keyframes resultContainerAppear {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(20px);
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 700px) {
+
+    body {
+
+        background-attachment:
+            scroll;
+
+    }
+
+
+    .student-toolbar {
+
+        border-radius:
+            13px;
+
+        padding:
+            14px;
+
+    }
+
+
+    .admin-table-container {
+
+        border-radius:
+            13px;
+
+    }
+
+
+    .modal-content {
+
+        border-radius:
+            17px;
+
+    }
+
+}
+
+/* ============================================================
+   RESULTS TABLE - HORIZONTAL SCROLL
+============================================================ */
+
+/* Allow the results table to scroll horizontally */
+.admin-table-container {
+    width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+/* Make the table wider than the phone screen */
+.admin-table-container .admin-table {
+    min-width: 1400px;
+    width: max-content;
+}
+
+/* Prevent table columns from becoming too narrow */
+.admin-table-container .admin-table th,
+.admin-table-container .admin-table td {
+    white-space: nowrap;
+}
+
+/* Make scrolling easier on mobile */
+.admin-table-container {
+    touch-action: pan-x pan-y;
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .admin-table-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+    }
+
+    .admin-table-container .admin-table {
+        min-width: 1400px;
+    }
+
+}
+
+/* ============================================================
+   RESULTS TABLE HEADER - MAKE TEXT VISIBLE
+============================================================ */
+
+.admin-table-container .admin-table thead {
+    background: rgba(15, 61, 145, 0.95) !important;
+    color: #ffffff !important;
+}
+
+.admin-table-container .admin-table thead th {
+    background: rgba(15, 61, 145, 0.95) !important;
+    color: #ffffff !important;
+
+    font-weight: 700;
+    font-size: 13px;
+
+    white-space: nowrap;
+
+    padding: 15px 14px;
+
+    text-align: left;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Make the /5, /10, /60, /100 text visible too */
+.admin-table-container .admin-table thead th small {
+    color: #ffffff !important;
+    opacity: 0.9;
+    font-weight: 600;
+}

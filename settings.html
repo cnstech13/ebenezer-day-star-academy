@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="lightblue"
+    >
+
+    <title>Settings | Ebenezer Day Star Academy</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin-login.css"
+    >
+<link rel="stylesheet" href="settings.css">
+    
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+</head>
+
+
+<body>
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <div class="logo-icon">
+                PMS
+            </div>
+
+            <div>
+
+                <strong>
+                    Ebenezer Day Star
+                </strong>
+
+                <small>
+                    Admin Portal
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            
+            <a
+                href="logout.html"
+                id="logoutBtn"
+            >
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <header class="admin-header">
+
+            <strong>
+                Settings
+            </strong>
+
+            <span id="adminUser">
+                Administrator
+            </span>
+
+        </header>
+
+
+
+        <section class="admin-content">
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <div class="page-header-row">
+
+                <div class="admin-title">
+
+                    <h1>
+                        Settings
+                    </h1>
+
+                    <p>
+                        Manage your school and administrator settings.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SETTINGS GRID
+            ================================================== -->
+
+            <div class="settings-grid">
+
+
+                <!-- =================================================
+                     SCHOOL INFORMATION
+                ================================================== -->
+
+                <div class="settings-card">
+
+                    <h2>
+                        🏫 School Information
+                    </h2>
+
+                    <p>
+                        Update the basic information of your school.
+                    </p>
+
+
+                    <form id="schoolSettingsForm">
+
+
+                        <div class="form-group">
+
+                            <label>
+                                School Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="schoolName"
+                                value="Ebenezer Day Star Academy"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                School Address
+                            </label>
+
+                            <textarea
+                                id="schoolAddress"
+                                rows="3"
+                                placeholder="Enter school address"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                School Phone
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="schoolPhone"
+                                placeholder="e.g. 08012345678"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                School Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="schoolEmail"
+                                placeholder="school@example.com"
+                            >
+
+                        </div>
+
+
+                        <div class="settings-actions">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Save School Settings
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="schoolMessage"
+                            class="settings-message"
+                        ></div>
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ADMIN ACCOUNT
+                ================================================== -->
+
+                <div class="settings-card">
+
+                    <h2>
+                        👤 Administrator Account
+                    </h2>
+
+                    <p>
+                        Manage the account currently signed in.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Current Email
+                        </label>
+
+                        <div
+                            class="account-email"
+                            id="adminEmail"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+
+                    <form id="passwordForm">
+
+
+                        <div class="form-group">
+
+                            <label>
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="newPassword"
+                                minlength="6"
+                                placeholder="Enter new password"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Confirm New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                minlength="6"
+                                placeholder="Confirm new password"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="settings-actions">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Change Password
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="passwordMessage"
+                            class="settings-message"
+                        ></div>
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     DISPLAY SETTINGS
+                ================================================== -->
+
+                <div class="settings-card">
+
+                    <h2>
+                        🎨 Display Settings
+                    </h2>
+
+                    <p>
+                        Customize the appearance of the admin portal.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Theme
+                        </label>
+
+                        <select id="themeSelect">
+
+                            <option value="light">
+                                Light
+                            </option>
+
+                            <option value="dark">
+                                Dark
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Dashboard Language
+                        </label>
+
+                        <select id="languageSelect">
+
+                            <option value="English">
+                                English
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="settings-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="saveDisplayBtn"
+                        >
+                            Save Display Settings
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="displayMessage"
+                        class="settings-message"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     NOTIFICATIONS
+                ================================================== -->
+
+                <div class="settings-card">
+
+                    <h2>
+                        🔔 Notifications
+                    </h2>
+
+                    <p>
+                        Manage administrator notifications.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Notifications
+                        </label>
+
+                        <select id="notificationSelect">
+
+                            <option value="enabled">
+                                Enabled
+                            </option>
+
+                            <option value="disabled">
+                                Disabled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Result Notifications
+                        </label>
+
+                        <select id="resultNotificationSelect">
+
+                            <option value="enabled">
+                                Enabled
+                            </option>
+
+                            <option value="disabled">
+                                Disabled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="settings-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="saveNotificationBtn"
+                        >
+                            Save Notification Settings
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="notificationMessage"
+                        class="settings-message"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SECURITY
+                ================================================== -->
+
+                <div class="settings-card danger-zone">
+
+                    <h2>
+                        🔐 Security
+                    </h2>
+
+                    <p>
+                        Manage your current administrator session.
+                    </p>
+
+
+                    <div class="settings-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="signOutBtn"
+                        >
+                            🚪 Sign Out
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="admin-login.js"></script>
+<script
+    type="module"
+    src="settings.js"
+></script>
+
+</body>
+
+</html>
