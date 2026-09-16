@@ -9,35 +9,67 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    
-    <meta name="theme-color" content="lightblue">
 
-    <title>Classes | Ebenezer Day Star Academy</title>
+    <meta
+        name="theme-color"
+        content="lightblue"
+    >
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="classes.css">
-    <link rel="stylesheet" href="admin-login.css">
+    <title>
+        Classes | Ebenezer Day Star Academy
+    </title>
 
-    <meta name="robots" content="noindex, nofollow, noarchive">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="classes.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin-login.css"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
+
 </head>
+
 
 <body>
 
+
 <div class="admin-layout">
 
-    <!-- SIDEBAR -->
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
     <aside class="admin-sidebar">
 
         <div class="admin-brand">
 
             <div class="logo-icon">
-                PMS
+                <img src="badge.jpg" alt="">
             </div>
 
             <div>
-                <strong>Ebenezer Day Star</strong>
-                <small>Admin Portal</small>
+
+                <strong>
+                    Ebenezer Day Star
+                </strong>
+
+                <small>
+                    Admin Portal
+                </small>
+
             </div>
 
         </div>
@@ -45,9 +77,10 @@
 
         <nav>
 
-            
-
-            <a href="logout.html" id="logoutBtn">
+            <a
+                href="logout.html"
+                id="logoutBtn"
+            >
                 🚪 Logout
             </a>
 
@@ -56,9 +89,15 @@
     </aside>
 
 
-    <!-- MAIN -->
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
     <main class="admin-main">
+
+
+        <!-- HEADER -->
 
         <header class="admin-header">
 
@@ -73,9 +112,14 @@
         </header>
 
 
+
+        <!-- CONTENT -->
+
         <section class="admin-content">
 
+
             <div class="page-header-row">
+
 
                 <div class="admin-title">
 
@@ -90,19 +134,28 @@
                 </div>
 
 
+
                 <button
+                    type="button"
                     class="btn btn-primary"
                     id="addClassBtn"
                 >
+
                     + Add Class
+
                 </button>
+
 
             </div>
 
 
-            <!-- SEARCH -->
+
+            <!-- =================================================
+                 SEARCH AND FILTER
+            ================================================== -->
 
             <div class="student-toolbar">
+
 
                 <input
                     type="search"
@@ -110,10 +163,17 @@
                     placeholder="Search classes..."
                 >
 
-                <select id="sectionFilter">
+
+                <select
+                    id="sectionFilter"
+                >
 
                     <option value="">
                         All Sections
+                    </option>
+
+                    <option value="Nursery">
+                        Nursery
                     </option>
 
                     <option value="Primary">
@@ -124,20 +184,22 @@
                         JSS
                     </option>
 
-                    <option value="SS">
-                        SS
-                    </option>
-
                 </select>
+
 
             </div>
 
 
-            <!-- CLASS TABLE -->
+
+            <!-- =================================================
+                 CLASS TABLE
+            ================================================== -->
 
             <div class="admin-table-container">
 
+
                 <table class="admin-table">
+
 
                     <thead>
 
@@ -183,7 +245,9 @@
                     <tbody id="classesTableBody">
                     </tbody>
 
+
                 </table>
+
 
 
                 <div
@@ -206,25 +270,37 @@
 
                 </div>
 
+
             </div>
+
 
         </section>
 
+
     </main>
+
 
 </div>
 
 
-<!-- CLASS MODAL -->
+
+<!-- =========================================================
+     CLASS MODAL
+========================================================= -->
 
 <div
     class="modal"
     id="classModal"
 >
 
+
     <div class="modal-content">
 
+
+        <!-- MODAL HEADER -->
+
         <div class="modal-header">
+
 
             <div>
 
@@ -240,16 +316,26 @@
 
 
             <button
+                type="button"
                 class="modal-close"
                 id="closeClassModal"
             >
+
                 ×
+
             </button>
+
 
         </div>
 
 
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
         <form id="classForm">
+
 
             <input
                 type="hidden"
@@ -257,14 +343,20 @@
             >
 
 
+
             <div class="form-grid">
 
 
+                <!-- =================================================
+                     CLASS NAME
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="className">
                         Class Name *
                     </label>
+
 
                     <input
                         type="text"
@@ -276,80 +368,91 @@
                 </div>
 
 
+
+                <!-- =================================================
+                     SECTION
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="classSection">
                         Section *
                     </label>
+
 
                     <select
                         id="classSection"
                         required
                     >
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                        <option value="">
+                            Select Section
+                        </option>
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                        <option value="Nursery">
+                            Nursery
+                        </option>
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                        <option value="Primary">
+                            Primary
+                        </option>
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                        <option value="JSS">
+                            JSS
+                        </option>
 
                     </select>
 
                 </div>
 
 
+
+                <!-- =================================================
+                     CLASS TEACHER
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="classTeacher">
                         Class Teacher
                     </label>
 
-                    <select id="classTeacher">
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                    <!--
+                        IMPORTANT:
+
+                        DO NOT put Nursery,
+                        Primary 1, JSS 1 etc.
+                        here.
+
+                        classes.js will load
+                        teachers from Firestore.
+                    -->
+
+                    <select
+                        id="classTeacher"
+                    >
+
+                        <option value="">
+                            No Class Teacher
+                        </option>
 
                     </select>
 
                 </div>
 
 
+
+                <!-- =================================================
+                     ACADEMIC SESSION
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="academicSession">
                         Academic Session *
                     </label>
+
 
                     <input
                         type="text"
@@ -361,11 +464,17 @@
                 </div>
 
 
+
+                <!-- =================================================
+                     MAXIMUM STUDENTS
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="maxStudents">
                         Maximum Students
                     </label>
+
 
                     <input
                         type="number"
@@ -378,66 +487,106 @@
                 </div>
 
 
+
+                <!-- =================================================
+                     STATUS
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="classStatus">
                         Status
                     </label>
 
-                    <select id="classStatus">
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                    <select
+                        id="classStatus"
+                    >
 
-                                <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
 
                     </select>
 
                 </div>
 
+
             </div>
 
 
+
+            <!-- =================================================
+                 MODAL ACTIONS
+            ================================================== -->
+
             <div class="modal-actions">
+
 
                 <button
                     type="button"
                     class="btn btn-outline"
                     id="cancelClassBtn"
                 >
+
                     Cancel
+
                 </button>
+
+
 
                 <button
                     type="submit"
                     class="btn btn-primary"
                 >
+
                     Save Class
+
                 </button>
+
 
             </div>
 
+
         </form>
+
 
     </div>
 
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="sweetalert.js"></script>
-<script type="module" src="admin-login.js"></script>
-<script type="module" src="classes.js"></script>
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
+
+<script
+    src="sweetalert.js"
+></script>
+
+
+<script
+    type="module"
+    src="admin-login.js"
+></script>
+
+
+<script
+    type="module"
+    src="classes.js"
+></script>
+
 
 </body>
 

@@ -1,9 +1,21 @@
 import { adminReady, withTimeout } from "./admin-guard.js";
+
 /* =========================================================
-   Ebenezer Day Star Academy
+   EBENEZER DAY STAR ACADEMY
    CLASS MANAGEMENT
    FIRESTORE VERSION
    SWEETALERT2 VERSION
+
+   FEATURES:
+   - Add class
+   - Edit class
+   - Delete class
+   - Search classes
+   - Filter by section
+   - Assign class teacher
+   - Prevent duplicate classes
+   - Prevent duplicate class records when loading
+   - Prevent duplicate teacher options
 ========================================================= */
 
 await adminReady;
@@ -74,13 +86,26 @@ const teachersCollection =
 
 
 // =========================================================
+// NORMALIZE TEXT
+// =========================================================
+
+function normalizeText(value) {
+
+    return String(value ?? "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+
+}
+
+
+// =========================================================
 // GENERATE CLASS ID
 // =========================================================
 
 function generateClassId() {
 
-    let number =
-        classes.length + 1;
+    let number = 1;
 
     let id =
         `CLS-${String(number).padStart(3, "0")}`;
@@ -89,7 +114,9 @@ function generateClassId() {
     while (
         classes.some(
             item =>
-                item.id === id
+                String(item.id || "")
+                    .toUpperCase() ===
+                id
         )
     ) {
 
@@ -102,6 +129,7 @@ function generateClassId() {
 
 
     return id;
+
 }
 
 
@@ -114,28 +142,70 @@ async function loadTeachers() {
     try {
 
         const snapshot =
-            await withTimeout(getDocs(
-                teachersCollection
-            ));
+            await withTimeout(
+                getDocs(
+                    teachersCollection
+                )
+            );
 
 
-        teachers = [];
+        const uniqueTeachers =
+            new Map();
 
 
         snapshot.forEach(
             teacherDocument => {
 
-                teachers.push({
+                const data =
+                    teacherDocument.data();
 
-                    firestoreId:
-                        teacherDocument.id,
 
-                    ...teacherDocument.data()
+                const firestoreId =
+                    teacherDocument.id;
 
-                });
+
+                const fullName =
+                    `${data.firstName || ""} ${data.lastName || ""}`
+                        .trim();
+
+
+                if (!fullName) {
+                    return;
+                }
+
+
+                /*
+                 * Use the Firebase document ID
+                 * as the primary unique key.
+                 */
+
+                if (
+                    uniqueTeachers.has(
+                        firestoreId
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                uniqueTeachers.set(
+                    firestoreId,
+                    {
+                        firestoreId,
+                        ...data
+                    }
+                );
 
             }
         );
+
+
+        teachers =
+            Array.from(
+                uniqueTeachers.values()
+            );
 
 
         populateTeacherDropdown();
@@ -162,21 +232,37 @@ async function loadTeachers() {
 
 // =========================================================
 // POPULATE TEACHER DROPDOWN
+// NO DUPLICATE TEACHERS
 // =========================================================
 
 function populateTeacherDropdown() {
 
-    if (!classTeacher)
+    if (!classTeacher) {
         return;
+    }
 
 
-    classTeacher.innerHTML = `
+    classTeacher.innerHTML = "";
 
-        <option value="">
-            No Class Teacher
-        </option>
 
-    `;
+    const defaultOption =
+        document.createElement("option");
+
+
+    defaultOption.value = "";
+
+
+    defaultOption.textContent =
+        "No Class Teacher";
+
+
+    classTeacher.appendChild(
+        defaultOption
+    );
+
+
+    const addedTeachers =
+        new Set();
 
 
     teachers.forEach(
@@ -187,8 +273,35 @@ function populateTeacherDropdown() {
                     .trim();
 
 
-            if (!fullName)
+            if (!fullName) {
                 return;
+            }
+
+
+            /*
+             * Name is used to prevent
+             * the same teacher appearing
+             * more than once.
+             */
+
+            const teacherKey =
+                normalizeText(fullName);
+
+
+            if (
+                addedTeachers.has(
+                    teacherKey
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            addedTeachers.add(
+                teacherKey
+            );
 
 
             const option =
@@ -218,6 +331,7 @@ function populateTeacherDropdown() {
 
 // =========================================================
 // LOAD CLASSES
+// PREVENT DUPLICATE CLASS RECORDS
 // =========================================================
 
 async function loadClasses() {
@@ -225,28 +339,120 @@ async function loadClasses() {
     try {
 
         const snapshot =
-            await withTimeout(getDocs(
-                classesCollection
-            ));
+            await withTimeout(
+                getDocs(
+                    classesCollection
+                )
+            );
 
 
-        classes = [];
+        /*
+         * Map guarantees that only one
+         * class with the same name and
+         * academic session is loaded.
+         */
+
+        const uniqueClasses =
+            new Map();
 
 
         snapshot.forEach(
             classDocument => {
 
-                classes.push({
+                const data =
+                    classDocument.data();
 
-                    firestoreId:
-                        classDocument.id,
 
-                    ...classDocument.data()
+                const className =
+                    String(
+                        data.name || ""
+                    )
+                    .trim()
+                    .replace(
+                        /\s+/g,
+                        " "
+                    );
 
-                });
+
+                const academicSession =
+                    String(
+                        data.academicSession ||
+                        "2026/2027"
+                    )
+                    .trim()
+                    .replace(
+                        /\s+/g,
+                        " "
+                    );
+
+
+                /*
+                 * Ignore empty records.
+                 */
+
+                if (!className) {
+                    return;
+                }
+
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * Nursery + 2026/2027
+                 *
+                 * is treated as one class.
+                 *
+                 * Primary 1 + 2026/2027
+                 *
+                 * is treated as another class.
+                 */
+
+                const uniqueKey =
+                    `${normalizeText(className)}__${normalizeText(academicSession)}`;
+
+
+                /*
+                 * If a duplicate Firestore
+                 * document exists, keep only
+                 * the first one in memory.
+                 */
+
+                if (
+                    uniqueClasses.has(
+                        uniqueKey
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                uniqueClasses.set(
+                    uniqueKey,
+                    {
+                        firestoreId:
+                            classDocument.id,
+
+                        ...data,
+
+                        name:
+                            className,
+
+                        academicSession:
+                            academicSession
+
+                    }
+                );
 
             }
         );
+
+
+        classes =
+            Array.from(
+                uniqueClasses.values()
+            );
 
 
         renderClasses();
@@ -279,8 +485,9 @@ function openClassModal(
     classData = null
 ) {
 
-    if (!classModal)
+    if (!classModal) {
         return;
+    }
 
 
     classModal.classList.add(
@@ -299,7 +506,7 @@ function openClassModal(
         document.getElementById(
             "editingClassId"
         ).value =
-            classData.firestoreId;
+            classData.firestoreId || "";
 
 
         document.getElementById(
@@ -336,7 +543,8 @@ function openClassModal(
         document.getElementById(
             "classStatus"
         ).value =
-            classData.status || "Active";
+            classData.status ||
+            "Active";
 
     }
 
@@ -391,8 +599,14 @@ function openClassModal(
 
 function closeClassModalFunction() {
 
-    if (!classModal || !classForm)
+    if (
+        !classModal ||
+        !classForm
+    ) {
+
         return;
+
+    }
 
 
     classModal.classList.remove(
@@ -403,35 +617,59 @@ function closeClassModalFunction() {
     classForm.reset();
 
 
-    document.getElementById(
-        "academicSession"
-    ).value =
-        "2026/2027";
+    const academicSession =
+        document.getElementById(
+            "academicSession"
+        );
 
 
-    document.getElementById(
-        "maxStudents"
-    ).value =
-        40;
+    const maxStudents =
+        document.getElementById(
+            "maxStudents"
+        );
 
 
-    document.getElementById(
-        "classStatus"
-    ).value =
-        "Active";
+    const classStatus =
+        document.getElementById(
+            "classStatus"
+        );
+
+
+    if (academicSession) {
+
+        academicSession.value =
+            "2026/2027";
+
+    }
+
+
+    if (maxStudents) {
+
+        maxStudents.value =
+            40;
+
+    }
+
+
+    if (classStatus) {
+
+        classStatus.value =
+            "Active";
+
+    }
 
 }
 
 
 // =========================================================
-// OPEN MODAL BUTTON
+// OPEN MODAL
 // =========================================================
 
 if (addClassBtn) {
 
     addClassBtn.addEventListener(
         "click",
-        function() {
+        () => {
 
             openClassModal();
 
@@ -442,7 +680,7 @@ if (addClassBtn) {
 
 
 // =========================================================
-// CLOSE BUTTONS
+// CLOSE MODAL
 // =========================================================
 
 if (closeClassModal) {
@@ -466,14 +704,14 @@ if (cancelClassBtn) {
 
 
 // =========================================================
-// CLOSE WHEN CLICKING OUTSIDE
+// CLOSE OUTSIDE MODAL
 // =========================================================
 
 if (classModal) {
 
     classModal.addEventListener(
         "click",
-        function(event) {
+        event => {
 
             if (
                 event.target ===
@@ -498,7 +736,7 @@ if (classForm) {
 
     classForm.addEventListener(
         "submit",
-        async function(event) {
+        async event => {
 
             event.preventDefault();
 
@@ -506,45 +744,55 @@ if (classForm) {
             const editingId =
                 document.getElementById(
                     "editingClassId"
-                ).value;
+                )?.value || "";
 
 
             const className =
                 document.getElementById(
                     "className"
-                ).value.trim();
+                )?.value
+                .trim()
+                .replace(
+                    /\s+/g,
+                    " "
+                ) || "";
 
 
             const section =
                 document.getElementById(
                     "classSection"
-                ).value;
+                )?.value || "";
 
 
             const teacherId =
                 document.getElementById(
                     "classTeacher"
-                ).value;
+                )?.value || "";
 
 
             const academicSession =
                 document.getElementById(
                     "academicSession"
-                ).value.trim();
+                )?.value
+                .trim()
+                .replace(
+                    /\s+/g,
+                    " "
+                ) || "";
 
 
             const maxStudents =
                 Number(
                     document.getElementById(
                         "maxStudents"
-                    ).value
+                    )?.value
                 );
 
 
             const status =
                 document.getElementById(
                     "classStatus"
-                ).value;
+                )?.value || "Active";
 
 
             // =================================================
@@ -568,32 +816,13 @@ if (classForm) {
             }
 
 
-            // =================================================
-            // DUPLICATE CLASS CHECK
-            // =================================================
-
-            const duplicate =
-                classes.some(
-                    item =>
-
-                        item.name
-                            ?.toLowerCase() ===
-                        className.toLowerCase() &&
-
-                        item.academicSession ===
-                        academicSession &&
-
-                        item.firestoreId !==
-                        editingId
-
-                );
-
-
-            if (duplicate) {
+            if (
+                maxStudents < 1
+            ) {
 
                 await showWarning(
-                    "Class Already Exists",
-                    "This class already exists for the selected academic session."
+                    "Invalid Capacity",
+                    "Maximum students must be at least 1."
                 );
 
                 return;
@@ -602,25 +831,92 @@ if (classForm) {
 
 
             // =================================================
-            // FIND TEACHER NAME
+            // DUPLICATE CLASS CHECK
+            // =================================================
+
+            const newClassName =
+                normalizeText(
+                    className
+                );
+
+
+            const newSession =
+                normalizeText(
+                    academicSession
+                );
+
+
+            const duplicate =
+                classes.some(
+                    item => {
+
+                        const existingName =
+                            normalizeText(
+                                item.name
+                            );
+
+
+                        const existingSession =
+                            normalizeText(
+                                item.academicSession
+                            );
+
+
+                        return (
+
+                            existingName ===
+                            newClassName &&
+
+                            existingSession ===
+                            newSession &&
+
+                            item.firestoreId !==
+                            editingId
+
+                        );
+
+                    }
+                );
+
+
+            if (duplicate) {
+
+                await showWarning(
+                    "Class Already Exists",
+                    `${className} already exists for ${academicSession}.`
+                );
+
+                return;
+
+            }
+
+
+            // =================================================
+            // FIND TEACHER
             // =================================================
 
             const teacher =
                 teachers.find(
-                    item =>
+                    item => {
 
-                        (
-                            item.id ||
-                            item.firestoreId
-                        ) ===
-                        teacherId
+                        return (
 
+                            (
+                                item.id ||
+                                item.firestoreId
+                            ) ===
+                            teacherId
+
+                        );
+
+                    }
                 );
 
 
             const teacherName =
                 teacher
-                    ? `${teacher.firstName || ""} ${teacher.lastName || ""}`.trim()
+                    ? `${teacher.firstName || ""} ${teacher.lastName || ""}`
+                        .trim()
                     : "No Class Teacher";
 
 
@@ -680,14 +976,25 @@ if (classForm) {
 
 
             // =================================================
-            // SAVE TO FIRESTORE
+            // SAVE
             // =================================================
 
             try {
 
-                // =============================================
+                showLoading(
+                    editingId
+                        ? "Updating Class..."
+                        : "Adding Class...",
+
+                    editingId
+                        ? "Please wait while the class information is being updated."
+                        : "Please wait while the class is being added."
+                );
+
+
+                // =================================================
                 // UPDATE
-                // =============================================
+                // =================================================
 
                 if (editingId) {
 
@@ -699,19 +1006,15 @@ if (classForm) {
                         );
 
 
-                    showLoading(
-                        "Updating Class...",
-                        "Please wait while the class information is being updated."
+                    await withTimeout(
+                        setDoc(
+                            classRef,
+                            classData,
+                            {
+                                merge: true
+                            }
+                        )
                     );
-
-
-                    await withTimeout(setDoc(
-                        classRef,
-                        classData,
-                        {
-                            merge: true
-                        }
-                    ));
 
 
                     Swal.close();
@@ -724,9 +1027,10 @@ if (classForm) {
 
                 }
 
-                // =============================================
+
+                // =================================================
                 // ADD
-                // =============================================
+                // =================================================
 
                 else {
 
@@ -742,23 +1046,17 @@ if (classForm) {
                         );
 
 
-                    showLoading(
-                        "Adding Class...",
-                        "Please wait while the class is being added."
+                    await withTimeout(
+                        setDoc(
+                            classRef,
+                            {
+                                ...classData,
+
+                                createdAt:
+                                    new Date().toISOString()
+                            }
+                        )
                     );
-
-
-                    await withTimeout(setDoc(
-                        classRef,
-                        {
-
-                            ...classData,
-
-                            createdAt:
-                                new Date().toISOString()
-
-                        }
-                    ));
 
 
                     Swal.close();
@@ -772,9 +1070,9 @@ if (classForm) {
                 }
 
 
-                // =============================================
-                // REFRESH
-                // =============================================
+                // =================================================
+                // RELOAD
+                // =================================================
 
                 await loadClasses();
 
@@ -829,10 +1127,9 @@ if (classForm) {
 
 function renderClasses() {
 
-    if (
-        !classesTableBody
-    )
+    if (!classesTableBody) {
         return;
+    }
 
 
     const search =
@@ -856,13 +1153,15 @@ function renderClasses() {
                 const classId =
                     String(
                         classData.id || ""
-                    ).toLowerCase();
+                    )
+                    .toLowerCase();
 
 
                 const className =
                     String(
                         classData.name || ""
-                    ).toLowerCase();
+                    )
+                    .toLowerCase();
 
 
                 const matchesSearch =
@@ -893,9 +1192,17 @@ function renderClasses() {
         );
 
 
+    // =====================================================
+    // CLEAR TABLE
+    // =====================================================
+
     classesTableBody.innerHTML =
         "";
 
+
+    // =====================================================
+    // EMPTY STATE
+    // =====================================================
 
     if (
         filtered.length === 0
@@ -920,6 +1227,10 @@ function renderClasses() {
 
     }
 
+
+    // =====================================================
+    // RENDER TABLE
+    // =====================================================
 
     filtered.forEach(
         classData => {
@@ -1031,6 +1342,7 @@ function renderClasses() {
                     <div class="table-actions">
 
                         <button
+                            type="button"
                             class="table-action"
                             title="Edit"
                             data-edit-class="${escapeAttribute(
@@ -1042,6 +1354,7 @@ function renderClasses() {
 
 
                         <button
+                            type="button"
                             class="table-action"
                             title="Delete"
                             data-delete-class="${escapeAttribute(
@@ -1183,10 +1496,6 @@ async function deleteClass(
     }
 
 
-    // =====================================================
-    // CONFIRM DELETE
-    // =====================================================
-
     const confirmed =
         await confirmDelete(
             `Delete ${classData.name}?`,
@@ -1194,15 +1503,12 @@ async function deleteClass(
         );
 
 
-    if (!confirmed)
+    if (!confirmed) {
         return;
+    }
 
 
     try {
-
-        // =================================================
-        // LOADING
-        // =================================================
 
         showLoading(
             "Deleting Class...",
@@ -1210,37 +1516,25 @@ async function deleteClass(
         );
 
 
-        // =================================================
-        // DELETE
-        // =================================================
-
-        await withTimeout(deleteDoc(
-
-            doc(
-                db,
-                "classes",
-                firestoreId
+        await withTimeout(
+            deleteDoc(
+                doc(
+                    db,
+                    "classes",
+                    firestoreId
+                )
             )
-
-        ));
+        );
 
 
         Swal.close();
 
-
-        // =================================================
-        // SUCCESS
-        // =================================================
 
         await showSuccess(
             "Class Deleted",
             `${classData.name} has been deleted successfully.`
         );
 
-
-        // =================================================
-        // REFRESH
-        // =================================================
 
         await loadClasses();
 
@@ -1315,9 +1609,7 @@ if (sectionFilter) {
 // HTML ESCAPE
 // =========================================================
 
-function escapeHTML(
-    value
-) {
+function escapeHTML(value) {
 
     return String(
         value ?? ""
@@ -1355,9 +1647,7 @@ function escapeHTML(
 // ATTRIBUTE ESCAPE
 // =========================================================
 
-function escapeAttribute(
-    value
-) {
+function escapeAttribute(value) {
 
     return String(
         value ?? ""
@@ -1414,17 +1704,26 @@ function getFirebaseErrorMessage(
 
             return "You do not have permission to perform this action. Please check your Firestore security rules.";
 
+
         case "unavailable":
 
             return "Firebase is temporarily unavailable. Please check your internet connection and try again.";
+
 
         case "network-request-failed":
 
             return "Network error. Please check your internet connection and try again.";
 
+
         case "failed-precondition":
 
             return "The requested operation could not be completed because a Firestore requirement is not satisfied.";
+
+
+        case "deadline-exceeded":
+
+            return "The Firebase request took too long. Please check your internet connection and try again.";
+
 
         default:
 
@@ -1442,9 +1741,22 @@ function getFirebaseErrorMessage(
 
 async function initializeClassesPage() {
 
-    await loadTeachers();
+    try {
 
-    await loadClasses();
+        await loadTeachers();
+
+        await loadClasses();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error initializing classes page:",
+            error
+        );
+
+    }
 
 }
 

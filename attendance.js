@@ -1,8 +1,18 @@
 import { adminReady, withTimeout } from "./admin-guard.js";
+
 /* =========================================================
-   Ebenezer Day Star Academy
+   EBENEZER DAY STAR ACADEMY
    ATTENDANCE.JS
    FIRESTORE VERSION
+
+   FEATURES:
+   - Loads classes from Firestore
+   - Displays all available classes in dropdown
+   - Prevents duplicate class options
+   - Loads students by selected class
+   - Marks Present / Absent / Late
+   - Saves attendance
+   - Updates existing attendance records
 ========================================================= */
 
 await adminReady;
@@ -48,79 +58,49 @@ let attendanceRecords = [];
 ========================================================= */
 
 const attendanceSession =
-    document.getElementById(
-        "attendanceSession"
-    );
+    document.getElementById("attendanceSession");
 
 const attendanceTerm =
-    document.getElementById(
-        "attendanceTerm"
-    );
+    document.getElementById("attendanceTerm");
 
 const attendanceClass =
-    document.getElementById(
-        "attendanceClass"
-    );
+    document.getElementById("attendanceClass");
 
 const attendanceDate =
-    document.getElementById(
-        "attendanceDate"
-    );
+    document.getElementById("attendanceDate");
 
 const loadAttendanceBtn =
-    document.getElementById(
-        "loadAttendanceBtn"
-    );
+    document.getElementById("loadAttendanceBtn");
 
 const attendanceTableCard =
-    document.getElementById(
-        "attendanceTableCard"
-    );
+    document.getElementById("attendanceTableCard");
 
 const attendanceTableBody =
-    document.getElementById(
-        "attendanceTableBody"
-    );
+    document.getElementById("attendanceTableBody");
 
 const attendanceSummaryCard =
-    document.getElementById(
-        "attendanceSummaryCard"
-    );
+    document.getElementById("attendanceSummaryCard");
 
 const attendanceDateTitle =
-    document.getElementById(
-        "attendanceDateTitle"
-    );
+    document.getElementById("attendanceDateTitle");
 
 const markAllPresentBtn =
-    document.getElementById(
-        "markAllPresentBtn"
-    );
+    document.getElementById("markAllPresentBtn");
 
 const saveAttendanceBtn =
-    document.getElementById(
-        "saveAttendanceBtn"
-    );
+    document.getElementById("saveAttendanceBtn");
 
 const summaryStudents =
-    document.getElementById(
-        "summaryStudents"
-    );
+    document.getElementById("summaryStudents");
 
 const summaryPresent =
-    document.getElementById(
-        "summaryPresent"
-    );
+    document.getElementById("summaryPresent");
 
 const summaryAbsent =
-    document.getElementById(
-        "summaryAbsent"
-    );
+    document.getElementById("summaryAbsent");
 
 const summaryLate =
-    document.getElementById(
-        "summaryLate"
-    );
+    document.getElementById("summaryLate");
 
 
 /* =========================================================
@@ -133,39 +113,73 @@ function setToday() {
         return;
     }
 
-
     const today =
-        new Date()
-            .toISOString()
-            .split("T")[0];
+        new Date().toISOString().split("T")[0];
 
-
-    attendanceDate.value =
-        today;
-
+    attendanceDate.value = today;
 }
 
 
 /* =========================================================
    GET CLASS NAME
-   Supports:
-   name
-   className
-   class
 ========================================================= */
 
 function getClassName(classItem) {
 
+    if (!classItem) {
+        return "";
+    }
+
+    /*
+     * Your Classes page saves:
+     *
+     * name
+     * section
+     *
+     * So name is the primary class value.
+     */
+
+    const name =
+        String(
+            classItem.name ||
+            classItem.className ||
+            classItem.class ||
+            classItem.title ||
+            ""
+        ).trim();
+
+    /*
+     * If name exists, use it.
+     */
+
+    if (name) {
+        return name;
+    }
+
+    /*
+     * Some older class records may only
+     * contain a section.
+     */
+
+    const section =
+        String(
+            classItem.section ||
+            ""
+        ).trim();
+
+    return section;
+}
+
+
+/* =========================================================
+   GET CLASS SECTION
+========================================================= */
+
+function getClassSection(classItem) {
+
     return String(
-
-        classItem.name ||
-
-        classItem.className ||
-
-        classItem.class ||
-
+        classItem?.section ||
         ""
-
     ).trim();
 
 }
@@ -177,6 +191,10 @@ function getClassName(classItem) {
 
 function getStudentClass(student) {
 
+    if (!student) {
+        return "";
+    }
+
     return String(
 
         student.class ||
@@ -184,6 +202,8 @@ function getStudentClass(student) {
         student.studentClass ||
 
         student.className ||
+
+        student.section ||
 
         ""
 
@@ -216,17 +236,11 @@ function getStudentName(student) {
     const combinedName =
         `${firstName} ${lastName}`.trim();
 
-
     return (
-
         combinedName ||
-
         fullName ||
-
         "Unnamed Student"
-
     );
-
 }
 
 
@@ -259,12 +273,27 @@ function getAdmissionNumber(student) {
 
 async function loadClasses() {
 
+    if (!attendanceClass) {
+        console.error(
+            "attendanceClass element was not found."
+        );
+
+        return;
+    }
+
     try {
 
+        console.log(
+            "Loading classes from Firestore..."
+        );
+
+
         const snapshot =
-            await withTimeout(getDocs(
-                classesCollection
-            ));
+            await withTimeout(
+                getDocs(
+                    classesCollection
+                )
+            );
 
 
         classes = [];
@@ -273,12 +302,16 @@ async function loadClasses() {
         snapshot.forEach(
             documentSnapshot => {
 
+                const data =
+                    documentSnapshot.data();
+
+
                 classes.push({
 
                     firestoreId:
                         documentSnapshot.id,
 
-                    ...documentSnapshot.data()
+                    ...data
 
                 });
 
@@ -287,12 +320,17 @@ async function loadClasses() {
 
 
         console.log(
-            "Classes loaded:",
+            "Raw classes from Firestore:",
             classes
         );
 
 
+        /*
+         * Populate dropdown.
+         */
+
         populateClassSelect();
+
 
     }
 
@@ -304,9 +342,39 @@ async function loadClasses() {
         );
 
 
-        alert(
-            "Unable to load classes from Firebase."
-        );
+        /*
+         * Keep the dropdown usable.
+         */
+
+        attendanceClass.innerHTML = `
+
+            <option value="">
+                Unable to Load Classes
+            </option>
+
+        `;
+
+
+        if (
+            typeof Swal !== "undefined"
+        ) {
+
+            Swal.fire({
+                icon: "error",
+                title: "Unable to Load Classes",
+                text:
+                    getFirebaseErrorMessage(error)
+            });
+
+        }
+
+        else {
+
+            alert(
+                "Unable to load classes from Firebase."
+            );
+
+        }
 
     }
 
@@ -314,7 +382,7 @@ async function loadClasses() {
 
 
 /* =========================================================
-   POPULATE ATTENDANCE CLASS DROPDOWN
+   POPULATE CLASS DROPDOWN
 ========================================================= */
 
 function populateClassSelect() {
@@ -324,45 +392,131 @@ function populateClassSelect() {
     }
 
 
-    attendanceClass.innerHTML = `
+    /*
+     * Completely clear existing options.
+     */
 
-        <option value="">
-            Select Class
-        </option>
-
-    `;
-
-
-    const classNames = [
-
-        ...new Set(
-
-            classes
-                .map(
-                    classItem =>
-                        getClassName(
-                            classItem
-                        )
-                )
-                .filter(Boolean)
-
-        )
-
-    ];
+    attendanceClass.innerHTML = "";
 
 
     /*
-     * Sort classes alphabetically
+     * Default option.
      */
 
-    classNames.sort(
-        (a, b) =>
-            a.localeCompare(b)
+    const defaultOption =
+        document.createElement("option");
+
+
+    defaultOption.value = "";
+
+    defaultOption.textContent =
+        "Select Class";
+
+
+    attendanceClass.appendChild(
+        defaultOption
     );
 
 
-    classNames.forEach(
-        className => {
+    /*
+     * Use a Map to guarantee that
+     * each class appears only once.
+     */
+
+    const uniqueClasses =
+        new Map();
+
+
+    classes.forEach(
+        classItem => {
+
+            const className =
+                getClassName(classItem);
+
+
+            if (!className) {
+                return;
+            }
+
+
+            /*
+             * Normalize the class name
+             * for duplicate checking.
+             */
+
+            const normalizedName =
+                className
+                    .trim()
+                    .toLowerCase();
+
+
+            /*
+             * Only add it once.
+             */
+
+            if (
+                !uniqueClasses.has(
+                    normalizedName
+                )
+            ) {
+
+                uniqueClasses.set(
+                    normalizedName,
+                    {
+
+                        name:
+                            className,
+
+                        firestoreId:
+                            classItem.firestoreId,
+
+                        section:
+                            getClassSection(
+                                classItem
+                            )
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+     * Convert Map to array.
+     */
+
+    const uniqueClassList =
+        Array.from(
+            uniqueClasses.values()
+        );
+
+
+    /*
+     * Sort classes.
+     */
+
+    uniqueClassList.sort(
+        (a, b) =>
+            a.name.localeCompare(
+                b.name,
+                undefined,
+                {
+                    numeric: true,
+                    sensitivity: "base"
+                }
+            )
+    );
+
+
+    /*
+     * Add classes to dropdown.
+     */
+
+    uniqueClassList.forEach(
+        classItem => {
 
             const option =
                 document.createElement(
@@ -371,11 +525,24 @@ function populateClassSelect() {
 
 
             option.value =
-                className;
+                classItem.name;
 
 
             option.textContent =
-                className;
+                classItem.name;
+
+
+            /*
+             * Keep Firestore ID available
+             * if needed later.
+             */
+
+            option.dataset.firestoreId =
+                classItem.firestoreId || "";
+
+
+            option.dataset.section =
+                classItem.section || "";
 
 
             attendanceClass.appendChild(
@@ -386,9 +553,44 @@ function populateClassSelect() {
     );
 
 
+    /*
+     * If no classes were found.
+     */
+
+    if (
+        uniqueClassList.length === 0
+    ) {
+
+        const noClassOption =
+            document.createElement(
+                "option"
+            );
+
+
+        noClassOption.value = "";
+
+        noClassOption.textContent =
+            "No Classes Available";
+
+
+        noClassOption.disabled = true;
+
+
+        attendanceClass.appendChild(
+            noClassOption
+        );
+
+
+        console.warn(
+            "No classes were found in the classes collection."
+        );
+
+    }
+
+
     console.log(
-        "Attendance classes:",
-        classNames
+        "Classes displayed in Attendance:",
+        uniqueClassList
     );
 
 }
@@ -403,9 +605,11 @@ async function loadStudents() {
     try {
 
         const snapshot =
-            await withTimeout(getDocs(
-                studentsCollection
-            ));
+            await withTimeout(
+                getDocs(
+                    studentsCollection
+                )
+            );
 
 
         students = [];
@@ -433,11 +637,6 @@ async function loadStudents() {
         );
 
 
-        console.log(
-            "Total students:",
-            students.length
-        );
-
     }
 
     catch (error) {
@@ -464,9 +663,11 @@ async function loadAttendanceRecords() {
     try {
 
         const snapshot =
-            await withTimeout(getDocs(
-                attendanceCollection
-            ));
+            await withTimeout(
+                getDocs(
+                    attendanceCollection
+                )
+            );
 
 
         attendanceRecords = [];
@@ -521,21 +722,21 @@ if (loadAttendanceBtn) {
         async function () {
 
             const session =
-                attendanceSession.value;
+                attendanceSession?.value || "";
 
             const term =
-                attendanceTerm.value;
+                attendanceTerm?.value || "";
 
             const className =
-                attendanceClass.value;
+                attendanceClass?.value || "";
 
             const date =
-                attendanceDate.value;
+                attendanceDate?.value || "";
 
 
-            /* -----------------------------------------
-               VALIDATE
-            ----------------------------------------- */
+            /*
+             * VALIDATION
+             */
 
             if (
                 !session ||
@@ -544,7 +745,7 @@ if (loadAttendanceBtn) {
                 !date
             ) {
 
-                alert(
+                showWarningMessage(
                     "Please select the academic session, term, class and date."
                 );
 
@@ -552,10 +753,6 @@ if (loadAttendanceBtn) {
 
             }
 
-
-            /* -----------------------------------------
-               LOADING
-            ----------------------------------------- */
 
             loadAttendanceBtn.disabled =
                 true;
@@ -567,16 +764,14 @@ if (loadAttendanceBtn) {
             try {
 
                 /*
-                 * Reload students so newly added
-                 * students appear immediately.
+                 * Reload students.
                  */
 
                 await loadStudents();
 
 
                 /*
-                 * Find students belonging
-                 * to selected class.
+                 * Find students in selected class.
                  */
 
                 const classStudents =
@@ -590,14 +785,13 @@ if (loadAttendanceBtn) {
 
 
                             return (
-
                                 studentClass
+                                    .trim()
                                     .toLowerCase() ===
 
                                 className
                                     .trim()
                                     .toLowerCase()
-
                             );
 
                         }
@@ -616,29 +810,39 @@ if (loadAttendanceBtn) {
                 );
 
 
-                /* -----------------------------------------
-                   NO STUDENTS
-                ----------------------------------------- */
+                /*
+                 * No students.
+                 */
 
                 if (
                     classStudents.length === 0
                 ) {
 
-                    alert(
+                    showWarningMessage(
 
-                        `No students found in ${className}.\n\n` +
-
-                        `Check that the student's class is "${className}".`
+                        `No students found in ${className}. Check that students have been assigned to this class.`
 
                     );
 
 
-                    attendanceTableCard.style.display =
-                        "none";
+                    if (
+                        attendanceTableCard
+                    ) {
+
+                        attendanceTableCard.style.display =
+                            "none";
+
+                    }
 
 
-                    attendanceSummaryCard.style.display =
-                        "none";
+                    if (
+                        attendanceSummaryCard
+                    ) {
+
+                        attendanceSummaryCard.style.display =
+                            "none";
+
+                    }
 
 
                     return;
@@ -646,9 +850,9 @@ if (loadAttendanceBtn) {
                 }
 
 
-                /* -----------------------------------------
-                   DATE TITLE
-                ----------------------------------------- */
+                /*
+                 * Date title.
+                 */
 
                 if (
                     attendanceDateTitle
@@ -661,7 +865,6 @@ if (loadAttendanceBtn) {
 
 
                     attendanceDateTitle.textContent =
-
                         displayDate.toLocaleDateString(
                             "en-NG",
                             {
@@ -682,9 +885,9 @@ if (loadAttendanceBtn) {
                 }
 
 
-                /* -----------------------------------------
-                   RENDER
-                ----------------------------------------- */
+                /*
+                 * Render students.
+                 */
 
                 renderAttendanceStudents(
 
@@ -699,12 +902,24 @@ if (loadAttendanceBtn) {
                 );
 
 
-                attendanceTableCard.style.display =
-                    "block";
+                if (
+                    attendanceTableCard
+                ) {
+
+                    attendanceTableCard.style.display =
+                        "block";
+
+                }
 
 
-                attendanceSummaryCard.style.display =
-                    "block";
+                if (
+                    attendanceSummaryCard
+                ) {
+
+                    attendanceSummaryCard.style.display =
+                        "block";
+
+                }
 
 
                 updateSummary();
@@ -719,8 +934,8 @@ if (loadAttendanceBtn) {
                 );
 
 
-                alert(
-                    "Unable to load students. Check your Firebase configuration and Firestore permissions."
+                showErrorMessage(
+                    getFirebaseErrorMessage(error)
                 );
 
             }
@@ -757,6 +972,11 @@ function renderAttendanceStudents(
 
 ) {
 
+    if (!attendanceTableBody) {
+        return;
+    }
+
+
     attendanceTableBody.innerHTML =
         "";
 
@@ -765,9 +985,7 @@ function renderAttendanceStudents(
         (student, index) => {
 
             const row =
-                document.createElement(
-                    "tr"
-                );
+                document.createElement("tr");
 
 
             row.dataset.studentId =
@@ -775,20 +993,15 @@ function renderAttendanceStudents(
 
 
             row.dataset.studentName =
-                getStudentName(
-                    student
-                );
+                getStudentName(student);
 
 
             row.dataset.admissionNumber =
-                getAdmissionNumber(
-                    student
-                );
+                getAdmissionNumber(student);
 
 
             /*
-             * Check for an existing
-             * attendance record.
+             * Existing attendance record.
              */
 
             const existing =
@@ -825,44 +1038,28 @@ function renderAttendanceStudents(
                     ${index + 1}
                 </td>
 
-
                 <td>
-
                     <strong>
-
                         ${escapeHTML(
-                            getStudentName(
-                                student
-                            )
+                            getStudentName(student)
                         )}
-
                     </strong>
-
                 </td>
-
 
                 <td>
-
                     ${escapeHTML(
-                        getAdmissionNumber(
-                            student
-                        )
+                        getAdmissionNumber(student)
                     )}
-
                 </td>
-
 
                 <td>
 
                     <input
                         type="radio"
-
                         name="attendance_${escapeAttribute(
                             student.firestoreId
                         )}"
-
                         value="present"
-
                         class="attendance-radio"
 
                         ${
@@ -871,23 +1068,18 @@ function renderAttendanceStudents(
                                 ? "checked"
                                 : ""
                         }
-
                     >
 
                 </td>
-
 
                 <td>
 
                     <input
                         type="radio"
-
                         name="attendance_${escapeAttribute(
                             student.firestoreId
                         )}"
-
                         value="absent"
-
                         class="attendance-radio"
 
                         ${
@@ -896,23 +1088,18 @@ function renderAttendanceStudents(
                                 ? "checked"
                                 : ""
                         }
-
                     >
 
                 </td>
-
 
                 <td>
 
                     <input
                         type="radio"
-
                         name="attendance_${escapeAttribute(
                             student.firestoreId
                         )}"
-
                         value="late"
-
                         class="attendance-radio"
 
                         ${
@@ -921,11 +1108,9 @@ function renderAttendanceStudents(
                                 ? "checked"
                                 : ""
                         }
-
                     >
 
                 </td>
-
 
                 <td class="attendance-status">
 
@@ -933,7 +1118,7 @@ function renderAttendanceStudents(
                         existingStatus
                             ? formatStatus(
                                 existingStatus
-                              )
+                            )
                             : "Not Marked"
                     }
 
@@ -946,6 +1131,10 @@ function renderAttendanceStudents(
                 row
             );
 
+
+            /*
+             * Radio events.
+             */
 
             const radios =
                 row.querySelectorAll(
@@ -961,13 +1150,9 @@ function renderAttendanceStudents(
                         function () {
 
                             updateRowStatus(
-
                                 row,
-
                                 this.value
-
                             );
-
 
                             updateSummary();
 
@@ -1004,9 +1189,7 @@ function updateRowStatus(
 
 
     statusCell.textContent =
-        formatStatus(
-            status
-        );
+        formatStatus(status);
 
 }
 
@@ -1018,8 +1201,7 @@ function updateRowStatus(
 function formatStatus(status) {
 
     if (
-        status ===
-        "present"
+        status === "present"
     ) {
 
         return "Present";
@@ -1028,8 +1210,7 @@ function formatStatus(status) {
 
 
     if (
-        status ===
-        "absent"
+        status === "absent"
     ) {
 
         return "Absent";
@@ -1038,8 +1219,7 @@ function formatStatus(status) {
 
 
     if (
-        status ===
-        "late"
+        status === "late"
     ) {
 
         return "Late";
@@ -1062,6 +1242,11 @@ if (markAllPresentBtn) {
         "click",
         function () {
 
+            if (!attendanceTableBody) {
+                return;
+            }
+
+
             const rows =
                 attendanceTableBody
                     .querySelectorAll("tr");
@@ -1083,11 +1268,8 @@ if (markAllPresentBtn) {
 
 
                         updateRowStatus(
-
                             row,
-
                             "present"
-
                         );
 
                     }
@@ -1109,6 +1291,11 @@ if (markAllPresentBtn) {
 ========================================================= */
 
 function updateSummary() {
+
+    if (!attendanceTableBody) {
+        return;
+    }
+
 
     const rows =
         attendanceTableBody
@@ -1212,16 +1399,16 @@ if (saveAttendanceBtn) {
         async function () {
 
             const session =
-                attendanceSession.value;
+                attendanceSession?.value || "";
 
             const term =
-                attendanceTerm.value;
+                attendanceTerm?.value || "";
 
             const className =
-                attendanceClass.value;
+                attendanceClass?.value || "";
 
             const date =
-                attendanceDate.value;
+                attendanceDate?.value || "";
 
 
             if (
@@ -1231,12 +1418,17 @@ if (saveAttendanceBtn) {
                 !date
             ) {
 
-                alert(
+                showWarningMessage(
                     "Please complete all attendance fields."
                 );
 
                 return;
 
+            }
+
+
+            if (!attendanceTableBody) {
+                return;
             }
 
 
@@ -1251,7 +1443,7 @@ if (saveAttendanceBtn) {
                 rows.length === 0
             ) {
 
-                alert(
+                showWarningMessage(
                     "Please load the students first."
                 );
 
@@ -1261,8 +1453,7 @@ if (saveAttendanceBtn) {
 
 
             /*
-             * Make sure every student
-             * has been marked.
+             * Check unmarked students.
              */
 
             const unmarked =
@@ -1280,7 +1471,7 @@ if (saveAttendanceBtn) {
                 unmarked.length > 0
             ) {
 
-                alert(
+                showWarningMessage(
 
                     `${unmarked.length} student(s) have not been marked.`
 
@@ -1293,7 +1484,6 @@ if (saveAttendanceBtn) {
 
             saveAttendanceBtn.disabled =
                 true;
-
 
             saveAttendanceBtn.textContent =
                 "Saving...";
@@ -1336,7 +1526,7 @@ if (saveAttendanceBtn) {
 
 
                     /*
-                     * Look for existing record.
+                     * Find existing attendance.
                      */
 
                     const existing =
@@ -1389,46 +1579,58 @@ if (saveAttendanceBtn) {
                     };
 
 
+                    /*
+                     * UPDATE EXISTING RECORD
+                     */
+
                     if (existing) {
 
-                        await withTimeout(updateDoc(
+                        await withTimeout(
+                            updateDoc(
 
-                            doc(
-                                db,
-                                "attendance",
-                                existing.firestoreId
-                            ),
+                                doc(
+                                    db,
+                                    "attendance",
+                                    existing.firestoreId
+                                ),
 
-                            attendanceData
+                                attendanceData
 
-                        ));
+                            )
+                        );
 
                     }
 
+                    /*
+                     * CREATE NEW RECORD
+                     */
+
                     else {
 
-                        await withTimeout(addDoc(
+                        await withTimeout(
+                            addDoc(
 
-                            attendanceCollection,
+                                attendanceCollection,
 
-                            {
+                                {
 
-                                ...attendanceData,
+                                    ...attendanceData,
 
-                                createdAt:
-                                    new Date()
-                                        .toISOString()
+                                    createdAt:
+                                        new Date()
+                                            .toISOString()
 
-                            }
+                                }
 
-                        ));
+                            )
+                        );
 
                     }
 
                 }
 
 
-                alert(
+                showSuccessMessage(
                     "Attendance saved successfully."
                 );
 
@@ -1448,8 +1650,8 @@ if (saveAttendanceBtn) {
                 );
 
 
-                alert(
-                    "Unable to save attendance. Check your Firestore rules."
+                showErrorMessage(
+                    getFirebaseErrorMessage(error)
                 );
 
             }
@@ -1466,6 +1668,108 @@ if (saveAttendanceBtn) {
 
         }
     );
+
+}
+
+
+/* =========================================================
+   SWEETALERT WARNING
+========================================================= */
+
+function showWarningMessage(message) {
+
+    if (
+        typeof Swal !== "undefined"
+    ) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "Attention",
+
+            text: message,
+
+            confirmButtonText:
+                "OK"
+
+        });
+
+    }
+
+    else {
+
+        alert(message);
+
+    }
+
+}
+
+
+/* =========================================================
+   SWEETALERT SUCCESS
+========================================================= */
+
+function showSuccessMessage(message) {
+
+    if (
+        typeof Swal !== "undefined"
+    ) {
+
+        Swal.fire({
+
+            icon: "success",
+
+            title: "Success",
+
+            text: message,
+
+            confirmButtonText:
+                "OK"
+
+        });
+
+    }
+
+    else {
+
+        alert(message);
+
+    }
+
+}
+
+
+/* =========================================================
+   SWEETALERT ERROR
+========================================================= */
+
+function showErrorMessage(message) {
+
+    if (
+        typeof Swal !== "undefined"
+    ) {
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "Error",
+
+            text: message,
+
+            confirmButtonText:
+                "OK"
+
+        });
+
+    }
+
+    else {
+
+        alert(message);
+
+    }
 
 }
 
@@ -1531,13 +1835,82 @@ function escapeAttribute(value) {
         .replace(
             /'/g,
             "&#039;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
         );
 
 }
 
 
 /* =========================================================
-   INITIALIZE
+   FIREBASE ERROR MESSAGE
+========================================================= */
+
+function getFirebaseErrorMessage(error) {
+
+    if (!error) {
+
+        return "An unknown error occurred.";
+
+    }
+
+
+    switch (
+        error.code
+    ) {
+
+        case "permission-denied":
+
+            return (
+                "You do not have permission to access this data. " +
+                "Please check your Firestore security rules."
+            );
+
+
+        case "unavailable":
+
+            return (
+                "Firebase is temporarily unavailable. " +
+                "Please check your internet connection."
+            );
+
+
+        case "network-request-failed":
+
+            return (
+                "Network error. Please check your internet connection."
+            );
+
+
+        case "failed-precondition":
+
+            return (
+                "The Firestore operation could not be completed."
+            );
+
+
+        default:
+
+            return (
+                error.message ||
+                "An unexpected Firebase error occurred."
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALIZE ATTENDANCE
 ========================================================= */
 
 async function initializeAttendance() {
@@ -1548,7 +1921,7 @@ async function initializeAttendance() {
 
 
         /*
-         * Load all required Firebase data.
+         * Load all data.
          */
 
         await Promise.all([
@@ -1564,6 +1937,19 @@ async function initializeAttendance() {
 
         console.log(
             "Attendance system initialized successfully."
+        );
+
+
+        /*
+         * Show the classes that were loaded.
+         */
+
+        console.log(
+            "Available classes:",
+            classes.map(
+                item =>
+                    getClassName(item)
+            )
         );
 
     }
