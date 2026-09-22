@@ -1,164 +1,156 @@
-/* =========================================================
-   CONTACT FORM - WEB3FORMS + SWEETALERT2
-========================================================= */
+// ======================================================
+// CONTACT FORM
+// EBENEZER DAY STAR ACADEMY
+// Firebase Firestore Version
+// ======================================================
+
+import {
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+import { db } from "./firebase-config.js";
+
 
 const contactForm = document.getElementById("contactForm");
+const submitBtn = document.getElementById("submitBtn");
+
 
 if (contactForm) {
 
-    contactForm.addEventListener("submit", async function (event) {
+    contactForm.addEventListener("submit", async (event) => {
 
         event.preventDefault();
 
 
-        /* ================================
-           GET FORM VALUES
-        ================================= */
+        // --------------------------------------------
+        // GET FORM VALUES
+        // --------------------------------------------
 
         const name =
-            document.getElementById("name")?.value.trim();
+            document.getElementById("name")?.value.trim() || "";
 
         const email =
-            document.getElementById("email")?.value.trim();
+            document.getElementById("email")?.value.trim() || "";
+
+        const phone =
+            document.getElementById("phone")?.value.trim() || "";
 
         const subject =
-            document.getElementById("subject")?.value.trim();
+            document.getElementById("messageSubject")?.value.trim() || "";
 
         const message =
-            document.getElementById("message")?.value.trim();
+            document.getElementById("message")?.value.trim() || "";
 
 
-        /* ================================
-           VALIDATION
-        ================================= */
+        // --------------------------------------------
+        // DEBUGGING
+        // --------------------------------------------
 
-        if (!name || !email || !subject || !message) {
+        console.log("Contact form values:", {
+            name,
+            email,
+            phone,
+            subject,
+            message
+        });
 
-            showWarning(
-                "Incomplete Form",
-                "Please fill in all required fields."
-            );
+
+        // --------------------------------------------
+        // VALIDATION
+        // --------------------------------------------
+
+        if (
+            name === "" ||
+            email === "" ||
+            phone === "" ||
+            subject === "" ||
+            message === ""
+        ) {
+
+            Swal.fire({
+                icon: "warning",
+                title: "Incomplete Form",
+                text: "Please fill in all required fields.",
+                confirmButtonText: "OK"
+            });
 
             return;
         }
 
 
-        /* ================================
-           EMAIL VALIDATION
-        ================================= */
+        // --------------------------------------------
+        // DISABLE BUTTON
+        // --------------------------------------------
 
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailPattern.test(email)) {
-
-            showWarning(
-                "Invalid Email",
-                "Please enter a valid email address."
-            );
-
-            return;
-        }
-
-
-        /* ================================
-           WEB3FORMS DATA
-        ================================= */
-
-        // IMPORTANT:
-        // Use the actual form so the access_key
-        // and all hidden fields are included.
-
-        const formData =
-            new FormData(contactForm);
-
-
-        /* ================================
-           LOADING
-        ================================= */
-
-        showLoading(
-            "Sending Message...",
-            "Please wait while your message is being sent."
-        );
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
 
 
         try {
 
-            const response = await fetch(
-                "https://api.web3forms.com/submit",
+            // ----------------------------------------
+            // SAVE MESSAGE TO FIRESTORE
+            // ----------------------------------------
+
+            await addDoc(
+                collection(db, "messages"),
                 {
-                    method: "POST",
-                    body: formData
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    subject: subject,
+                    message: message,
+                    status: "unread",
+                    createdAt: serverTimestamp()
                 }
             );
 
 
-            const result =
-                await response.json();
+            // ----------------------------------------
+            // SUCCESS MESSAGE
+            // ----------------------------------------
+
+            await Swal.fire({
+                icon: "success",
+                title: "Message Sent!",
+                text: "Thank you for contacting Ebenezer Day Star Academy. Your message has been sent successfully.",
+                confirmButtonText: "OK"
+            });
 
 
-            /* ================================
-               CLOSE LOADING
-            ================================= */
+            // ----------------------------------------
+            // RESET FORM
+            // ----------------------------------------
 
-            Swal.close();
-
-
-            /* ================================
-               SUCCESS
-            ================================= */
-
-            if (result.success) {
-
-                contactForm.reset();
-
-                await showSuccess(
-                    "Message Sent!",
-                    "Thank you! Your message has been received successfully."
-                );
-
-                return;
-            }
+            contactForm.reset();
 
 
-            /* ================================
-               WEB3FORMS ERROR
-            ================================= */
-
-            showError(
-                "Message Not Sent",
-                result.message ||
-                "We could not send your message. Please try again."
-            );
-
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
-                "Web3Forms error:",
+                "Error sending contact message:",
                 error
             );
 
 
-            /* ================================
-               CLOSE LOADING
-            ================================= */
-
-            Swal.close();
-
-
-            /* ================================
-               CONNECTION ERROR
-            ================================= */
-
-            showError(
-                "Connection Error",
-                "Unable to connect to Web3Forms. Please check your internet connection and try again."
-            );
+            Swal.fire({
+                icon: "error",
+                title: "Unable to Send",
+                text: "Your message could not be sent. Please try again later.",
+                confirmButtonText: "OK"
+            });
 
         }
+
+
+        // --------------------------------------------
+        // ENABLE BUTTON AGAIN
+        // --------------------------------------------
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send Message";
 
     });
 

@@ -218,7 +218,7 @@
                 <a href="admin-login.html">
                     Admin
                 </a>
-                
+
                 <a href="teacher-login.html">
                     Teacher Portal
                 </a>
@@ -310,9 +310,6 @@
                         Today
 
                     </h1>
-
-
-                    
 
 
                     <div class="hero-buttons">
@@ -447,11 +444,6 @@
             <div class="container about-grid">
 
 
-                <!-- IMAGE -->
-
-                
-
-
                 <!-- CONTENT -->
 
                 <div class="about-content">
@@ -584,12 +576,6 @@
                     </span>
 
                 </div>
-
-
-                
-
-
-                
 
 
                 <div class="stat">
@@ -1182,6 +1168,8 @@
                     <div class="contact-info">
 
 
+                        <!-- ADDRESS -->
+
                         <div>
 
                             <strong>
@@ -1199,16 +1187,26 @@
                         </div>
 
 
+                        <!-- PHONE -->
+
                         <div>
 
                             <strong>
                                 📞 Phone
                             </strong>
 
-                            <p>+2347063733459</p>
-<p>+2348151073775</p>
+                            <p>
+                                +2347063733459
+                            </p>
+
+                            <p>
+                                +2348151073775
+                            </p>
+
                         </div>
 
+
+                        <!-- EMAIL -->
 
                         <div>
 
@@ -1228,41 +1226,15 @@
 
 
 
-                <!-- CONTACT FORM -->
+                <!-- =================================================
+                     CONTACT FORM
+                     FIREBASE FIRESTORE
+                ================================================== -->
 
                 <form
                     class="contact-form"
                     id="contactForm"
-                    action="https://api.web3forms.com/submit"
-                    method="POST"
                 >
-
-
-                    <!-- WEB3FORMS ACCESS KEY -->
-
-                    <input
-                        type="hidden"
-                        name="access_key"
-                        value="5382b599-6e27-4566-9faf-381d6659d148"
-                    >
-
-
-                    <!-- FORM NAME -->
-
-                    <input
-                        type="hidden"
-                        name="from_name"
-                        value="Ebenezer Day Star Academy Website"
-                    >
-
-
-                    <!-- SUBJECT -->
-
-                    <input
-                        type="hidden"
-                        name="subject"
-                        value="New Message from Ebenezer Day Star Academy Website"
-                    >
 
 
                     <!-- NAME -->
@@ -1272,6 +1244,7 @@
                         id="name"
                         name="name"
                         placeholder="Your Name"
+                        autocomplete="name"
                         required
                     >
 
@@ -1283,11 +1256,25 @@
                         id="email"
                         name="email"
                         placeholder="Your Email"
+                        autocomplete="email"
                         required
                     >
 
 
-                    <!-- MESSAGE SUBJECT -->
+                
+                    <!-- PHONE NUMBER -->
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Phone Number"
+                        inputmode="tel"
+                        autocomplete="tel"
+                        required
+                    >
+
+    <!-- SUBJECT -->
 
                     <input
                         type="text"
@@ -1296,6 +1283,7 @@
                         placeholder="Subject"
                         required
                     >
+
 
 
                     <!-- MESSAGE -->
@@ -1515,6 +1503,14 @@
     <script src="script.js"></script>
 
     <script src="global.js"></script>
+
+
+    <!-- FIREBASE CONTACT FORM -->
+
+    <script
+        type="module"
+        src="contact.js"
+    ></script>
 
 
 </body>
