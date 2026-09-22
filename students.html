@@ -10,13 +10,29 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta name="theme-color" content="lightblue">
+    <meta
+        name="theme-color"
+        content="lightblue"
+    >
 
-    <title>Students | Ebenezer Day Star Academy</title>
+    <title>
+        Students | Ebenezer Day Star Academy
+    </title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="admin-login.css">
-    <link rel="stylesheet" href="students.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="admin-login.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="students.css"
+    >
 
     <meta
         name="robots"
@@ -25,9 +41,11 @@
 
 </head>
 
+
 <body>
 
 <div class="admin-layout">
+
 
     <!-- =====================================================
          SIDEBAR
@@ -63,7 +81,10 @@
 
         <nav>
 
-            <a href="logout.html" id="logoutBtn">
+            <a
+                href="logout.html"
+                id="logoutBtn"
+            >
                 🚪 Logout
             </a>
 
@@ -72,13 +93,17 @@
     </aside>
 
 
+
     <!-- =====================================================
          MAIN CONTENT
     ====================================================== -->
 
     <main class="admin-main">
 
-        <!-- HEADER -->
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
 
         <header class="admin-header">
 
@@ -93,13 +118,17 @@
         </header>
 
 
+
         <!-- =================================================
              PAGE CONTENT
         ================================================== -->
 
         <section class="admin-content">
 
-            <!-- PAGE HEADER -->
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
 
             <div class="page-header-row">
 
@@ -127,11 +156,13 @@
             </div>
 
 
+
             <!-- =================================================
                  SEARCH AND FILTER
             ================================================== -->
 
             <div class="student-toolbar">
+
 
                 <!-- SEARCH -->
 
@@ -148,40 +179,13 @@
                 <select id="classFilter">
 
                     <option value="">
-                        All Levels
-                    </option>
-
-                    <option value="Nursery">
-                        Nursery
-                    </option>
-
-                    <option value="Primary 1">
-                        Primary 1
-                    </option>
-
-                    <option value="Primary 2">
-                        Primary 2
-                    </option>
-
-                    <option value="Primary 3">
-                        Primary 3
-                    </option>
-
-                    <option value="Primary 4">
-                        Primary 4
-                    </option>
-
-                    <option value="JSS 1">
-                        JSS 1
-                    </option>
-
-                    <option value="JSS 2">
-                        JSS 2
+                        All Classes
                     </option>
 
                 </select>
 
             </div>
+
 
 
             <!-- =================================================
@@ -197,11 +201,11 @@
                         <tr>
 
                             <th>
-                                Student ID
+                                Admission No.
                             </th>
 
                             <th>
-                                Student
+                                Student Name
                             </th>
 
                             <th>
@@ -213,7 +217,15 @@
                             </th>
 
                             <th>
-                                Parent Phone
+                                Parent / Guardian
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Parent Email
                             </th>
 
                             <th>
@@ -235,7 +247,10 @@
                 </table>
 
 
-                <!-- EMPTY STATE -->
+
+                <!-- =================================================
+                     EMPTY STATE
+                ================================================== -->
 
                 <div
                     id="emptyStudents"
@@ -265,6 +280,7 @@
 </div>
 
 
+
 <!-- =========================================================
      ADD / EDIT STUDENT MODAL
 ========================================================= -->
@@ -277,7 +293,9 @@
     <div class="modal-content">
 
 
-        <!-- MODAL HEADER -->
+        <!-- =================================================
+             MODAL HEADER
+        ================================================== -->
 
         <div class="modal-header">
 
@@ -306,13 +324,14 @@
         </div>
 
 
+
         <!-- =================================================
              STUDENT FORM
         ================================================== -->
 
         <form id="studentForm">
 
-            <!-- EDITING FIRESTORE ID -->
+            <!-- FIRESTORE DOCUMENT ID BEING EDITED -->
 
             <input
                 type="hidden"
@@ -323,7 +342,9 @@
             <div class="form-grid">
 
 
-                <!-- FIRST NAME -->
+                <!-- =================================================
+                     FIRST NAME
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -342,7 +363,10 @@
                 </div>
 
 
-                <!-- LAST NAME -->
+
+                <!-- =================================================
+                     LAST NAME
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -361,7 +385,10 @@
                 </div>
 
 
-                <!-- DATE OF BIRTH -->
+
+                <!-- =================================================
+                     DATE OF BIRTH
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -378,7 +405,10 @@
                 </div>
 
 
-                <!-- GENDER -->
+
+                <!-- =================================================
+                     GENDER
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -412,7 +442,10 @@
                 </div>
 
 
-                <!-- CLASS -->
+
+                <!-- =================================================
+                     CLASS
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -430,35 +463,7 @@
                             disabled
                             selected
                         >
-                            Select Level
-                        </option>
-
-                        <option value="Nursery">
-                            Nursery
-                        </option>
-
-                        <option value="Primary 1">
-                            Primary 1
-                        </option>
-
-                        <option value="Primary 2">
-                            Primary 2
-                        </option>
-
-                        <option value="Primary 3">
-                            Primary 3
-                        </option>
-
-                        <option value="Primary 4">
-                            Primary 4
-                        </option>
-
-                        <option value="JSS 1">
-                            JSS 1
-                        </option>
-
-                        <option value="JSS 2">
-                            JSS 2
+                            Select Class
                         </option>
 
                     </select>
@@ -466,7 +471,10 @@
                 </div>
 
 
-                <!-- ADMISSION DATE -->
+
+                <!-- =================================================
+                     ADMISSION DATE
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -483,7 +491,10 @@
                 </div>
 
 
-                <!-- PARENT NAME -->
+
+                <!-- =================================================
+                     PARENT / GUARDIAN NAME
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -494,7 +505,7 @@
                     <input
                         type="text"
                         id="parentName"
-                        placeholder="Enter parent name"
+                        placeholder="Enter parent or guardian name"
                         autocomplete="name"
                         required
                     >
@@ -502,7 +513,10 @@
                 </div>
 
 
-                <!-- PARENT PHONE -->
+
+                <!-- =================================================
+                     PARENT / GUARDIAN PHONE
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -521,7 +535,10 @@
                 </div>
 
 
-                <!-- PARENT EMAIL -->
+
+                <!-- =================================================
+                     PARENT EMAIL
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -544,7 +561,10 @@
                 </div>
 
 
-                <!-- STATUS -->
+
+                <!-- =================================================
+                     STATUS
+                ================================================== -->
 
                 <div class="form-group">
 
@@ -567,7 +587,10 @@
                 </div>
 
 
-                <!-- ADDRESS -->
+
+                <!-- =================================================
+                     HOME ADDRESS
+                ================================================== -->
 
                 <div
                     class="form-group"
@@ -587,6 +610,7 @@
                 </div>
 
             </div>
+
 
 
             <!-- =================================================
@@ -618,6 +642,7 @@
     </div>
 
 </div>
+
 
 
 <!-- =========================================================

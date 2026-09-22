@@ -8,7 +8,6 @@ import {
     collection,
     addDoc,
     getDocs,
-    getDoc,
     doc,
     updateDoc,
     deleteDoc,
@@ -24,13 +23,20 @@ import {
    ELEMENTS
 ========================================================= */
 
-const studentSearch = document.getElementById("studentSearch");
-const classFilter = document.getElementById("classFilter");
+const studentSearch =
+    document.getElementById("studentSearch");
 
-const addStudentBtn = document.getElementById("addStudentBtn");
+const classFilter =
+    document.getElementById("classFilter");
 
-const studentModal = document.getElementById("studentModal");
-const studentForm = document.getElementById("studentForm");
+const addStudentBtn =
+    document.getElementById("addStudentBtn");
+
+const studentModal =
+    document.getElementById("studentModal");
+
+const studentForm =
+    document.getElementById("studentForm");
 
 const editingStudentId =
     document.getElementById("editingStudentId");
@@ -41,13 +47,25 @@ const studentsTableBody =
 const emptyStudents =
     document.getElementById("emptyStudents");
 
+const closeStudentModalBtn =
+    document.getElementById("closeStudentModal");
+
+const cancelStudentBtn =
+    document.getElementById("cancelStudentBtn");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
 
 /* =========================================================
    COLLECTIONS
 ========================================================= */
 
-const studentsRef = collection(db, "students");
-const classesRef = collection(db, "classes");
+const studentsRef =
+    collection(db, "students");
+
+const classesRef =
+    collection(db, "classes");
 
 
 /* =========================================================
@@ -55,6 +73,7 @@ const classesRef = collection(db, "classes");
 ========================================================= */
 
 let students = [];
+
 let classes = [];
 
 
@@ -62,29 +81,37 @@ let classes = [];
    DOM READY
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    try {
+        try {
 
-        await loadClasses();
+            await loadClasses();
 
-        await loadStudents();
+            await loadStudents();
 
-        setupEvents();
+            setupEvents();
 
-    } catch (error) {
+        } catch (error) {
 
-        console.error("Students page error:", error);
+            console.error(
+                "Students page error:",
+                error
+            );
 
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: error.message || "Unable to load students."
-        });
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text:
+                    error.message ||
+                    "Unable to load students."
+            });
+
+        }
 
     }
-
-});
+);
 
 
 /* =========================================================
@@ -93,49 +120,73 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadClasses() {
 
-    const snapshot = await getDocs(classesRef);
+    const snapshot =
+        await getDocs(classesRef);
 
-    const classMap = new Map();
+    const classMap =
+        new Map();
+
 
     snapshot.forEach((docSnap) => {
 
-        const data = docSnap.data();
+        const data =
+            docSnap.data();
 
         const className =
-            String(data.name || "").trim();
+            String(
+                data.name || ""
+            ).trim();
 
-        if (!className) return;
+
+        if (!className) {
+            return;
+        }
+
 
         const normalized =
             className.toLowerCase();
 
+
+        /*
+         * Prevent duplicate class names.
+         */
+
         if (!classMap.has(normalized)) {
 
-            classMap.set(normalized, {
-
-                firestoreId: docSnap.id,
-
-                ...data,
-
-                name: className
-
-            });
+            classMap.set(
+                normalized,
+                {
+                    firestoreId: docSnap.id,
+                    ...data,
+                    name: className
+                }
+            );
 
         }
 
     });
 
-    classes = Array.from(classMap.values());
 
-    classes.sort((a, b) =>
-        a.name.localeCompare(
-            b.name,
-            undefined,
-            {
-                numeric: true,
-                sensitivity: "base"
-            }
-        )
+    classes =
+        Array.from(
+            classMap.values()
+        );
+
+
+    /*
+     * Sort classes naturally.
+     */
+
+    classes.sort(
+        (a, b) =>
+            a.name.localeCompare(
+                b.name,
+                undefined,
+                {
+                    numeric: true,
+                    sensitivity: "base"
+                }
+            )
     );
 
 
@@ -153,31 +204,50 @@ async function loadClasses() {
 function populateStudentClassSelect() {
 
     const select =
-        document.getElementById("studentClass");
+        document.getElementById(
+            "studentClass"
+        );
 
-    if (!select) return;
+
+    if (!select) {
+        return;
+    }
 
 
     select.innerHTML = `
-        <option value="">Select Class</option>
+        <option value="">
+            Select Class
+        </option>
     `;
 
 
-    classes.forEach((classItem) => {
+    classes.forEach(
+        (classItem) => {
 
-        const option =
-            document.createElement("option");
+            const option =
+                document.createElement(
+                    "option"
+                );
 
-        option.value = classItem.name;
 
-        option.textContent = classItem.name;
+            option.value =
+                classItem.name;
 
-        option.dataset.classId =
-            classItem.firestoreId;
 
-        select.appendChild(option);
+            option.textContent =
+                classItem.name;
 
-    });
+
+            option.dataset.classId =
+                classItem.firestoreId;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
 
 }
 
@@ -188,26 +258,41 @@ function populateStudentClassSelect() {
 
 function populateClassFilter() {
 
-    if (!classFilter) return;
+    if (!classFilter) {
+        return;
+    }
 
 
     classFilter.innerHTML = `
-        <option value="">All Classes</option>
+        <option value="">
+            All Classes
+        </option>
     `;
 
 
-    classes.forEach((classItem) => {
+    classes.forEach(
+        (classItem) => {
 
-        const option =
-            document.createElement("option");
+            const option =
+                document.createElement(
+                    "option"
+                );
 
-        option.value = classItem.name;
 
-        option.textContent = classItem.name;
+            option.value =
+                classItem.name;
 
-        classFilter.appendChild(option);
 
-    });
+            option.textContent =
+                classItem.name;
+
+
+            classFilter.appendChild(
+                option
+            );
+
+        }
+    );
 
 }
 
@@ -219,38 +304,55 @@ function populateClassFilter() {
 async function loadStudents() {
 
     const snapshot =
-        await getDocs(studentsRef);
+        await getDocs(
+            studentsRef
+        );
+
 
     students = [];
 
-    snapshot.forEach((docSnap) => {
 
-        students.push({
+    snapshot.forEach(
+        (docSnap) => {
 
-            firestoreId: docSnap.id,
+            students.push({
 
-            ...docSnap.data()
+                firestoreId:
+                    docSnap.id,
 
-        });
+                ...docSnap.data()
 
-    });
+            });
+
+        }
+    );
 
 
-    students.sort((a, b) => {
+    /*
+     * Sort students alphabetically.
+     */
 
-        const nameA =
-            `${a.firstName || ""} ${a.lastName || ""}`
-                .trim()
-                .toLowerCase();
+    students.sort(
+        (a, b) => {
 
-        const nameB =
-            `${b.firstName || ""} ${b.lastName || ""}`
-                .trim()
-                .toLowerCase();
+            const nameA =
+                `${a.firstName || ""} ${a.lastName || ""}`
+                    .trim()
+                    .toLowerCase();
 
-        return nameA.localeCompare(nameB);
 
-    });
+            const nameB =
+                `${b.firstName || ""} ${b.lastName || ""}`
+                    .trim()
+                    .toLowerCase();
+
+
+            return nameA.localeCompare(
+                nameB
+            );
+
+        }
+    );
 
 
     renderStudents();
@@ -264,54 +366,116 @@ async function loadStudents() {
 
 function renderStudents() {
 
-    if (!studentsTableBody) return;
+    if (!studentsTableBody) {
+        return;
+    }
 
 
     const search =
-        (studentSearch?.value || "")
-            .trim()
-            .toLowerCase();
+        (
+            studentSearch?.value ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
 
     const selectedClass =
-        classFilter?.value || "";
+        classFilter?.value ||
+        "";
 
+
+    /*
+     * Filter students.
+     */
 
     const filtered =
-        students.filter((student) => {
+        students.filter(
+            (student) => {
 
-            const fullName =
-                `${student.firstName || ""} ${student.lastName || ""}`
-                    .trim()
-                    .toLowerCase();
-
-            const matchesSearch =
-                !search ||
-                fullName.includes(search) ||
-                String(student.parentName || "")
-                    .toLowerCase()
-                    .includes(search) ||
-                String(student.parentPhone || "")
-                    .toLowerCase()
-                    .includes(search);
+                const fullName =
+                    `${student.firstName || ""} ${student.lastName || ""}`
+                        .trim()
+                        .toLowerCase();
 
 
-            const matchesClass =
-                !selectedClass ||
-                student.studentClass === selectedClass;
+                const admissionNumber =
+                    String(
+                        student.id || ""
+                    ).toLowerCase();
 
 
-            return matchesSearch && matchesClass;
+                const parentName =
+                    String(
+                        student.parentName || ""
+                    ).toLowerCase();
 
-        });
+
+                const parentPhone =
+                    String(
+                        student.parentPhone || ""
+                    ).toLowerCase();
+
+
+                const parentEmail =
+                    String(
+                        student.parentEmail || ""
+                    ).toLowerCase();
+
+
+                const matchesSearch =
+                    !search ||
+
+                    fullName.includes(
+                        search
+                    ) ||
+
+                    admissionNumber.includes(
+                        search
+                    ) ||
+
+                    parentName.includes(
+                        search
+                    ) ||
+
+                    parentPhone.includes(
+                        search
+                    ) ||
+
+                    parentEmail.includes(
+                        search
+                    );
+
+
+                const matchesClass =
+                    !selectedClass ||
+                    student.studentClass ===
+                        selectedClass;
+
+
+                return (
+                    matchesSearch &&
+                    matchesClass
+                );
+
+            }
+        );
 
 
     studentsTableBody.innerHTML = "";
 
 
+    /*
+     * Empty state.
+     */
+
     if (filtered.length === 0) {
 
         if (emptyStudents) {
-            emptyStudents.style.display = "block";
+
+            emptyStudents.style.display =
+                "block";
+
         }
 
         return;
@@ -320,82 +484,173 @@ function renderStudents() {
 
 
     if (emptyStudents) {
-        emptyStudents.style.display = "none";
+
+        emptyStudents.style.display =
+            "none";
+
     }
 
 
-    filtered.forEach((student) => {
+    /*
+     * Create table rows.
+     */
 
-        const row =
-            document.createElement("tr");
+    filtered.forEach(
+        (student) => {
 
-
-        row.innerHTML = `
-
-            <td>
-                ${escapeHTML(student.id || "-")}
-            </td>
-
-            <td>
-                <strong>
-                    ${escapeHTML(student.firstName || "")}
-                    ${escapeHTML(student.lastName || "")}
-                </strong>
-            </td>
-
-            <td>
-                ${escapeHTML(student.gender || "-")}
-            </td>
-
-            <td>
-                ${escapeHTML(student.studentClass || "-")}
-            </td>
-
-            <td>
-                ${escapeHTML(student.parentName || "-")}
-            </td>
-
-            <td>
-                ${escapeHTML(student.parentPhone || "-")}
-            </td>
-
-            <td>
-                <span class="status-badge ${
-                    String(student.status || "")
-                        .toLowerCase() === "active"
-                        ? "active"
-                        : "inactive"
-                }">
-                    ${escapeHTML(student.status || "-")}
-                </span>
-            </td>
-
-            <td>
-
-                <button
-                    type="button"
-                    class="edit-student-btn"
-                    data-id="${student.firestoreId}"
-                >
-                    Edit
-                </button>
-
-                <button
-                    type="button"
-                    class="delete-student-btn"
-                    data-id="${student.firestoreId}"
-                >
-                    Delete
-                </button>
-
-            </td>
-
-        `;
+            const row =
+                document.createElement(
+                    "tr"
+                );
 
 
-        studentsTableBody.appendChild(row);
+            row.innerHTML = `
 
-    });
+                <!-- ADMISSION NUMBER -->
+
+                <td>
+                    <strong>
+                        ${escapeHTML(
+                            student.id || "-"
+                        )}
+                    </strong>
+                </td>
+
+
+                <!-- STUDENT NAME -->
+
+                <td>
+                    <strong>
+                        ${escapeHTML(
+                            student.firstName || ""
+                        )}
+                        ${escapeHTML(
+                            student.lastName || ""
+                        )}
+                    </strong>
+                </td>
+
+
+                <!-- GENDER -->
+
+                <td>
+                    ${escapeHTML(
+                        student.gender || "-"
+                    )}
+                </td>
+
+
+                <!-- CLASS -->
+
+                <td>
+                    ${escapeHTML(
+                        student.studentClass || "-"
+                    )}
+                </td>
+
+
+                <!-- PARENT / GUARDIAN -->
+
+                <td>
+                    ${escapeHTML(
+                        student.parentName || "-"
+                    )}
+                </td>
+
+
+                <!-- PHONE -->
+
+                <td>
+                    ${escapeHTML(
+                        student.parentPhone || "-"
+                    )}
+                </td>
+
+
+                <!-- PARENT EMAIL -->
+
+                <td>
+
+                    ${
+                        student.parentEmail
+                            ? `
+                                <a
+                                    href="mailto:${escapeHTML(
+                                        student.parentEmail
+                                    )}"
+                                >
+                                    ${escapeHTML(
+                                        student.parentEmail
+                                    )}
+                                </a>
+                              `
+                            : "-"
+                    }
+
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+
+                    <span
+                        class="status-badge ${
+                            String(
+                                student.status || ""
+                            )
+                            .toLowerCase() ===
+                            "active"
+                                ? "active"
+                                : "inactive"
+                        }"
+                    >
+
+                        ${escapeHTML(
+                            student.status || "-"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <!-- ACTIONS -->
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="edit-student-btn"
+                        data-id="${
+                            student.firestoreId
+                        }"
+                    >
+                        Edit
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="delete-student-btn"
+                        data-id="${
+                            student.firestoreId
+                        }"
+                    >
+                        Delete
+                    </button>
+
+                </td>
+
+            `;
+
+
+            studentsTableBody.appendChild(
+                row
+            );
+
+        }
+    );
 
 
     attachRowButtons();
@@ -409,6 +664,9 @@ function renderStudents() {
 
 function setupEvents() {
 
+
+    /* ADD STUDENT */
+
     if (addStudentBtn) {
 
         addStudentBtn.addEventListener(
@@ -418,6 +676,8 @@ function setupEvents() {
 
     }
 
+
+    /* SEARCH */
 
     if (studentSearch) {
 
@@ -429,6 +689,8 @@ function setupEvents() {
     }
 
 
+    /* CLASS FILTER */
+
     if (classFilter) {
 
         classFilter.addEventListener(
@@ -438,6 +700,8 @@ function setupEvents() {
 
     }
 
+
+    /* FORM SUBMISSION */
 
     if (studentForm) {
 
@@ -449,20 +713,51 @@ function setupEvents() {
     }
 
 
-    document.addEventListener(
-        "click",
-        (event) => {
+    /* CLOSE BUTTON */
 
-            if (
-                event.target === studentModal
-            ) {
+    if (closeStudentModalBtn) {
 
-                closeStudentModal();
+        closeStudentModalBtn.addEventListener(
+            "click",
+            closeStudentModal
+        );
+
+    }
+
+
+    /* CANCEL BUTTON */
+
+    if (cancelStudentBtn) {
+
+        cancelStudentBtn.addEventListener(
+            "click",
+            closeStudentModal
+        );
+
+    }
+
+
+    /* CLICK OUTSIDE MODAL */
+
+    if (studentModal) {
+
+        studentModal.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    event.target ===
+                    studentModal
+                ) {
+
+                    closeStudentModal();
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
 
 }
 
@@ -473,40 +768,53 @@ function setupEvents() {
 
 function attachRowButtons() {
 
-    document
-        .querySelectorAll(".edit-student-btn")
-        .forEach((button) => {
 
-            button.addEventListener(
-                "click",
-                () => {
-
-                    editStudent(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
-        });
-
+    /* EDIT BUTTONS */
 
     document
-        .querySelectorAll(".delete-student-btn")
-        .forEach((button) => {
+        .querySelectorAll(
+            ".edit-student-btn"
+        )
+        .forEach(
+            (button) => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    deleteStudent(
-                        button.dataset.id
-                    );
+                        editStudent(
+                            button.dataset.id
+                        );
 
-                }
-            );
+                    }
+                );
 
-        });
+            }
+        );
+
+
+    /* DELETE BUTTONS */
+
+    document
+        .querySelectorAll(
+            ".delete-student-btn"
+        )
+        .forEach(
+            (button) => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        deleteStudent(
+                            button.dataset.id
+                        );
+
+                    }
+                );
+
+            }
+        );
 
 }
 
@@ -517,29 +825,34 @@ function attachRowButtons() {
 
 function openAddStudentModal() {
 
-    if (!studentForm) return;
+    if (!studentForm) {
+        return;
+    }
+
 
     studentForm.reset();
 
 
     if (editingStudentId) {
-        editingStudentId.value = "";
+
+        editingStudentId.value =
+            "";
+
     }
 
 
-    const title =
-        studentModal?.querySelector(
-            ".modal-title"
-        );
+    if (modalTitle) {
 
-    if (title) {
-        title.textContent = "Add Student";
+        modalTitle.textContent =
+            "Add Student";
+
     }
 
 
     if (studentModal) {
 
-        studentModal.style.display = "flex";
+        studentModal.style.display =
+            "flex";
 
     }
 
@@ -550,12 +863,15 @@ function openAddStudentModal() {
    EDIT STUDENT
 ========================================================= */
 
-async function editStudent(studentId) {
+async function editStudent(
+    studentId
+) {
 
     const student =
         students.find(
             (item) =>
-                item.firestoreId === studentId
+                item.firestoreId ===
+                studentId
         );
 
 
@@ -573,8 +889,10 @@ async function editStudent(studentId) {
 
 
     if (editingStudentId) {
+
         editingStudentId.value =
             student.firestoreId;
+
     }
 
 
@@ -583,50 +901,60 @@ async function editStudent(studentId) {
         student.firstName
     );
 
+
     setValue(
         "lastName",
         student.lastName
     );
+
 
     setValue(
         "dateOfBirth",
         student.dateOfBirth
     );
 
+
     setValue(
         "gender",
         student.gender
     );
+
 
     setValue(
         "studentClass",
         student.studentClass
     );
 
+
     setValue(
         "admissionDate",
         student.admissionDate
     );
+
 
     setValue(
         "parentName",
         student.parentName
     );
 
+
     setValue(
         "parentPhone",
         student.parentPhone
     );
+
 
     setValue(
         "parentEmail",
         student.parentEmail
     );
 
+
     setValue(
         "studentStatus",
         student.status
     );
+
 
     setValue(
         "studentAddress",
@@ -634,18 +962,19 @@ async function editStudent(studentId) {
     );
 
 
-    const title =
-        studentModal?.querySelector(
-            ".modal-title"
-        );
+    if (modalTitle) {
 
-    if (title) {
-        title.textContent = "Edit Student";
+        modalTitle.textContent =
+            "Edit Student";
+
     }
 
 
     if (studentModal) {
-        studentModal.style.display = "flex";
+
+        studentModal.style.display =
+            "flex";
+
     }
 
 }
@@ -655,7 +984,9 @@ async function editStudent(studentId) {
    SAVE STUDENT
 ========================================================= */
 
-async function saveStudent(event) {
+async function saveStudent(
+    event
+) {
 
     event.preventDefault();
 
@@ -663,48 +994,71 @@ async function saveStudent(event) {
     const firstName =
         getValue("firstName");
 
+
     const lastName =
         getValue("lastName");
+
 
     const dateOfBirth =
         getValue("dateOfBirth");
 
+
     const gender =
         getValue("gender");
+
 
     const studentClass =
         getValue("studentClass");
 
+
     const admissionDate =
         getValue("admissionDate");
+
 
     const parentName =
         getValue("parentName");
 
+
     const parentPhone =
         getValue("parentPhone");
+
 
     const parentEmail =
         getValue("parentEmail");
 
+
     const status =
         getValue("studentStatus");
+
 
     const address =
         getValue("studentAddress");
 
 
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
     if (
         !firstName ||
         !lastName ||
-        !studentClass
+        !dateOfBirth ||
+        !gender ||
+        !studentClass ||
+        !admissionDate ||
+        !parentName ||
+        !parentPhone
     ) {
 
         Swal.fire({
+
             icon: "warning",
+
             title: "Incomplete Form",
+
             text:
-                "Please enter the student's name and select a class."
+                "Please complete all required student and parent information."
+
         });
 
         return;
@@ -719,17 +1073,22 @@ async function saveStudent(event) {
     const selectedClass =
         classes.find(
             (classItem) =>
-                classItem.name === studentClass
+                classItem.name ===
+                studentClass
         );
 
 
     if (!selectedClass) {
 
         Swal.fire({
+
             icon: "error",
+
             title: "Class Not Found",
+
             text:
                 "The selected class could not be found in Firestore."
+
         });
 
         return;
@@ -754,10 +1113,10 @@ async function saveStudent(event) {
         studentClass,
 
         /*
-         * IMPORTANT
-         * This is the Firestore class document ID.
+         * Firestore class document ID.
          * Example: CLS-001
          */
+
         classId:
             selectedClass.firestoreId,
 
@@ -781,14 +1140,15 @@ async function saveStudent(event) {
 
     try {
 
+
+        /* =================================================
+           UPDATE EXISTING STUDENT
+        ================================================= */
+
         if (
             editingStudentId &&
             editingStudentId.value
         ) {
-
-            /* =================================================
-               UPDATE EXISTING STUDENT
-            ================================================= */
 
             const studentRef =
                 doc(
@@ -804,19 +1164,29 @@ async function saveStudent(event) {
             );
 
 
-            Swal.fire({
+            await Swal.fire({
+
                 icon: "success",
+
                 title: "Updated",
-                text: "Student updated successfully.",
+
+                text:
+                    "Student updated successfully.",
+
                 timer: 1500,
+
                 showConfirmButton: false
+
             });
 
-        } else {
+        }
 
-            /* =================================================
-               CREATE NEW STUDENT
-            ================================================= */
+
+        /* =================================================
+           CREATE NEW STUDENT
+        ================================================= */
+
+        else {
 
             const studentId =
                 await generateStudentId();
@@ -826,7 +1196,8 @@ async function saveStudent(event) {
                 studentsRef,
                 {
 
-                    id: studentId,
+                    id:
+                        studentId,
 
                     ...studentData,
 
@@ -837,18 +1208,26 @@ async function saveStudent(event) {
             );
 
 
-            Swal.fire({
+            await Swal.fire({
+
                 icon: "success",
+
                 title: "Student Added",
-                text: "Student added successfully.",
+
+                text:
+                    "Student added successfully.",
+
                 timer: 1500,
+
                 showConfirmButton: false
+
             });
 
         }
 
 
         closeStudentModal();
+
 
         await loadStudents();
 
@@ -862,11 +1241,15 @@ async function saveStudent(event) {
 
 
         Swal.fire({
+
             icon: "error",
+
             title: "Save Failed",
+
             text:
                 error.message ||
                 "Unable to save student."
+
         });
 
     }
@@ -875,59 +1258,66 @@ async function saveStudent(event) {
 
 
 /* =========================================================
-   GENERATE STUDENT ID
+   GENERATE STUDENT ADMISSION NUMBER
 ========================================================= */
 
 async function generateStudentId() {
 
     const year =
-        new Date().getFullYear();
+        new Date()
+            .getFullYear();
 
 
     let highestNumber = 0;
 
 
-    students.forEach((student) => {
+    students.forEach(
+        (student) => {
 
-        const id =
-            String(student.id || "");
-
-
-        const match =
-            id.match(
-                new RegExp(
-                    `STU-${year}-(\\d+)`
-                )
-            );
-
-
-        if (match) {
-
-            const number =
-                parseInt(
-                    match[1],
-                    10
+            const id =
+                String(
+                    student.id || ""
                 );
 
 
-            if (
-                number >
-                highestNumber
-            ) {
+            const match =
+                id.match(
+                    new RegExp(
+                        `STU-${year}-(\\d+)`
+                    )
+                );
 
-                highestNumber = number;
+
+            if (match) {
+
+                const number =
+                    parseInt(
+                        match[1],
+                        10
+                    );
+
+
+                if (
+                    number >
+                    highestNumber
+                ) {
+
+                    highestNumber =
+                        number;
+
+                }
 
             }
 
         }
-
-    });
+    );
 
 
     const nextNumber =
         String(
             highestNumber + 1
-        ).padStart(
+        )
+        .padStart(
             4,
             "0"
         );
@@ -942,16 +1332,21 @@ async function generateStudentId() {
    DELETE STUDENT
 ========================================================= */
 
-async function deleteStudent(studentId) {
+async function deleteStudent(
+    studentId
+) {
 
     const student =
         students.find(
             (item) =>
-                item.firestoreId === studentId
+                item.firestoreId ===
+                studentId
         );
 
 
-    if (!student) return;
+    if (!student) {
+        return;
+    }
 
 
     const result =
@@ -959,12 +1354,14 @@ async function deleteStudent(studentId) {
 
             icon: "warning",
 
-            title: "Delete Student?",
+            title:
+                "Delete Student?",
 
             text:
                 `${student.firstName || ""} ${student.lastName || ""} will be permanently deleted.`,
 
-            showCancelButton: true,
+            showCancelButton:
+                true,
 
             confirmButtonText:
                 "Yes, Delete",
@@ -991,12 +1388,22 @@ async function deleteStudent(studentId) {
         );
 
 
-        Swal.fire({
+        await Swal.fire({
+
             icon: "success",
-            title: "Deleted",
-            text: "Student deleted successfully.",
-            timer: 1500,
-            showConfirmButton: false
+
+            title:
+                "Deleted",
+
+            text:
+                "Student deleted successfully.",
+
+            timer:
+                1500,
+
+            showConfirmButton:
+                false
+
         });
 
 
@@ -1012,11 +1419,16 @@ async function deleteStudent(studentId) {
 
 
         Swal.fire({
+
             icon: "error",
-            title: "Delete Failed",
+
+            title:
+                "Delete Failed",
+
             text:
                 error.message ||
                 "Unable to delete student."
+
         });
 
     }
@@ -1030,21 +1442,26 @@ async function deleteStudent(studentId) {
 
 function closeStudentModal() {
 
-    if (!studentModal) return;
+    if (!studentModal) {
+        return;
+    }
 
-    studentModal.style.display = "none";
+
+    studentModal.style.display =
+        "none";
 
 }
 
 
 /* =========================================================
-   HELPERS
+   GET VALUE
 ========================================================= */
 
 function getValue(id) {
 
     const element =
         document.getElementById(id);
+
 
     return element
         ? element.value.trim()
@@ -1053,10 +1470,18 @@ function getValue(id) {
 }
 
 
-function setValue(id, value) {
+/* =========================================================
+   SET VALUE
+========================================================= */
+
+function setValue(
+    id,
+    value
+) {
 
     const element =
         document.getElementById(id);
+
 
     if (element) {
 
@@ -1068,29 +1493,37 @@ function setValue(id, value) {
 }
 
 
-function escapeHTML(value) {
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-    return String(value ?? "")
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
