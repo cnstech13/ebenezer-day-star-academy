@@ -120,126 +120,694 @@ button {
    HEADER
 ========================= */
 
+/* =========================
+   HEADER
+   BEAUTIFUL EBENEZER NAVIGATION
+========================= */
+
 .header {
     position: sticky;
     top: 0;
     z-index: 1000;
+
     background: rgba(255, 255, 255, 0.96);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid rgba(11, 94, 215, 0.10);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 5px 25px rgba(16, 24, 40, 0.08);
+
+    transition:
+        background 0.3s ease,
+        box-shadow 0.3s ease;
 }
+
+
+/* =========================================================
+   NAVIGATION CONTAINER
+========================================================= */
 
 .nav-container {
+
     min-height: 78px;
+
     display: flex;
+
     align-items: center;
-    gap: 30px;
+
+    gap: 22px;
+
 }
+
+
+/* =========================================================
+   SCHOOL LOGO / BRAND
+========================================================= */
 
 .logo {
+
     display: flex;
+
     align-items: center;
-    gap: 10px;
+
+    gap: 11px;
+
     margin-right: auto;
+
+    text-decoration: none;
+
+    flex-shrink: 0;
+
 }
+
 
 .logo-icon {
-    width: 44px;
-    height: 44px;
+
+    width: 50px;
+
+    height: 50px;
+
     display: grid;
+
     place-items: center;
-    background: var(--primary);
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b5ed7,
+            #084298
+        );
+
     color: white;
-    border-radius: 10px;
+
+    border-radius: 12px;
+
     font-weight: 800;
+
     overflow: hidden;
+
+    box-shadow:
+        0 5px 15px rgba(11, 94, 215, 0.20);
+
+    transition: 0.3s ease;
+
 }
 
-.logo-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+
+.logo:hover .logo-icon {
+
+    transform:
+        translateY(-2px)
+        rotate(-2deg);
+
+    box-shadow:
+        0 8px 20px rgba(11, 94, 215, 0.28);
+
 }
+
+
+.logo-icon img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+}
+
 
 .logo strong,
 .logo small {
+
     display: block;
+
 }
+
 
 .logo strong {
+
     font-size: 16px;
+
+    font-weight: 800;
+
+    color: #101828;
+
+    line-height: 1.2;
+
 }
+
 
 .logo small {
-    color: var(--primary);
-    font-size: 12px;
+
+    color: #0b5ed7;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    margin-top: 3px;
+
 }
+
+
+/* =========================================================
+   MAIN NAVIGATION
+========================================================= */
 
 .navbar {
+
     display: flex;
+
     align-items: center;
-    gap: 25px;
+
+    gap: 4px;
+
 }
+
+
+/* Navigation links */
 
 .navbar a {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
     color: #344054;
+
     font-size: 14px;
+
     font-weight: 600;
-    transition: 0.3s;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    transition:
+        color 0.3s ease,
+        background 0.3s ease,
+        transform 0.3s ease;
+
 }
 
-.navbar a:hover,
-.navbar a.active {
-    color: var(--primary);
+
+/* Hover */
+
+.navbar a:hover {
+
+    color: #0b5ed7;
+
+    background: #eef6ff;
+
+    transform:
+        translateY(-1px);
+
 }
+
+
+/* Animated underline */
+
+.navbar a::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 4px;
+
+    width: 0;
+
+    height: 2px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0b5ed7,
+            #4da3ff
+        );
+
+    transform:
+        translateX(-50%);
+
+    transition:
+        width 0.3s ease;
+
+}
+
+
+.navbar a:hover::after,
+.navbar a.active::after {
+
+    width: 45%;
+
+}
+
+
+/* Active navigation */
+
+.navbar a.active {
+
+    color: #0b5ed7;
+
+    background: #eef6ff;
+
+}
+
+
+/* =========================================================
+   NAVIGATION ACTIONS
+========================================================= */
 
 .nav-actions {
+
     display: flex;
+
     align-items: center;
-    gap: 12px;
+
+    gap: 9px;
+
 }
+
+
+/* =========================================================
+   THEME BUTTON
+========================================================= */
 
 .theme-btn {
-    border: none;
-    background: #f2f4f7;
+
+    border: 1px solid #e4e7ec;
+
+    background: #f8fafc;
+
+    color: #344054;
+
     width: 40px;
+
     height: 40px;
+
     border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        0.3s ease;
+
 }
+
+
+.theme-btn:hover {
+
+    background: #0b5ed7;
+
+    color: white;
+
+    border-color: #0b5ed7;
+
+    transform:
+        rotate(15deg)
+        scale(1.05);
+
+}
+
+
+/* =========================================================
+   APPLY NOW BUTTON
+========================================================= */
 
 .nav-apply {
-    background: var(--primary);
-    color: white;
-    padding: 11px 18px;
-    border-radius: 8px;
-    font-size: 14px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b5ed7,
+            #084298
+        );
+
+    color: white !important;
+
+    padding: 11px 19px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
     font-weight: 700;
-    transition: 0.3s;
+
+    box-shadow:
+        0 6px 16px rgba(11, 94, 215, 0.20);
+
+    transition:
+        0.3s ease;
+
 }
+
 
 .nav-apply:hover {
-    background: var(--primary-dark);
+
+    background:
+        linear-gradient(
+            135deg,
+            #084298,
+            #063276
+        );
+
+    color: white !important;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 9px 22px rgba(11, 94, 215, 0.28);
+
 }
+
+
+/* Remove underline from Apply button */
+
+.nav-apply::after {
+
+    display: none !important;
+
+}
+
+
+/* =========================================================
+   MOBILE MENU BUTTON
+========================================================= */
 
 .menu-btn {
+
     display: none;
+
     border: none;
-    background: transparent;
-    width: 40px;
-    height: 40px;
+
+    background: #f2f7ff;
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 10px;
+
+    transition:
+        0.3s ease;
+
 }
+
+
+.menu-btn:hover {
+
+    background: #0b5ed7;
+
+}
+
 
 .menu-btn span {
+
     display: block;
-    width: 24px;
+
+    width: 23px;
+
     height: 2px;
+
     margin: 5px auto;
-    background: var(--dark);
-    transition: 0.4s;
+
+    background: #0b1f3a;
+
+    border-radius: 5px;
+
+    transition:
+        0.4s;
+
 }
 
 
+.menu-btn:hover span {
+
+    background: white;
+
+}
+
+
+/* =========================================================
+   MOBILE NAVIGATION
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .nav-container {
+
+        min-height: 72px;
+
+        gap: 10px;
+
+    }
+
+
+    .navbar {
+
+        position: absolute;
+
+        top: calc(100% + 8px);
+
+        left: 15px;
+
+        right: 15px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 5px;
+
+        padding: 14px;
+
+        background:
+            rgba(255, 255, 255, 0.98);
+
+        backdrop-filter: blur(18px);
+
+        -webkit-backdrop-filter: blur(18px);
+
+        border:
+            1px solid rgba(11, 94, 215, 0.10);
+
+        border-radius: 16px;
+
+        box-shadow:
+            0 15px 40px rgba(16, 24, 40, 0.15);
+
+        transform:
+            translateY(-15px);
+
+        opacity: 0;
+
+        pointer-events: none;
+
+        transition:
+            0.3s ease;
+
+    }
+
+
+    .navbar.show {
+
+        transform:
+            translateY(0);
+
+        opacity: 1;
+
+        pointer-events: auto;
+
+    }
+
+
+    .navbar a {
+
+        width: 100%;
+
+        justify-content: flex-start;
+
+        padding: 13px 15px;
+
+        border-radius: 10px;
+
+    }
+
+
+    .navbar a::after {
+
+        display: none;
+
+    }
+
+
+    .navbar a:hover {
+
+        transform:
+            translateX(4px);
+
+    }
+
+
+    .nav-actions {
+
+        margin-left: 0;
+
+        gap: 7px;
+
+    }
+
+
+    .nav-apply {
+
+        display: none;
+
+    }
+
+
+    .menu-btn {
+
+        display: block;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .nav-container {
+
+        min-height: 68px;
+
+        width: 94%;
+
+    }
+
+
+    .logo {
+
+        gap: 8px;
+
+    }
+
+
+    .logo-icon {
+
+        width: 44px;
+
+        height: 44px;
+
+        border-radius: 10px;
+
+    }
+
+
+    .logo strong {
+
+        font-size: 14px;
+
+    }
+
+
+    .logo small {
+
+        font-size: 9px;
+
+    }
+
+
+    .theme-btn {
+
+        width: 37px;
+
+        height: 37px;
+
+    }
+
+
+    .menu-btn {
+
+        width: 39px;
+
+        height: 39px;
+
+    }
+
+
+    .navbar {
+
+        left: 10px;
+
+        right: 10px;
+
+        padding: 12px;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .logo strong {
+
+        font-size: 12px;
+
+    }
+
+
+    .logo small {
+
+        font-size: 8px;
+
+    }
+
+
+    .logo-icon {
+
+        width: 40px;
+
+        height: 40px;
+
+    }
+
+}
 /* =========================
    HERO
 ========================= */
@@ -258,12 +826,15 @@ button {
 }
 
 .hero-content {
-    position: relative;
-    z-index: 2;
+    min-height: 650px;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 70px;
 }
 
 .hero-text {
     max-width: 720px;
+    top:23%;
 }
 
 .hero-badge {
@@ -282,6 +853,7 @@ button {
     font-size: clamp(42px, 7vw, 76px);
     line-height: 1.02;
     margin-bottom: 25px;
+    top:30%;
 }
 
 .hero h1 span {
@@ -293,6 +865,7 @@ button {
     font-size: 18px;
     color: #e4e7ec;
     margin-bottom: 32px;
+    top:35;
 }
 
 .hero-buttons {
@@ -2529,4 +3102,226 @@ select {
         font-size: 14px;
         line-height: 1.6;
     }
+}
+
+/* =========================================================
+   EBENEZER DAY STAR ACADEMY
+   BEAUTIFUL ADMIN SIDEBAR LINKS
+========================================================= */
+
+.sidebar {
+    background: linear-gradient(
+        180deg,
+        #082f70 0%,
+        #0b3d91 45%,
+        #06275f 100%
+    );
+
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Sidebar school name */
+.sidebar-header {
+    padding: 24px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: center;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 19px;
+    line-height: 1.35;
+}
+
+.sidebar-header p {
+    margin: 6px 0 0;
+    color: #dbeafe;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.sidebar-nav {
+    padding: 18px 12px;
+}
+
+
+/* Individual links */
+.sidebar-nav a {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 46px;
+    margin: 5px 0;
+    padding: 11px 15px;
+
+    border-radius: 12px;
+
+    color: #e8f0ff;
+    background: transparent;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+
+    overflow: hidden;
+}
+
+
+/* Small left indicator */
+.sidebar-nav a::before {
+    content: "";
+
+    width: 4px;
+    height: 0;
+
+    position: absolute;
+    left: 0;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    background: #f4d35e;
+
+    border-radius: 0 5px 5px 0;
+
+    transition: height 0.25s ease;
+}
+
+
+/* Hover */
+.sidebar-nav a:hover {
+    color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    transform: translateX(4px);
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Hover indicator */
+.sidebar-nav a:hover::before {
+    height: 24px;
+}
+
+
+/* Active page */
+.sidebar-nav a.active {
+    color: #082f70;
+
+    background: linear-gradient(
+        135deg,
+        #fff8d6 0%,
+        #f4d35e 45%,
+        #d4af37 100%
+    );
+
+    font-weight: 700;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.16);
+}
+
+
+/* Active indicator */
+.sidebar-nav a.active::before {
+    height: 28px;
+    background: #082f70;
+}
+
+
+/* Active hover */
+.sidebar-nav a.active:hover {
+    transform: translateX(3px);
+
+    background: linear-gradient(
+        135deg,
+        #fffbe8 0%,
+        #f6da67 45%,
+        #d4af37 100%
+    );
+}
+
+
+/* =========================================================
+   LOGOUT LINK
+========================================================= */
+
+.sidebar-nav a#logout {
+    margin-top: 18px;
+
+    color: #ffe2e2;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 12px;
+    padding-top: 15px;
+}
+
+
+.sidebar-nav a#logout:hover {
+    color: #ffffff;
+
+    background: rgba(220, 38, 38, 0.25);
+
+    transform: translateX(4px);
+}
+
+
+.sidebar-nav a#logout::before {
+    background: #ff7676;
+}
+
+
+/* =========================================================
+   MOBILE SIDEBAR
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar-nav {
+        padding: 14px 10px;
+    }
+
+    .sidebar-nav a {
+        min-height: 44px;
+
+        padding: 10px 13px;
+
+        font-size: 13px;
+
+        border-radius: 10px;
+    }
+
+    .sidebar-header h2 {
+        font-size: 17px;
+    }
+
+    .sidebar-header p {
+        font-size: 12px;
+    }
+
+}
+
+.hero-content {
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    padding-top: 150px;
 }

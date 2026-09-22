@@ -1,10 +1,2179 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teacher Portal</title><link rel="stylesheet" href="portal-dashboard.css"></head><body><header><strong>Ebenezer Day Star Academy</strong><nav><a href="teacher-dashboard.html">Dashboard</a><a href="teacher-results.html">Results</a><a href="teacher-attendance.html">Attendance</a><a href="#notifications">Notifications</a><button id="logout">Logout</button></nav></header><main><section class="hero"><h1 id="welcome">Teacher Portal</h1><p id="details">Loading your teaching profile...</p></section><section class="grid"><div class="card"><h2>Assigned Classes</h2><div id="classes">Loading...</div></div><div class="card"><h2>Students</h2><div id="students">Loading...</div></div><div class="card"><h2>Recent Results</h2><div id="results">Loading...</div></div><div class="card" id="notifications"><h2>Notifications</h2><div id="notices">Loading...</div></div></section></main><script type="module" src="teacher-dashboard.js"></script><script type="module">
-import { goBackOr } from "./back-navigation.js";
-document.querySelectorAll("[data-smart-back]").forEach((el) => {
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
-    goBackOr(el.dataset.smartBack || "portal-login.html");
-  });
-});
-</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <title>
+        Teacher Dashboard | Ebenezer Day Star Academy
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #26384f;
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+
+            top: 0;
+
+            width: 250px;
+
+            height: 100vh;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #071a33,
+                    #0b1f3a,
+                    #163f70
+                );
+
+            color: white;
+
+            z-index: 1000;
+
+            overflow-y: auto;
+
+            transition:
+                transform 0.3s ease;
+
+        }
+
+
+        .sidebar-header {
+
+            padding: 24px 18px;
+
+            text-align: center;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.12);
+
+        }
+
+
+        .teacher-logo {
+
+            width: 65px;
+
+            height: 65px;
+
+            margin: 0 auto 12px;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8d6,
+                    #f4d35e
+                );
+
+            font-size: 30px;
+
+        }
+
+
+        .sidebar-header h2 {
+
+            margin: 0;
+
+            font-size: 17px;
+
+        }
+
+
+        .sidebar-header p {
+
+            margin: 6px 0 0;
+
+            color: #f4d35e;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+        }
+
+
+        .sidebar-menu {
+
+            padding: 18px 12px;
+
+        }
+
+
+        .sidebar-menu a,
+        .logout-btn {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 13px 14px;
+
+            margin-bottom: 5px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: transparent;
+
+            color: #dce6f3;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            text-align: left;
+
+        }
+
+
+        .sidebar-menu a:hover,
+        .logout-btn:hover {
+
+            background:
+                rgba(255,255,255,0.10);
+
+            color: white;
+
+        }
+
+
+        .sidebar-menu a.active {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d4af37,
+                    #f4d35e
+                );
+
+            color: #071a33;
+
+            font-weight: bold;
+
+        }
+
+
+        .menu-icon {
+
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 16px;
+
+        }
+
+
+        .logout-area {
+
+            margin-top: 20px;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.12);
+
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+
+            height: 72px;
+
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 28px;
+
+            box-shadow:
+                0 2px 12px
+                rgba(0,0,0,0.06);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 500;
+
+        }
+
+
+        .menu-toggle {
+
+            display: none;
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #0b1f3a;
+
+        }
+
+
+        .page-heading h1 {
+
+            margin: 0;
+
+            color: #0b1f3a;
+
+            font-size: 21px;
+
+        }
+
+
+        .page-heading p {
+
+            margin: 4px 0 0;
+
+            color: #718096;
+
+            font-size: 12px;
+
+        }
+
+
+        .teacher-top-info {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .top-avatar {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8d6,
+                    #f4d35e
+                );
+
+            color: #0b1f3a;
+
+            font-weight: bold;
+
+        }
+
+
+        .top-teacher-name {
+
+            color: #0b1f3a;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+        }
+
+
+        .top-teacher-role {
+
+            color: #718096;
+
+            font-size: 11px;
+
+            margin-top: 2px;
+
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+
+            padding: 28px;
+
+        }
+
+
+        /* =====================================================
+           WELCOME CARD
+        ===================================================== */
+
+        .welcome-card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b1f3a,
+                    #163f70
+                );
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            color: white;
+
+            margin-bottom: 25px;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        .welcome-card::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+
+            height: 180px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(244,211,94,0.10);
+
+            right: -50px;
+
+            top: -70px;
+
+        }
+
+
+        .welcome-card h2 {
+
+            margin: 0;
+
+            font-size: 23px;
+
+            position: relative;
+
+            z-index: 1;
+
+        }
+
+
+        .welcome-card p {
+
+            margin: 8px 0 0;
+
+            color: #dce6f3;
+
+            font-size: 13px;
+
+            position: relative;
+
+            z-index: 1;
+
+        }
+
+
+        .welcome-motto {
+
+            margin-top: 13px;
+
+            color: #f4d35e;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            position: relative;
+
+            z-index: 1;
+
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 17px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 19px;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,0.05);
+
+            border:
+                1px solid
+                #edf1f5;
+
+        }
+
+
+        .stat-icon {
+
+            width: 43px;
+
+            height: 43px;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #fff8d6;
+
+            font-size: 20px;
+
+            margin-bottom: 13px;
+
+        }
+
+
+        .stat-card h3 {
+
+            margin: 0;
+
+            color: #0b1f3a;
+
+            font-size: 24px;
+
+        }
+
+
+        .stat-card p {
+
+            margin: 5px 0 0;
+
+            color: #718096;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .dashboard-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.5fr 1fr;
+
+            gap: 20px;
+
+        }
+
+
+        .card {
+
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 21px;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,0.05);
+
+            border:
+                1px solid
+                #edf1f5;
+
+        }
+
+
+        .card-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 17px;
+
+            padding-bottom: 13px;
+
+            border-bottom:
+                1px solid
+                #edf1f5;
+
+        }
+
+
+        .card-header h3 {
+
+            margin: 0;
+
+            color: #0b1f3a;
+
+            font-size: 16px;
+
+        }
+
+
+        .card-header span {
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           PROFILE
+        ===================================================== */
+
+        .profile-row {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 12px 0;
+
+            border-bottom:
+                1px solid
+                #f0f3f7;
+
+        }
+
+
+        .profile-row:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .profile-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 10px;
+
+            background: #fff8d6;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .profile-label {
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        .profile-value {
+
+            margin-top: 3px;
+
+            color: #0b1f3a;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           QUICK ACTIONS
+        ===================================================== */
+
+        .quick-actions {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 10px;
+
+        }
+
+
+        .quick-action {
+
+            border:
+                1px solid
+                #e5eaf0;
+
+            border-radius: 11px;
+
+            padding: 15px 10px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            color: #0b1f3a;
+
+            transition:
+                0.2s ease;
+
+        }
+
+
+        .quick-action:hover {
+
+            border-color: #d4af37;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 5px 14px
+                rgba(0,0,0,0.07);
+
+        }
+
+
+        .quick-action-icon {
+
+            font-size: 23px;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .quick-action span {
+
+            display: block;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           CLASSES
+        ===================================================== */
+
+        .class-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+        }
+
+
+        .class-item {
+
+            padding: 14px;
+
+            border-radius: 11px;
+
+            background: #f7f9fc;
+
+            border-left:
+                4px solid
+                #d4af37;
+
+        }
+
+
+        .class-name {
+
+            color: #0b1f3a;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+
+        .class-subject {
+
+            margin-top: 4px;
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           CLASS ACTION BUTTONS
+        ===================================================== */
+
+        .class-actions {
+
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 12px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .class-action-btn {
+
+            flex: 1;
+
+            min-width: 120px;
+
+            padding: 10px 9px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .results-btn {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d4af37,
+                    #f4d35e
+                );
+
+            color: #071a33;
+
+        }
+
+
+        .attendance-btn {
+
+            background: #0b1f3a;
+
+            color: white;
+
+        }
+
+
+        .class-action-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 5px 12px
+                rgba(0,0,0,0.12);
+
+        }
+
+
+        /* =====================================================
+           RESULT MANAGEMENT BUTTON
+        ===================================================== */
+
+        .management-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            margin-top: 10px;
+
+            padding: 11px 18px;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d4af37,
+                    #f4d35e
+                );
+
+            color: #071a33;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .management-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 5px 14px
+                rgba(0,0,0,0.12);
+
+        }
+
+
+        .no-data {
+
+            text-align: center;
+
+            padding: 25px 10px;
+
+            color: #718096;
+
+            font-size: 12px;
+
+        }
+        
+        /* =====================================================
+   DASHBOARD MANAGEMENT ACTIONS
+===================================================== */
+
+.dashboard-class-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 12px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.dashboard-action {
+
+    flex: 1;
+
+    min-width: 120px;
+
+    padding: 9px 10px;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    transition: 0.2s ease;
+
+}
+
+
+.results-action {
+
+    background: #0b1f3a;
+
+    color: white;
+
+}
+
+
+.results-action:hover {
+
+    background: #163f70;
+
+    transform: translateY(-1px);
+
+}
+
+
+.attendance-action {
+
+    background: #d4af37;
+
+    color: #071a33;
+
+}
+
+
+.attendance-action:hover {
+
+    background: #f4d35e;
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =====================================================
+   MANAGEMENT SECTIONS
+===================================================== */
+
+.dashboard-management-intro {
+
+    padding: 12px;
+
+    background: #f7f9fc;
+
+    border-radius: 10px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.dashboard-management-intro strong {
+
+    display: block;
+
+    color: #0b1f3a;
+
+    font-size: 13px;
+
+}
+
+
+.dashboard-management-intro p {
+
+    margin: 5px 0 0;
+
+    color: #718096;
+
+    font-size: 11px;
+
+}
+
+
+.dashboard-management-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+
+.management-class-card {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    background: #f7f9fc;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 10px;
+
+}
+
+
+.management-class-name {
+
+    color: #0b1f3a;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+}
+
+
+.management-class-info {
+
+    margin-top: 4px;
+
+    color: #718096;
+
+    font-size: 11px;
+
+}
+
+
+.dashboard-management-btn {
+
+    display: inline-block;
+
+    padding: 9px 12px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    white-space: nowrap;
+
+}
+
+
+.results-management-btn {
+
+    background: #0b1f3a;
+
+    color: white;
+
+}
+
+
+.results-management-btn:hover {
+
+    background: #163f70;
+
+}
+
+
+.attendance-management-btn {
+
+    background: #d4af37;
+
+    color: #071a33;
+
+}
+
+
+.attendance-management-btn:hover {
+
+    background: #f4d35e;
+
+}
+
+
+/* =====================================================
+   MOBILE MANAGEMENT
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .management-class-card {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .dashboard-management-btn {
+
+        text-align: center;
+
+        width: 100%;
+
+    }
+
+
+    .dashboard-class-actions {
+
+        flex-direction: column;
+
+    }
+
+
+    .dashboard-action {
+
+        width: 100%;
+
+    }
+
+}
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .dashboard-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                transform:
+                    translateX(-100%);
+
+            }
+
+
+            .sidebar.open {
+
+                transform:
+                    translateX(0);
+
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+            }
+
+
+            .menu-toggle {
+
+                display: block;
+
+            }
+
+
+            .topbar {
+
+                padding:
+                    0 16px;
+
+            }
+
+
+            .page-heading h1 {
+
+                font-size: 17px;
+
+            }
+
+
+            .top-teacher-name,
+            .top-teacher-role {
+
+                display: none;
+
+            }
+
+
+            .content {
+
+                padding: 17px;
+
+            }
+
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 10px;
+
+            }
+
+
+            .stat-card {
+
+                padding: 14px;
+
+            }
+
+
+            .stat-card h3 {
+
+                font-size: 20px;
+
+            }
+
+
+            .welcome-card {
+
+                padding: 20px;
+
+            }
+
+
+            .welcome-card h2 {
+
+                font-size: 20px;
+
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+
+            .quick-actions {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .class-actions {
+
+                flex-direction: column;
+
+            }
+
+
+            .class-action-btn {
+
+                width: 100%;
+
+                flex: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside
+    class="sidebar"
+    id="sidebar"
+>
+
+
+    <div class="sidebar-header">
+
+        <div class="teacher-logo">
+            👨‍🏫
+        </div>
+
+
+        <h2>
+            Ebenezer Day Star Academy
+        </h2>
+
+
+        <p>
+            TEACHER PORTAL
+        </p>
+
+    </div>
+
+
+    <nav class="sidebar-menu">
+
+
+        <!-- DASHBOARD -->
+
+        <a
+            href="teacher-dashboard.html"
+            class="active"
+        >
+
+            <span class="menu-icon">
+                🏠
+            </span>
+
+            Dashboard
+
+        </a>
+
+
+        <!-- MY CLASSES -->
+
+        <a href="teacher-classes.html">
+
+            <span class="menu-icon">
+                🏫
+            </span>
+
+            My Classes
+
+        </a>
+
+
+        <!-- RESULT MANAGEMENT -->
+
+        <a href="teacher-results.html">
+
+            <span class="menu-icon">
+                📊
+            </span>
+
+            Result Management
+
+        </a>
+
+
+        <!-- ATTENDANCE -->
+
+        <a href="teacher-attendance.html">
+
+            <span class="menu-icon">
+                📝
+            </span>
+
+            Attendance
+
+        </a>
+
+
+        <!-- PROFILE -->
+
+        <a href="#profile">
+
+            <span class="menu-icon">
+                👤
+            </span>
+
+            My Profile
+
+        </a>
+
+
+        <!-- NOTIFICATIONS -->
+
+        <a href="teacher-notifications.html">
+
+            <span class="menu-icon">
+                🔔
+            </span>
+
+            Notifications
+
+        </a>
+
+
+        <div class="logout-area">
+
+            <button
+                class="logout-btn"
+                id="logoutBtn"
+                type="button"
+            >
+
+                <span class="menu-icon">
+                    🚪
+                </span>
+
+                Logout
+
+            </button>
+
+        </div>
+
+
+    </nav>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
+
+    <header class="topbar">
+
+
+        <div
+            style="
+                display:flex;
+                align-items:center;
+                gap:12px;
+            "
+        >
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                type="button"
+            >
+                ☰
+            </button>
+
+
+            <div class="page-heading">
+
+                <h1>
+                    Teacher Dashboard
+                </h1>
+
+                <p>
+                    Manage your teaching activities
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="teacher-top-info">
+
+            <div
+                class="top-avatar"
+                id="topAvatar"
+            >
+                T
+            </div>
+
+
+            <div>
+
+                <div
+                    class="top-teacher-name"
+                    id="topTeacherName"
+                >
+                    Teacher
+                </div>
+
+
+                <div class="top-teacher-role">
+                    Teacher
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </header>
+
+
+    <!-- =================================================
+         CONTENT
+    ================================================== -->
+
+    <section class="content">
+
+
+        <!-- =================================================
+             WELCOME
+        ================================================== -->
+
+        <div class="welcome-card">
+
+            <h2 id="welcomeName">
+                Welcome, Teacher!
+            </h2>
+
+
+            <p>
+
+                Welcome to your Teacher Portal.
+                Manage your classes, results and
+                attendance from one place.
+
+            </p>
+
+
+            <div class="welcome-motto">
+
+                In God We Trust
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STATS
+        ================================================== -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏫
+                </div>
+
+                <h3 id="classCount">
+                    0
+                </h3>
+
+                <p>
+                    Assigned Classes
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <h3 id="subjectCount">
+                    0
+                </h3>
+
+                <p>
+                    Subject
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📊
+                </div>
+
+                <h3>
+                    —
+                </h3>
+
+                <p>
+                    Results
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📝
+                </div>
+
+                <h3>
+                    —
+                </h3>
+
+                <p>
+                    Attendance
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             DASHBOARD GRID
+        ================================================== -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- =================================================
+                 PROFILE
+            ================================================== -->
+
+            <div
+                class="card"
+                id="profile"
+            >
+
+                <div class="card-header">
+
+                    <h3>
+                        👤 My Profile
+                    </h3>
+
+                    <span>
+                        Teacher Information
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <div class="profile-icon">
+                        👨‍🏫
+                    </div>
+
+                    <div>
+
+                        <div class="profile-label">
+                            Full Name
+                        </div>
+
+                        <div
+                            class="profile-value"
+                            id="profileName"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <div class="profile-icon">
+                        📧
+                    </div>
+
+                    <div>
+
+                        <div class="profile-label">
+                            Email Address
+                        </div>
+
+                        <div
+                            class="profile-value"
+                            id="profileEmail"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <div class="profile-icon">
+                        📱
+                    </div>
+
+                    <div>
+
+                        <div class="profile-label">
+                            Phone Number
+                        </div>
+
+                        <div
+                            class="profile-value"
+                            id="profilePhone"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <div class="profile-icon">
+                        📚
+                    </div>
+
+                    <div>
+
+                        <div class="profile-label">
+                            Subject
+                        </div>
+
+                        <div
+                            class="profile-value"
+                            id="profileSubject"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        ⚡ Quick Actions
+                    </h3>
+
+                    <span>
+                        Access
+                    </span>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <!-- MY CLASSES -->
+
+                    <a
+                        href="teacher-classes.html"
+                        class="quick-action"
+                    >
+
+                        <div class="quick-action-icon">
+                            🏫
+                        </div>
+
+                        <span>
+                            My Classes
+                        </span>
+
+                    </a>
+
+
+                    <!-- ENTER RESULTS -->
+
+                    <a
+                        href="teacher-results.html"
+                        class="quick-action"
+                    >
+
+                        <div class="quick-action-icon">
+                            📊
+                        </div>
+
+                        <span>
+                            Enter Results
+                        </span>
+
+                    </a>
+
+
+                    <!-- ATTENDANCE -->
+
+                    <a
+                        href="teacher-attendance.html"
+                        class="quick-action"
+                    >
+
+                        <div class="quick-action-icon">
+                            📝
+                        </div>
+
+                        <span>
+                            Attendance
+                        </span>
+
+                    </a>
+
+
+                    <!-- NOTIFICATIONS -->
+
+                    <a
+                        href="teacher-notifications.html"
+                        class="quick-action"
+                    >
+
+                        <div class="quick-action-icon">
+                            🔔
+                        </div>
+
+                        <span>
+                            Notifications
+                        </span>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CLASSES
+            ================================================== -->
+
+            <div
+                class="card"
+                id="classes"
+            >
+
+                <div class="card-header">
+
+                    <h3>
+                        🏫 My Classes
+                    </h3>
+
+                    <span>
+                        Assigned Classes
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="class-list"
+                    id="classList"
+                >
+
+                    <div class="no-data">
+
+                        Loading assigned classes...
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 NOTIFICATIONS
+            ================================================== -->
+
+            <div
+                class="card"
+                id="notifications"
+            >
+
+                <div class="card-header">
+
+                    <h3>
+                        🔔 Notifications
+                    </h3>
+
+                    <span>
+                        School Updates
+                    </span>
+
+                </div>
+
+
+                <div class="no-data">
+
+                    No new notifications.
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RESULTS
+            ================================================== -->
+
+            <div
+                class="card"
+                id="results"
+            >
+
+                <div class="card-header">
+
+                    <h3>
+                        📊 Result Management
+                    </h3>
+
+                    <span>
+                        Academic Results
+                    </span>
+
+                </div>
+
+
+                <div class="no-data">
+
+                    <p>
+                        Enter and manage student academic
+                        results for your assigned classes.
+                    </p>
+
+
+                    <a
+                        href="teacher-results.html"
+                        class="management-btn"
+                    >
+
+                        📊 Open Result Management
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ATTENDANCE
+            ================================================== -->
+
+            <div
+                class="card"
+                id="attendance"
+            >
+
+                <div class="card-header">
+
+                    <h3>
+                        📝 Attendance
+                    </h3>
+
+                    <span>
+                        Student Attendance
+                    </span>
+
+                </div>
+
+
+                <div class="no-data">
+
+                    <p>
+                        Take and manage student attendance
+                        for your assigned classes.
+                    </p>
+
+
+                    <a
+                        href="teacher-attendance.html"
+                        class="management-btn"
+                    >
+
+                        📝 Open Attendance
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
+
+    <footer class="footer">
+
+        © 2026 Ebenezer Day Star Academy.
+        All Rights Reserved.
+
+    </footer>
+
+
+</main>
+
+
+<!-- =====================================================
+     SWEETALERT
+===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
+
+<!-- =====================================================
+     TEACHER DASHBOARD JAVASCRIPT
+===================================================== -->
+
+<script
+    type="module"
+    src="teacher-dashboard.js"
+></script>
+
+
+</body>
+
+</html>

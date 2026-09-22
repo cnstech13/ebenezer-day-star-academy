@@ -1,552 +1,1144 @@
-import { adminReady, withTimeout } from "./admin-guard.js";
-// ======================================================
-// TEACHERS.JS
-// Ebenezer Day Star Academy
-// Firebase Firestore Version
-// SweetAlert2 Version
-// ======================================================
+/* =========================================================
+   EBENEZER DAY STAR ACADEMY
+   TEACHER MANAGEMENT
+   ADMIN PORTAL
 
-await adminReady;
+   TEACHER ACCOUNT SYSTEM - OPTION 2
+
+   IMPORTANT:
+   Admin creates the teacher's staff record.
+
+   Teacher creates their own Firebase Authentication
+   account later using the email registered by Admin.
+
+   The Admin NEVER creates or stores the teacher password.
+========================================================= */
+
 
 import {
     collection,
     getDocs,
     addDoc,
+    doc,
     updateDoc,
     deleteDoc,
-    doc,
-    query,
-    orderBy,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
 
 import { db } from "./firebase-config.js";
 
 
-// ======================================================
-// DATA
-// ======================================================
-
-let teachers = [];
+import { adminReady } from "./admin-guard.js";
 
 
-// ======================================================
-// ELEMENTS
-// ======================================================
+/* =========================================================
+   ADMIN PROTECTION
+========================================================= */
 
-const teacherModal =
-    document.getElementById("teacherModal");
+await adminReady;
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let allClasses = [];
+
+let allTeachers = [];
+
+let editingTeacherId = null;
+
+
+/* =========================================================
+   DOM ELEMENTS
+========================================================= */
 
 const teacherForm =
     document.getElementById("teacherForm");
 
+
+const teacherName =
+    document.getElementById("teacherName");
+
+
+const teacherEmail =
+    document.getElementById("teacherEmail");
+
+
+const teacherPhone =
+    document.getElementById("teacherPhone");
+
+
+const teacherSubject =
+    document.getElementById("teacherSubject");
+
+
+const teacherStatus =
+    document.getElementById("teacherStatus");
+
+
+const classesContainer =
+    document.getElementById("classesContainer");
+
+
 const teachersTableBody =
     document.getElementById("teachersTableBody");
 
-const emptyTeachers =
-    document.getElementById("emptyTeachers");
 
-const teacherSearch =
-    document.getElementById("teacherSearch");
-
-const teacherStatusFilter =
-    document.getElementById("teacherStatusFilter");
-
-const addTeacherBtn =
-    document.getElementById("addTeacherBtn");
-
-const closeTeacherModal =
-    document.getElementById("closeTeacherModal");
-
-const cancelTeacherBtn =
-    document.getElementById("cancelTeacherBtn");
+const saveTeacherBtn =
+    document.getElementById("saveTeacherBtn");
 
 
-// ======================================================
-// FIRESTORE COLLECTION
-// ======================================================
-
-const teachersCollection =
-    collection(db, "teachers");
+const cancelEditBtn =
+    document.getElementById("cancelEditBtn");
 
 
-// ======================================================
-// GENERATE TEACHER ID
-// ======================================================
-
-function generateTeacherId() {
-
-    const year =
-        new Date().getFullYear();
-
-    let number =
-        teachers.length + 1;
-
-    let id =
-        `TCH-${year}-${String(number).padStart(4, "0")}`;
+const resetBtn =
+    document.getElementById("resetBtn");
 
 
-    while (
-        teachers.some(
-            teacher =>
-                teacher.id === id
-        )
-    ) {
-
-        number++;
-
-        id =
-            `TCH-${year}-${String(number).padStart(4, "0")}`;
-    }
+const formTitle =
+    document.getElementById("formTitle");
 
 
-    return id;
-}
+const editingBanner =
+    document.getElementById("editingBanner");
 
 
-// ======================================================
-// LOAD TEACHERS
-// ======================================================
-
-async function loadTeachers() {
-
-    try {
-
-        const teacherQuery =
-            query(
-                teachersCollection,
-                orderBy(
-                    "createdAt",
-                    "desc"
-                )
-            );
+const teacherCount =
+    document.getElementById("teacherCount");
 
 
-        const snapshot =
-            await withTimeout(getDocs(
-                teacherQuery
-            ));
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
+function escapeHTML(value) {
 
-        teachers = [];
-
-
-        snapshot.forEach(
-            documentSnapshot => {
-
-                teachers.push({
-
-                    firestoreId:
-                        documentSnapshot.id,
-
-                    ...documentSnapshot.data()
-
-                });
-
-            }
-        );
-
-
-        renderTeachers();
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Error loading teachers:",
-            error
-        );
-
-
-        /*
-         * If createdAt is unavailable or
-         * the ordered query fails,
-         * try loading without orderBy.
-         */
-
-        try {
-
-            const snapshot =
-                await withTimeout(getDocs(
-                    teachersCollection
-                ));
-
-
-            teachers = [];
-
-
-            snapshot.forEach(
-                documentSnapshot => {
-
-                    teachers.push({
-
-                        firestoreId:
-                            documentSnapshot.id,
-
-                        ...documentSnapshot.data()
-
-                    });
-
-                }
-            );
-
-
-            renderTeachers();
-
-        }
-
-        catch (secondError) {
-
-            console.error(
-                "Firestore loading error:",
-                secondError
-            );
-
-
-            await showError(
-                "Unable to Load Teachers",
-                getFirebaseErrorMessage(
-                    secondError
-                )
-            );
-
-        }
-
-    }
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
 
-// ======================================================
-// OPEN TEACHER MODAL
-// ======================================================
+/* =========================================================
+   NORMALIZE EMAIL
+========================================================= */
 
-function openTeacherModal(
-    teacher = null
-) {
+function normalizeEmail(email) {
 
-    if (!teacherModal)
-        return;
+    return String(email || "")
+        .trim()
+        .toLowerCase();
+
+}
 
 
-    teacherModal.classList.add(
-        "show"
+/* =========================================================
+   LOAD CLASSES
+========================================================= */
+
+async function loadClasses() {
+
+    const snapshot =
+        await getDocs(
+            collection(db, "classes")
+        );
+
+
+    allClasses = [];
+
+
+    snapshot.forEach(
+        documentSnapshot => {
+
+            allClasses.push({
+
+                id:
+                    documentSnapshot.id,
+
+                ...documentSnapshot.data()
+
+            });
+
+        }
     );
 
 
-    if (teacher) {
+    /*
+     * Remove duplicate classes that may have the
+     * same displayed name.
+     */
 
-        document.getElementById(
-            "teacherModalTitle"
-        ).textContent =
+    const uniqueClasses = [];
+
+    const seenNames = new Set();
+
+
+    allClasses.forEach(classItem => {
+
+        const className =
+            String(
+                classItem.name ||
+                classItem.className ||
+                classItem.title ||
+                classItem.id ||
+                ""
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if (!seenNames.has(className)) {
+
+            seenNames.add(className);
+
+            uniqueClasses.push(classItem);
+
+        }
+
+    });
+
+
+    allClasses =
+        uniqueClasses;
+
+
+    allClasses.sort(
+        (a, b) => {
+
+            const nameA =
+                String(
+                    a.name ||
+                    a.className ||
+                    a.title ||
+                    a.id ||
+                    ""
+                ).toLowerCase();
+
+
+            const nameB =
+                String(
+                    b.name ||
+                    b.className ||
+                    b.title ||
+                    b.id ||
+                    ""
+                ).toLowerCase();
+
+
+            return nameA.localeCompare(nameB);
+
+        }
+    );
+
+
+    renderClassCheckboxes();
+
+}
+
+
+/* =========================================================
+   RENDER CLASS CHECKBOXES
+========================================================= */
+
+function renderClassCheckboxes(
+    selectedIds = []
+) {
+
+    if (!classesContainer) {
+        return;
+    }
+
+
+    if (allClasses.length === 0) {
+
+        classesContainer.innerHTML = `
+            <p class="empty-message">
+                No classes have been created yet.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    classesContainer.innerHTML =
+        allClasses.map(
+            classItem => {
+
+                const classId =
+                    classItem.id;
+
+
+                const className =
+                    classItem.name ||
+                    classItem.className ||
+                    classItem.title ||
+                    classId;
+
+
+                const checked =
+                    selectedIds.includes(classId)
+                        ? "checked"
+                        : "";
+
+
+                return `
+                    <label class="class-checkbox">
+
+                        <input
+                            type="checkbox"
+                            name="assignedClasses"
+                            value="${escapeHTML(classId)}"
+                            ${checked}
+                        >
+
+                        <span>
+                            ${escapeHTML(className)}
+                        </span>
+
+                    </label>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   GET SELECTED CLASSES
+========================================================= */
+
+function getSelectedClassIds() {
+
+    return [
+        ...document.querySelectorAll(
+            'input[name="assignedClasses"]:checked'
+        )
+    ].map(
+        checkbox => checkbox.value
+    );
+
+}
+
+
+/* =========================================================
+   LOAD TEACHERS
+========================================================= */
+
+async function loadTeachers() {
+
+    const snapshot =
+        await getDocs(
+            collection(db, "teachers")
+        );
+
+
+    allTeachers = [];
+
+
+    snapshot.forEach(
+        documentSnapshot => {
+
+            allTeachers.push({
+
+                id:
+                    documentSnapshot.id,
+
+                ...documentSnapshot.data()
+
+            });
+
+        }
+    );
+
+
+    allTeachers.sort(
+        (a, b) => {
+
+            const nameA =
+                String(
+                    a.name ||
+                    a.fullName ||
+                    ""
+                ).toLowerCase();
+
+
+            const nameB =
+                String(
+                    b.name ||
+                    b.fullName ||
+                    ""
+                ).toLowerCase();
+
+
+            return nameA.localeCompare(nameB);
+
+        }
+    );
+
+
+    updateTeacherCount();
+
+    renderTeachers();
+
+}
+
+
+/* =========================================================
+   TEACHER COUNT
+========================================================= */
+
+function updateTeacherCount() {
+
+    if (!teacherCount) {
+        return;
+    }
+
+
+    teacherCount.textContent =
+        allTeachers.length;
+
+}
+
+
+/* =========================================================
+   RENDER TEACHERS
+========================================================= */
+
+function renderTeachers() {
+
+    if (!teachersTableBody) {
+        return;
+    }
+
+
+    if (allTeachers.length === 0) {
+
+        teachersTableBody.innerHTML = `
+            <tr>
+                <td
+                    colspan="8"
+                    class="empty-message"
+                >
+                    No teachers registered yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    teachersTableBody.innerHTML =
+        allTeachers.map(
+            teacher => {
+
+                const name =
+                    teacher.name ||
+                    teacher.fullName ||
+                    "Unnamed Teacher";
+
+
+                const email =
+                    teacher.email ||
+                    "";
+
+
+                const phone =
+                    teacher.phone ||
+                    "—";
+
+
+                const subject =
+                    teacher.subject ||
+                    "Not assigned";
+
+
+                const status =
+                    String(
+                        teacher.status ||
+                        "active"
+                    ).toLowerCase();
+
+
+                const accountCreated =
+                    teacher.accountCreated === true;
+
+
+                const assignedClassIds =
+                    Array.isArray(
+                        teacher.assignedClassIds
+                    )
+                        ? teacher.assignedClassIds
+                        : [];
+
+
+                const classNames =
+                    assignedClassIds
+                        .map(classId => {
+
+                            const found =
+                                allClasses.find(
+                                    classItem =>
+                                        classItem.id ===
+                                        classId
+                                );
+
+
+                            return found
+                                ? (
+                                    found.name ||
+                                    found.className ||
+                                    found.title ||
+                                    found.id
+                                )
+                                : classId;
+
+                        })
+                        .filter(Boolean);
+
+
+                /* =========================================
+                   ACCOUNT STATUS
+                ========================================= */
+
+                let accountHTML = "";
+
+
+                if (!email) {
+
+                    accountHTML = `
+                        <span class="account-badge no-email">
+                            No Email
+                        </span>
+                    `;
+
+                }
+
+
+                else if (accountCreated) {
+
+                    accountHTML = `
+                        <span class="account-badge registered">
+                            Registered
+                        </span>
+                    `;
+
+                }
+
+
+                else {
+
+                    accountHTML = `
+                        <span class="account-badge not-registered">
+                            Not Registered
+                        </span>
+                    `;
+
+                }
+
+
+                return `
+                    <tr>
+
+                        <td>
+                            <strong>
+                                ${escapeHTML(name)}
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            ${
+                                email
+                                    ? escapeHTML(email)
+                                    : "—"
+                            }
+                        </td>
+
+
+                        <td>
+                            ${escapeHTML(phone)}
+                        </td>
+
+
+                        <td>
+                            ${escapeHTML(subject)}
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                classNames.length
+
+                                    ? classNames
+                                        .map(
+                                            className =>
+                                                `<span class="class-tag">
+                                                    ${escapeHTML(className)}
+                                                </span>`
+                                        )
+                                        .join(" ")
+
+                                    : "None"
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="status-badge ${
+                                    status === "active"
+                                        ? "active"
+                                        : "inactive"
+                                }"
+                            >
+                                ${escapeHTML(status)}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            ${accountHTML}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="teacher-actions">
+
+                                <button
+                                    type="button"
+                                    class="edit-btn"
+                                    data-action="edit"
+                                    data-id="${escapeHTML(teacher.id)}"
+                                >
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="toggle-btn"
+                                    data-action="toggle"
+                                    data-id="${escapeHTML(teacher.id)}"
+                                >
+                                    ${
+                                        status === "active"
+                                            ? "Deactivate"
+                                            : "Activate"
+                                    }
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="delete-btn"
+                                    data-action="delete"
+                                    data-id="${escapeHTML(teacher.id)}"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   EDIT TEACHER
+========================================================= */
+
+function editTeacher(id) {
+
+    const teacher =
+        allTeachers.find(
+            item => item.id === id
+        );
+
+
+    if (!teacher) {
+        return;
+    }
+
+
+    editingTeacherId =
+        teacher.id;
+
+
+    if (formTitle) {
+
+        formTitle.textContent =
             "Edit Teacher";
 
-
-        document.getElementById(
-            "editingTeacherId"
-        ).value =
-            teacher.firestoreId;
+    }
 
 
-        document.getElementById(
-            "teacherFirstName"
-        ).value =
-            teacher.firstName || "";
+    if (editingBanner) {
+
+        editingBanner.classList.remove(
+            "hidden"
+        );
+
+    }
 
 
-        document.getElementById(
-            "teacherLastName"
-        ).value =
-            teacher.lastName || "";
+    if (teacherName) {
+
+        teacherName.value =
+            teacher.name ||
+            teacher.fullName ||
+            "";
+
+    }
 
 
-        document.getElementById(
-            "teacherGender"
-        ).value =
-            teacher.gender || "";
+    if (teacherEmail) {
+
+        teacherEmail.value =
+            teacher.email ||
+            "";
 
 
-        document.getElementById(
-            "teacherQualification"
-        ).value =
-            teacher.qualification || "";
+        /*
+         * Once the teacher has registered,
+         * do not allow the Admin to change
+         * the email from this page.
+         *
+         * The Firebase Auth email and this
+         * Firestore email must remain linked.
+         */
+
+        if (teacher.accountCreated === true) {
+
+            teacherEmail.disabled =
+                true;
+
+            teacherEmail.title =
+                "This email cannot be changed after the teacher has registered.";
+
+        }
+
+        else {
+
+            teacherEmail.disabled =
+                false;
+
+            teacherEmail.title =
+                "";
+
+        }
+
+    }
 
 
-        document.getElementById(
-            "teacherSpecialization"
-        ).value =
-            teacher.specialization || "";
+    if (teacherPhone) {
+
+        teacherPhone.value =
+            teacher.phone ||
+            "";
+
+    }
 
 
-        document.getElementById(
-            "teacherPhone"
-        ).value =
-            teacher.phone || "";
+    if (teacherSubject) {
+
+        teacherSubject.value =
+            teacher.subject ||
+            "";
+
+    }
 
 
-        document.getElementById(
-            "teacherEmail"
-        ).value =
-            teacher.email || "";
+    if (teacherStatus) {
+
+        teacherStatus.value =
+            teacher.status ||
+            "active";
+
+    }
 
 
-        document.getElementById(
-            "employmentDate"
-        ).value =
-            teacher.employmentDate || "";
+    renderClassCheckboxes(
+        Array.isArray(
+            teacher.assignedClassIds
+        )
+            ? teacher.assignedClassIds
+            : []
+    );
 
 
-        document.getElementById(
-            "teacherStatus"
-        ).value =
-            teacher.status || "Active";
+    if (saveTeacherBtn) {
+
+        saveTeacherBtn.textContent =
+            "Update Teacher";
+
+    }
 
 
-        document.getElementById(
-            "teacherAddress"
-        ).value =
-            teacher.address || "";
+    if (cancelEditBtn) {
+
+        cancelEditBtn.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetTeacherForm() {
+
+    editingTeacherId =
+        null;
+
+
+    if (teacherForm) {
+
+        teacherForm.reset();
+
+    }
+
+
+    if (teacherEmail) {
+
+        teacherEmail.disabled =
+            false;
+
+        teacherEmail.title =
+            "";
+
+    }
+
+
+    if (teacherStatus) {
+
+        teacherStatus.value =
+            "active";
+
+    }
+
+
+    if (formTitle) {
+
+        formTitle.textContent =
+            "Add New Teacher";
+
+    }
+
+
+    if (editingBanner) {
+
+        editingBanner.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    if (cancelEditBtn) {
+
+        cancelEditBtn.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    if (saveTeacherBtn) {
+
+        saveTeacherBtn.textContent =
+            "Save Teacher";
+
+    }
+
+
+    renderClassCheckboxes();
+
+}
+
+
+/* =========================================================
+   SHOW SUCCESS MESSAGE
+========================================================= */
+
+function showSuccess(message) {
+
+    if (
+        typeof Swal !== "undefined"
+    ) {
+
+        Swal.fire({
+
+            icon: "success",
+
+            title: "Success",
+
+            text: message,
+
+            confirmButtonColor:
+                "#0b1f3a"
+
+        });
 
     }
 
     else {
 
-        teacherForm.reset();
-
-
-        document.getElementById(
-            "teacherModalTitle"
-        ).textContent =
-            "Add Teacher";
-
-
-        document.getElementById(
-            "editingTeacherId"
-        ).value =
-            "";
-
-
-        document.getElementById(
-            "teacherStatus"
-        ).value =
-            "Active";
+        alert(message);
 
     }
 
 }
 
 
-// ======================================================
-// CLOSE MODAL
-// ======================================================
+/* =========================================================
+   SHOW ERROR MESSAGE
+========================================================= */
 
-function closeTeacherModalFunction() {
+function showError(message) {
 
-    teacherModal.classList.remove(
-        "show"
-    );
+    if (
+        typeof Swal !== "undefined"
+    ) {
 
-    teacherForm.reset();
+        Swal.fire({
+
+            icon: "error",
+
+            title: "Unable to Continue",
+
+            text: message,
+
+            confirmButtonColor:
+                "#0b1f3a"
+
+        });
+
+    }
+
+    else {
+
+        alert(message);
+
+    }
 
 }
 
 
-// ======================================================
-// MODAL EVENTS
-// ======================================================
+/* =========================================================
+   SAVE TEACHER
+========================================================= */
 
-addTeacherBtn.addEventListener(
-    "click",
-    () => {
+async function saveTeacher(event) {
 
-        openTeacherModal();
+    event.preventDefault();
+
+
+    const name =
+        teacherName?.value.trim();
+
+
+    const email =
+        normalizeEmail(
+            teacherEmail?.value
+        );
+
+
+    const phone =
+        teacherPhone?.value.trim();
+
+
+    const subject =
+        teacherSubject?.value.trim();
+
+
+    const status =
+        teacherStatus?.value ||
+        "active";
+
+
+    const assignedClassIds =
+        getSelectedClassIds();
+
+
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
+    if (!name) {
+
+        showError(
+            "Please enter the teacher's name."
+        );
+
+        teacherName?.focus();
+
+        return;
 
     }
-);
 
 
-closeTeacherModal.addEventListener(
-    "click",
-    closeTeacherModalFunction
-);
+    if (!email) {
+
+        showError(
+            "Please enter the teacher's email address."
+        );
+
+        teacherEmail?.focus();
+
+        return;
+
+    }
 
 
-cancelTeacherBtn.addEventListener(
-    "click",
-    closeTeacherModalFunction
-);
+    if (!phone) {
+
+        showError(
+            "Please enter the teacher's phone number."
+        );
+
+        teacherPhone?.focus();
+
+        return;
+
+    }
 
 
-teacherModal.addEventListener(
-    "click",
-    event => {
+    if (!subject) {
 
-        if (
-            event.target ===
-            teacherModal
-        ) {
+        showError(
+            "Please enter the teacher's main subject."
+        );
 
-            closeTeacherModalFunction();
+        teacherSubject?.focus();
+
+        return;
+
+    }
+
+
+    /*
+     * Check for duplicate teacher email.
+     *
+     * This prevents two teacher records from
+     * being registered with the same email.
+     */
+
+    const duplicateTeacher =
+        allTeachers.find(
+            teacher => {
+
+                if (
+                    editingTeacherId &&
+                    teacher.id === editingTeacherId
+                ) {
+
+                    return false;
+
+                }
+
+
+                return (
+                    normalizeEmail(
+                        teacher.email
+                    ) === email
+                );
+
+            }
+        );
+
+
+    if (duplicateTeacher) {
+
+        showError(
+            "A teacher with this email address already exists."
+        );
+
+        teacherEmail?.focus();
+
+        return;
+
+    }
+
+
+    try {
+
+        if (saveTeacherBtn) {
+
+            saveTeacherBtn.disabled =
+                true;
+
+            saveTeacherBtn.textContent =
+                editingTeacherId
+                    ? "Updating..."
+                    : "Saving...";
 
         }
 
-    }
-);
 
+        /* =================================================
+           UPDATE EXISTING TEACHER
+        ================================================= */
 
-// ======================================================
-// SAVE TEACHER
-// ======================================================
+        if (editingTeacherId) {
 
-teacherForm.addEventListener(
-    "submit",
-    async event => {
-
-        event.preventDefault();
-
-
-        const saveButton =
-            teacherForm.querySelector(
-                'button[type="submit"]'
-            );
-
-
-        const originalText =
-            saveButton
-                ? saveButton.textContent
-                : "";
-
-
-        try {
-
-            if (saveButton) {
-
-                saveButton.disabled =
-                    true;
-
-                saveButton.textContent =
-                    "Saving...";
-
-            }
-
-
-            const editingId =
-                document.getElementById(
-                    "editingTeacherId"
-                ).value;
-
-
-            const firstName =
-                document.getElementById(
-                    "teacherFirstName"
-                ).value.trim();
-
-
-            const lastName =
-                document.getElementById(
-                    "teacherLastName"
-                ).value.trim();
-
-
-            const gender =
-                document.getElementById(
-                    "teacherGender"
-                ).value;
-
-
-            const qualification =
-                document.getElementById(
-                    "teacherQualification"
-                ).value.trim();
-
-
-            const specialization =
-                document.getElementById(
-                    "teacherSpecialization"
-                ).value.trim();
-
-
-            const phone =
-                document.getElementById(
-                    "teacherPhone"
-                ).value.trim();
-
-
-            const email =
-                document.getElementById(
-                    "teacherEmail"
-                ).value.trim();
-
-
-            const employmentDate =
-                document.getElementById(
-                    "employmentDate"
-                ).value;
-
-
-            const status =
-                document.getElementById(
-                    "teacherStatus"
-                ).value;
-
-
-            const address =
-                document.getElementById(
-                    "teacherAddress"
-                ).value.trim();
-
-
-            // ==========================================
-            // VALIDATION
-            // ==========================================
-
-            if (
-                !firstName ||
-                !lastName ||
-                !gender ||
-                !qualification ||
-                !specialization ||
-                !phone ||
-                !employmentDate ||
-                !status
-            ) {
-
-                await showWarning(
-                    "Incomplete Form",
-                    "Please complete all required fields."
+            const existingTeacher =
+                allTeachers.find(
+                    teacher =>
+                        teacher.id ===
+                        editingTeacherId
                 );
 
-                return;
 
-            }
+            const updateData = {
 
-
-            // ==========================================
-            // TEACHER DATA
-            // ==========================================
-
-            const teacherData = {
-
-                firstName,
-
-                lastName,
-
-                gender,
-
-                qualification,
-
-                specialization,
+                name,
 
                 phone,
 
-                email,
-
-                employmentDate,
+                subject,
 
                 status,
 
-                address,
+                assignedClassIds,
 
                 updatedAt:
                     serverTimestamp()
@@ -554,551 +1146,339 @@ teacherForm.addEventListener(
             };
 
 
-            // ==========================================
-            // EDIT
-            // ==========================================
-
-            if (editingId) {
-
-                const teacherRef =
-                    doc(
-                        db,
-                        "teachers",
-                        editingId
-                    );
-
-
-                showLoading(
-                    "Updating Teacher...",
-                    "Please wait while the teacher information is being updated."
-                );
-
-
-                await withTimeout(updateDoc(
-                    teacherRef,
-                    teacherData
-                ));
-
-
-                Swal.close();
-
-
-                await showSuccess(
-                    "Teacher Updated",
-                    "Teacher information has been updated successfully."
-                );
-
-            }
-
-
-            // ==========================================
-            // ADD
-            // ==========================================
-
-            else {
-
-                const teacherId =
-                    generateTeacherId();
-
-
-                const newTeacher = {
-
-                    id:
-                        teacherId,
-
-                    ...teacherData,
-
-                    createdAt:
-                        serverTimestamp()
-
-                };
-
-
-                showLoading(
-                    "Adding Teacher...",
-                    "Please wait while the teacher is being added."
-                );
-
-
-                await withTimeout(addDoc(
-                    teachersCollection,
-                    newTeacher
-                ));
-
-
-                Swal.close();
-
-
-                await showSuccess(
-                    "Teacher Added",
-                    "Teacher has been added successfully."
-                );
-
-            }
-
-
-            // ==========================================
-            // REFRESH
-            // ==========================================
-
-            await loadTeachers();
-
-            closeTeacherModalFunction();
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Teacher save error:",
-                error
-            );
-
-
-            console.error(
-                "Error code:",
-                error.code
-            );
-
-
-            console.error(
-                "Error message:",
-                error.message
-            );
-
-
-            Swal.close();
-
+            /*
+             * Only update email when the teacher
+             * has NOT created an account yet.
+             */
 
             if (
-                error.code ===
-                "permission-denied"
+                !existingTeacher ||
+                existingTeacher.accountCreated !== true
             ) {
 
-                await showError(
-                    "Permission Denied",
-                    "Firestore permission was denied. Please check your Firebase Firestore security rules."
-                );
+                updateData.email =
+                    email;
 
             }
 
-            else {
 
-                await showError(
-                    "Unable to Save Teacher",
-                    getFirebaseErrorMessage(
-                        error
-                    )
-                );
+            await updateDoc(
 
-            }
+                doc(
+                    db,
+                    "teachers",
+                    editingTeacherId
+                ),
 
-        }
+                updateData
 
-        finally {
+            );
 
-            if (saveButton) {
 
-                saveButton.disabled =
-                    false;
-
-                saveButton.textContent =
-                    originalText ||
-                    "Save Teacher";
-
-            }
-
-        }
-
-    }
-);
-
-
-// ======================================================
-// RENDER TEACHERS
-// ======================================================
-
-function renderTeachers() {
-
-    if (!teachersTableBody)
-        return;
-
-
-    const search =
-        teacherSearch.value
-            .trim()
-            .toLowerCase();
-
-
-    const selectedStatus =
-        teacherStatusFilter.value;
-
-
-    const filtered =
-        teachers.filter(
-            teacher => {
-
-                const fullName =
-                    `${teacher.firstName || ""} ${teacher.lastName || ""}`
-                        .toLowerCase();
-
-
-                const teacherId =
-                    String(
-                        teacher.id || ""
-                    ).toLowerCase();
-
-
-                const email =
-                    String(
-                        teacher.email || ""
-                    ).toLowerCase();
-
-
-                const matchesSearch =
-                    !search ||
-                    fullName.includes(
-                        search
-                    ) ||
-                    teacherId.includes(
-                        search
-                    ) ||
-                    email.includes(
-                        search
-                    );
-
-
-                const matchesStatus =
-                    !selectedStatus ||
-                    teacher.status ===
-                    selectedStatus;
-
-
-                return (
-                    matchesSearch &&
-                    matchesStatus
-                );
-
-            }
-        );
-
-
-    teachersTableBody.innerHTML =
-        "";
-
-
-    if (
-        filtered.length === 0
-    ) {
-
-        emptyTeachers.style.display =
-            "block";
-
-        return;
-
-    }
-
-
-    emptyTeachers.style.display =
-        "none";
-
-
-    filtered.forEach(
-        teacher => {
-
-            const row =
-                document.createElement(
-                    "tr"
-                );
-
-
-            const firstInitial =
-                teacher.firstName
-                    ? teacher.firstName[0]
-                    : "";
-
-
-            const lastInitial =
-                teacher.lastName
-                    ? teacher.lastName[0]
-                    : "";
-
-
-            const initials =
-                (
-                    firstInitial +
-                    lastInitial
-                ).toUpperCase();
-
-
-            row.innerHTML = `
-
-                <td>
-                    <span class="student-id">
-                        ${escapeHTML(
-                            teacher.id
-                        )}
-                    </span>
-                </td>
-
-                <td>
-
-                    <div class="student-name">
-
-                        <div class="student-avatar">
-                            ${escapeHTML(
-                                initials
-                            )}
-                        </div>
-
-                        <strong>
-                            ${escapeHTML(
-                                teacher.firstName || ""
-                            )}
-                            ${escapeHTML(
-                                teacher.lastName || ""
-                            )}
-                        </strong>
-
-                    </div>
-
-                </td>
-
-                <td>
-                    ${escapeHTML(
-                        teacher.gender || ""
-                    )}
-                </td>
-
-                <td>
-                    ${escapeHTML(
-                        teacher.qualification || ""
-                    )}
-                </td>
-
-                <td>
-                    ${escapeHTML(
-                        teacher.phone || ""
-                    )}
-                </td>
-
-                <td>
-
-                    <span class="
-                        status-badge
-                        ${
-                            teacher.status ===
-                            "Active"
-                                ? "status-active"
-                                : "status-inactive"
-                        }
-                    ">
-
-                        ${escapeHTML(
-                            teacher.status || ""
-                        )}
-
-                    </span>
-
-                </td>
-
-                <td>
-
-                    <div class="table-actions">
-
-                        <button
-                            class="table-action"
-                            title="Edit"
-                            data-edit="${escapeHTML(
-                                teacher.firestoreId
-                            )}"
-                        >
-                            ✏️
-                        </button>
-
-                        <button
-                            class="table-action"
-                            title="Delete"
-                            data-delete="${escapeHTML(
-                                teacher.firestoreId
-                            )}"
-                        >
-                            🗑️
-                        </button>
-
-                    </div>
-
-                </td>
-
-            `;
-
-
-            teachersTableBody.appendChild(
-                row
+            showSuccess(
+                "Teacher updated successfully."
             );
 
         }
-    );
 
 
-    // ==========================================
-    // EDIT BUTTONS
-    // ==========================================
+        /* =================================================
+           ADD NEW TEACHER
+        ================================================= */
 
-    teachersTableBody
-        .querySelectorAll(
-            "[data-edit]"
-        )
-        .forEach(
-            button => {
+        else {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+            await addDoc(
 
-                        const id =
-                            button.dataset.edit;
+                collection(
+                    db,
+                    "teachers"
+                ),
+
+                {
+
+                    name,
+
+                    email,
+
+                    phone,
+
+                    subject,
+
+                    status,
+
+                    assignedClassIds,
+
+                    role: "teacher",
+
+                    /*
+                     * This is false until the teacher
+                     * creates their Firebase account.
+                     */
+
+                    accountCreated:
+                        false,
+
+                    createdAt:
+                        serverTimestamp(),
+
+                    updatedAt:
+                        serverTimestamp()
+
+                }
+
+            );
 
 
-                        const teacher =
-                            teachers.find(
-                                item =>
-                                    item.firestoreId ===
-                                    id
-                            );
+            showSuccess(
+                "Teacher added successfully. The teacher can now create their Teacher Portal account using this email."
+            );
+
+        }
 
 
-                        if (teacher) {
+        resetTeacherForm();
 
-                            openTeacherModal(
-                                teacher
-                            );
 
-                        }
+        await loadTeachers();
 
-                    }
-                );
 
-            }
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Teacher save error:",
+            error
         );
 
 
-    // ==========================================
-    // DELETE BUTTONS
-    // ==========================================
+        let message =
+            error.message ||
+            "Unable to save teacher.";
 
-    teachersTableBody
-        .querySelectorAll(
-            "[data-delete]"
-        )
-        .forEach(
-            button => {
 
-                button.addEventListener(
-                    "click",
-                    async () => {
+        if (
+            error.code ===
+            "permission-denied"
+        ) {
 
-                        await deleteTeacher(
-                            button.dataset.delete
-                        );
+            message =
+                "You do not have permission to manage teachers. Please check your Firestore security rules.";
 
-                    }
-                );
+        }
 
-            }
-        );
+
+        showError(message);
+
+    }
+
+
+    finally {
+
+        if (saveTeacherBtn) {
+
+            saveTeacherBtn.disabled =
+                false;
+
+            saveTeacherBtn.textContent =
+                editingTeacherId
+                    ? "Update Teacher"
+                    : "Save Teacher";
+
+        }
+
+    }
 
 }
 
 
-// ======================================================
-// DELETE TEACHER
-// ======================================================
+/* =========================================================
+   TOGGLE TEACHER STATUS
+========================================================= */
 
-async function deleteTeacher(
-    firestoreId
-) {
+async function toggleTeacherStatus(id) {
 
     const teacher =
-        teachers.find(
-            item =>
-                item.firestoreId ===
-                firestoreId
+        allTeachers.find(
+            item => item.id === id
         );
 
 
     if (!teacher) {
-
-        await showError(
-            "Teacher Not Found",
-            "The selected teacher could not be found."
-        );
-
         return;
-
     }
 
 
-    // ==========================================
-    // CONFIRM DELETE
-    // ==========================================
-
-    const confirmed =
-        await confirmDelete(
-            `Delete ${teacher.firstName} ${teacher.lastName}?`,
-            "This teacher record will be permanently deleted."
-        );
+    const currentStatus =
+        String(
+            teacher.status ||
+            "active"
+        ).toLowerCase();
 
 
-    if (!confirmed)
-        return;
+    const newStatus =
+        currentStatus === "active"
+            ? "inactive"
+            : "active";
 
 
     try {
 
-        // ==========================================
-        // LOADING
-        // ==========================================
+        await updateDoc(
 
-        showLoading(
-            "Deleting Teacher...",
-            "Please wait while the teacher record is being deleted."
-        );
-
-
-        // ==========================================
-        // DELETE
-        // ==========================================
-
-        await withTimeout(deleteDoc(
             doc(
                 db,
                 "teachers",
-                firestoreId
-            )
-        ));
+                id
+            ),
 
+            {
 
-        Swal.close();
+                status:
+                    newStatus,
 
+                updatedAt:
+                    serverTimestamp()
 
-        // ==========================================
-        // SUCCESS
-        // ==========================================
+            }
 
-        await showSuccess(
-            "Teacher Deleted",
-            `${teacher.firstName} ${teacher.lastName} has been deleted successfully.`
         );
 
 
-        // ==========================================
-        // REFRESH
-        // ==========================================
+        showSuccess(
+            `Teacher ${
+                newStatus === "active"
+                    ? "activated"
+                    : "deactivated"
+            } successfully.`
+        );
+
 
         await loadTeachers();
 
     }
+
+
+    catch (error) {
+
+        console.error(
+            "Status update error:",
+            error
+        );
+
+
+        showError(
+            error.message ||
+            "Unable to update teacher status."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DELETE TEACHER
+========================================================= */
+
+async function deleteTeacher(id) {
+
+    const teacher =
+        allTeachers.find(
+            item => item.id === id
+        );
+
+
+    if (!teacher) {
+        return;
+    }
+
+
+    const name =
+        teacher.name ||
+        teacher.fullName ||
+        "this teacher";
+
+
+    let confirmed =
+        false;
+
+
+    if (
+        typeof Swal !== "undefined"
+    ) {
+
+        const result =
+            await Swal.fire({
+
+                icon: "warning",
+
+                title: "Delete Teacher?",
+
+                text:
+                    `Are you sure you want to delete ${name}?`,
+
+                showCancelButton: true,
+
+                confirmButtonText:
+                    "Yes, Delete",
+
+                cancelButtonText:
+                    "Cancel",
+
+                confirmButtonColor:
+                    "#b4232f",
+
+                cancelButtonColor:
+                    "#6c757d"
+
+            });
+
+
+        confirmed =
+            result.isConfirmed;
+
+    }
+
+    else {
+
+        confirmed =
+            confirm(
+                `Are you sure you want to delete ${name}?`
+            );
+
+    }
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        await deleteDoc(
+
+            doc(
+                db,
+                "teachers",
+                id
+            )
+
+        );
+
+
+        showSuccess(
+            "Teacher deleted successfully."
+        );
+
+
+        await loadTeachers();
+
+    }
+
 
     catch (error) {
 
@@ -1108,143 +1488,177 @@ async function deleteTeacher(
         );
 
 
-        Swal.close();
-
-
-        // ==========================================
-        // ERROR
-        // ==========================================
-
-        if (
-            error.code ===
-            "permission-denied"
-        ) {
-
-            await showError(
-                "Permission Denied",
-                "You do not have permission to delete this teacher."
-            );
-
-        }
-
-        else {
-
-            await showError(
-                "Unable to Delete Teacher",
-                getFirebaseErrorMessage(
-                    error
-                )
-            );
-
-        }
-
-    }
-
-}
-
-
-// ======================================================
-// SEARCH
-// ======================================================
-
-teacherSearch.addEventListener(
-    "input",
-    renderTeachers
-);
-
-
-// ======================================================
-// STATUS FILTER
-// ======================================================
-
-teacherStatusFilter.addEventListener(
-    "change",
-    renderTeachers
-);
-
-
-// ======================================================
-// ESCAPE HTML
-// ======================================================
-
-function escapeHTML(value) {
-
-    return String(
-        value ?? ""
-    )
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
+        showError(
+            error.message ||
+            "Unable to delete teacher."
         );
 
+    }
+
 }
 
 
-// ======================================================
-// FIREBASE ERROR MESSAGE
-// ======================================================
+/* =========================================================
+   TABLE ACTIONS
+========================================================= */
 
-function getFirebaseErrorMessage(
-    error
-) {
+if (teachersTableBody) {
 
-    if (!error)
-        return "An unknown error occurred.";
+    teachersTableBody.addEventListener(
+
+        "click",
+
+        event => {
+
+            const button =
+                event.target.closest(
+                    "button[data-action]"
+                );
 
 
-    switch (
-        error.code
-    ) {
+            if (!button) {
+                return;
+            }
 
-        case "permission-denied":
 
-            return "You do not have permission to perform this action. Please check your Firestore security rules.";
+            const action =
+                button.dataset.action;
 
-        case "unavailable":
 
-            return "Firebase is temporarily unavailable. Please check your internet connection and try again.";
+            const id =
+                button.dataset.id;
 
-        case "network-request-failed":
 
-            return "Network error. Please check your internet connection and try again.";
+            if (action === "edit") {
 
-        case "failed-precondition":
+                editTeacher(id);
 
-            return "The requested operation could not be completed because a Firestore requirement is not satisfied.";
+            }
 
-        default:
 
-            return error.message ||
-                "An unexpected error occurred.";
+            else if (
+                action === "toggle"
+            ) {
+
+                toggleTeacherStatus(id);
+
+            }
+
+
+            else if (
+                action === "delete"
+            ) {
+
+                deleteTeacher(id);
+
+            }
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   FORM EVENTS
+========================================================= */
+
+if (teacherForm) {
+
+    teacherForm.addEventListener(
+
+        "submit",
+
+        saveTeacher
+
+    );
+
+}
+
+
+if (cancelEditBtn) {
+
+    cancelEditBtn.addEventListener(
+
+        "click",
+
+        resetTeacherForm
+
+    );
+
+}
+
+
+if (resetBtn) {
+
+    resetBtn.addEventListener(
+
+        "click",
+
+        () => {
+
+            /*
+             * Allow the browser's reset event to
+             * complete first.
+             */
+
+            setTimeout(
+                resetTeacherForm,
+                0
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+async function initializeTeacherManagement() {
+
+    try {
+
+        console.log(
+            "Teacher Management loading..."
+        );
+
+
+        await loadClasses();
+
+
+        await loadTeachers();
+
+
+        console.log(
+            "Teacher Management loaded successfully."
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Teacher Management initialization error:",
+            error
+        );
+
+
+        showError(
+
+            error.message ||
+            "Unable to load teacher management."
+
+        );
 
     }
 
 }
 
 
-// ======================================================
-// INITIALIZE
-// ======================================================
-
-loadTeachers();
+initializeTeacherManagement();

@@ -1,1 +1,327 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>User Management</title><link rel="stylesheet" href="portal-dashboard.css"><style>main{width:min(1100px,92%);margin:30px auto}.panel{background:#fff;padding:22px;border-radius:16px;margin-bottom:20px;box-shadow:0 8px 25px #123b6612}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}input,select,button{padding:11px;border:1px solid #ccd8e2;border-radius:8px}button{background:#123b66;color:#fff;border:0;cursor:pointer}.table{overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e7edf2;text-align:left}</style></head><body><header><strong>Admin • User Management</strong><nav><a href="dashboard.html">Dashboard</a><a href="users.html">Users</a><a href="fees.html">Fees</a><a href="notifications.html">Notifications</a><button id="logout">Logout</button></nav></header><main><div class=panel><h2>Create Teacher/Student Account</h2><form id=form><div class=formgrid><input id=name placeholder="Full name" required><input id=email type=email placeholder="Email" required><input id=password type=password minlength=6 placeholder="Temporary password" required><select id=role><option value=teacher>Teacher</option><option value=student>Student</option></select><input id=link placeholder="Teacher ID / Student ID"><input id=classes placeholder="Assigned class IDs (teacher, comma separated)"></div><button type=submit style="margin-top:14px">Create Account</button><p id=msg></p></form></div><div class=panel><h2>Registered Portal Users</h2><div class=table><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Linked record</th><th>Status</th></tr></thead><tbody id=rows></tbody></table></div></div></main><script type="module" src="users.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b3d91"
+    >
+
+    <title>User Management | Ebenezer Day Star Academy</title>
+
+    <!-- Main Admin CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Portal/Admin CSS -->
+    <link rel="stylesheet" href="portal-dashboard.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <h2>Ebenezer Day Star Academy</h2>
+            <p>Admin Portal</p>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="students.html">
+                Students
+            </a>
+
+            <a href="teachers.html">
+                Teachers
+            </a>
+
+            <a href="classes.html">
+                Classes
+            </a>
+
+            <a href="subjects.html">
+                Subjects
+            </a>
+
+            <a href="admissions.html">
+                Admissions
+            </a>
+
+            <a href="results.html">
+                Results
+            </a>
+
+            <a href="attendance.html">
+                Attendance
+            </a>
+
+            <a href="report-card.html">
+                Report Cards
+            </a>
+
+            <a href="fees.html">
+                Fees
+            </a>
+
+            <a href="news.html">
+                News
+            </a>
+
+            <a href="messages.html">
+                Messages
+            </a>
+
+            <a href="parents.html">
+                Parents
+            </a>
+
+            <a
+                href="users.html"
+                class="active"
+            >
+                User Management
+            </a>
+
+            <a href="notifications.html">
+                Notifications
+            </a>
+
+            <a
+                href="#"
+                id="logout"
+            >
+                Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="page-header">
+
+            <div>
+                <h1>User Management</h1>
+
+                <p>
+                    View and manage all registered users
+                </p>
+            </div>
+
+            <div class="admin-badge">
+                Administrator
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             USER MANAGEMENT PANEL
+        ================================================== -->
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>All Users</h2>
+
+                    <p>
+                        The administrator can view teachers,
+                        students, parents and other administrators
+                        from this page.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FILTERS
+            ================================================== -->
+            <div class="filters">
+
+                <!-- Search -->
+                <div class="form-group">
+
+                    <label for="searchUser">
+                        Search Users
+                    </label>
+
+                    <input
+                        type="search"
+                        id="searchUser"
+                        placeholder="Search by name or email..."
+                    >
+
+                </div>
+
+
+                <!-- Role Filter -->
+                <div class="form-group">
+
+                    <label for="roleFilter">
+                        Filter by Role
+                    </label>
+
+                    <select id="roleFilter">
+
+                        <option value="">
+                            All Users
+                        </option>
+
+                        <option value="admin">
+                            Admin
+                        </option>
+
+                        <option value="teacher">
+                            Teacher
+                        </option>
+
+                        <option value="student">
+                            Student
+                        </option>
+
+                        <option value="parent">
+                            Parent
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Status Filter -->
+                <div class="form-group">
+
+                    <label for="statusFilter">
+                        Filter by Status
+                    </label>
+
+                    <select id="statusFilter">
+
+                        <option value="">
+                            All Statuses
+                        </option>
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 USER COUNT
+            ================================================== -->
+            <div
+                id="userCount"
+                class="user-count"
+            >
+                Loading users...
+            </div>
+
+
+            <!-- =================================================
+                 MESSAGE
+            ================================================== -->
+            <div
+                id="msg"
+                class="message"
+                aria-live="polite"
+            ></div>
+
+
+            <!-- =================================================
+                 TABLE
+            ================================================== -->
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Name</th>
+
+                            <th>Email</th>
+
+                            <th>Role</th>
+
+                            <th>Assigned Class</th>
+
+                            <th>Status</th>
+
+                            <th>Created</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="rows">
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                style="text-align:center;"
+                            >
+                                Loading users...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     PAGE SCRIPT
+========================================================= -->
+<script type="module" src="users.js"></script>
+
+</body>
+</html>

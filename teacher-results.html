@@ -1,10 +1,840 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Teacher Results</title><link rel=stylesheet href=portal-dashboard.css><style>main{width:min(1000px,92%);margin:30px auto}.panel{background:#fff;padding:22px;border-radius:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;padding:0;width:auto}.grid input,.grid select,button{padding:11px;border:1px solid #ccd8e2;border-radius:8px}button{background:#123b66;color:#fff;border:0}.notice{margin-top:12px}</style></head><body><header><strong>Teacher • Results</strong><nav><a href=teacher-dashboard.html>Dashboard</a><a href=teacher-attendance.html>Attendance</a><button id=logout>Logout</button></nav></header><main><div class=panel><h2>Enter Student Result</h2><form id=form><div class=grid><select id=student required><option value="">Select student</option></select><input id=subject placeholder=Subject required><input id=session placeholder="Session e.g. 2026/2027" required><input id=term placeholder="Term e.g. First Term" required><input id=ca1 type=number min=0 placeholder=CA1><input id=ca2 type=number min=0 placeholder=CA2><input id=cw1 type=number min=0 placeholder="Class Work 1"><input id=cw2 type=number min=0 placeholder="Class Work 2"><input id=ass1 type=number min=0 placeholder="Assignment 1"><input id=ass2 type=number min=0 placeholder="Assignment 2"><input id=exam type=number min=0 placeholder=Exam></div><button style="margin-top:14px">Save Result</button><div id=msg class=notice></div></form></div></main><script type=module src=teacher-results.js></script><script type="module">
-import { goBackOr } from "./back-navigation.js";
-document.querySelectorAll("[data-smart-back]").forEach((el) => {
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
-    goBackOr(el.dataset.smartBack || "portal-login.html");
-  });
-});
-</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Teacher Results | Ebenezer Day Star Academy</title>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #0b1f3a;
+            color: white;
+            padding: 20px 15px;
+            z-index: 1000;
+            overflow-y: auto;
+            transition: 0.3s;
+        }
+
+        .school-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .school-logo h2 {
+            color: #f4d35e;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+
+        .school-logo p {
+            font-size: 12px;
+            color: #ddd;
+            margin-top: 5px;
+        }
+
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            padding: 13px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #f4d35e;
+            color: #0b1f3a;
+        }
+
+        .logout-btn {
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            background: #b91c1c;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .logout-btn:hover {
+            background: #991b1b;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: transparent;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .teacher-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f4d35e;
+            color: #0b1f3a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .teacher-name {
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           CONTENT
+        ========================= */
+
+        .content {
+            padding: 25px;
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+        }
+
+        .page-title h1 {
+            color: #0b1f3a;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+        }
+
+
+        /* =========================
+           CONTROLS
+        ========================= */
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            background: white;
+
+            color: #1f2937;
+
+            font-size: 14px;
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group select:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+            color: #6b7280;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0b1f3a;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(11,31,58,0.08);
+        }
+
+
+        /* =========================
+           RESULTS CARD
+        ========================= */
+
+        .results-card {
+            background: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.06);
+
+            overflow: hidden;
+        }
+
+
+        /* =========================
+           RESULTS HEADER
+        ========================= */
+
+        .results-header {
+            padding: 18px 20px;
+
+            background: #0b1f3a;
+
+            color: white;
+        }
+
+        .results-header h2 {
+            font-size: 18px;
+        }
+
+        .results-header p {
+            font-size: 13px;
+
+            margin-top: 5px;
+
+            color: #ddd;
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1100px;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 10px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            text-align: center;
+
+            white-space: nowrap;
+        }
+
+        .results-table th {
+            background: #f3f4f6;
+
+            font-size: 13px;
+
+            color: #1f2937;
+        }
+
+        .results-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .results-table th:first-child,
+        .results-table td:first-child {
+            text-align: left;
+
+            position: sticky;
+
+            left: 0;
+
+            background: white;
+
+            z-index: 2;
+        }
+
+        .results-table th:first-child {
+            background: #f3f4f6;
+
+            z-index: 3;
+        }
+
+
+        /* =========================
+           SCORE INPUT
+        ========================= */
+
+        .score-input {
+            width: 70px;
+
+            padding: 8px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 6px;
+
+            text-align: center;
+
+            font-size: 14px;
+        }
+
+        .score-input:focus {
+            outline: none;
+
+            border-color: #0b1f3a;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(11,31,58,0.08);
+        }
+
+        .score-input::-webkit-inner-spin-button,
+        .score-input::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        .total-cell {
+            font-weight: bold;
+
+            color: #0b1f3a;
+
+            background: #f9fafb;
+        }
+
+
+        /* =========================
+           SAVE BUTTON
+        ========================= */
+
+        .save-area {
+            padding: 20px;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            border-top:
+                1px solid #e5e7eb;
+        }
+
+        .save-btn {
+            border: none;
+
+            background: #0b1f3a;
+
+            color: white;
+
+            padding: 13px 25px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #163b68;
+        }
+
+        .save-btn:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            padding: 50px 20px;
+
+            text-align: center;
+
+            color: #6b7280;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .controls {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                left: -250px;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .teacher-name {
+                max-width: 130px;
+
+                overflow: hidden;
+
+                text-overflow: ellipsis;
+
+                white-space: nowrap;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <div class="school-logo">
+
+            <h2>
+                Ebenezer Day Star Academy
+            </h2>
+
+            <p>
+                In God We Trust
+            </p>
+
+        </div>
+
+
+        <a href="teacher-dashboard.html">
+            Dashboard
+        </a>
+
+
+        <a href="teacher-classes.html">
+            My Classes
+        </a>
+
+
+        <a
+            href="teacher-results.html"
+            class="active"
+        >
+            Results
+        </a>
+
+
+        <a href="teacher-attendance.html">
+            Attendance
+        </a>
+
+
+        <a href="teacher-profile.html">
+            My Profile
+        </a>
+
+
+        <a href="teacher-notifications.html">
+            Notifications
+        </a>
+
+
+        <button
+            type="button"
+            class="logout-btn"
+            id="logoutBtn"
+        >
+            Logout
+        </button>
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main">
+
+
+        <!-- =========================
+             TOPBAR
+        ========================== -->
+
+        <header class="topbar">
+
+
+            <button
+                type="button"
+                class="menu-toggle"
+                id="menuToggle"
+            >
+                ☰
+            </button>
+
+
+            <div>
+                <strong>
+                    Teacher Results
+                </strong>
+            </div>
+
+
+            <div class="teacher-info">
+
+
+                <div
+                    class="avatar"
+                    id="topAvatar"
+                >
+                    T
+                </div>
+
+
+                <span
+                    class="teacher-name"
+                    id="topTeacherName"
+                >
+                    Teacher
+                </span>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =========================
+             CONTENT
+        ========================== -->
+
+        <section class="content">
+
+
+            <div class="page-title">
+
+                <h1>
+                    Student Results
+                </h1>
+
+                <p>
+                    Enter and save academic results
+                    for your assigned classes.
+                </p>
+
+            </div>
+
+
+
+            <!-- =========================
+                 CONTROLS
+            ========================== -->
+
+            <div class="controls">
+
+
+                <!-- CLASS -->
+
+                <div class="form-group">
+
+                    <label for="classSelect">
+                        Select Class
+                    </label>
+
+
+                    <select
+                        id="classSelect"
+                    >
+
+                        <option value="">
+                            Select a class
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SUBJECT -->
+
+                <div class="form-group">
+
+                    <label for="subjectSelect">
+                        Select Subject
+                    </label>
+
+
+                    <select
+                        id="subjectSelect"
+                    >
+
+                        <option value="">
+                            Loading subject...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- TERM -->
+
+                <div class="form-group">
+
+                    <label for="termSelect">
+                        Term
+                    </label>
+
+
+                    <select
+                        id="termSelect"
+                    >
+
+                        <option
+                            value="First Term"
+                        >
+                            First Term
+                        </option>
+
+
+                        <option
+                            value="Second Term"
+                        >
+                            Second Term
+                        </option>
+
+
+                        <option
+                            value="Third Term"
+                        >
+                            Third Term
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SESSION -->
+
+                <div class="form-group">
+
+                    <label for="sessionInput">
+                        Academic Session
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="sessionInput"
+                        value="2026/2027"
+                        placeholder="e.g. 2026/2027"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 RESULTS CARD
+            ========================== -->
+
+            <div class="results-card">
+
+
+                <div class="results-header">
+
+
+                    <h2 id="resultsTitle">
+                        Results
+                    </h2>
+
+
+                    <p id="resultsSubtitle">
+                        Select a class and subject
+                        to load students.
+                    </p>
+
+
+                </div>
+
+
+
+                <div
+                    id="resultsArea"
+                    class="empty-state"
+                >
+
+                    Select a class and subject
+                    to begin entering results.
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script
+        type="module"
+        src="./teacher-results.js"
+    ></script>
+
+
+</body>
+</html>
