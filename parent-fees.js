@@ -1,78 +1,113 @@
-import { goBackOr } from "./back-navigation.js";
 // ============================================================
 // PARENT FEES
 // Ebenezer Day Star Academy
 // ============================================================
 
+import { goBackOr } from "./back-navigation.js";
+
 import {
     collection,
     getDocs,
     query,
-    where
+    where,
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 import {
-    getAuth,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 import {
+    auth,
     db
 } from "./firebase-config.js";
 
 
-const auth = getAuth();
-
-
-const studentsCollection =
-    collection(db, "students");
-
-
-const feesCollection =
-    collection(db, "fees");
-
+// ============================================================
+// ELEMENTS
+// ============================================================
 
 const container =
     document.getElementById(
         "childrenFeesContainer"
     );
 
-
 const loading =
     document.getElementById(
         "loadingMessage"
     );
-
 
 const error =
     document.getElementById(
         "errorMessage"
     );
 
+const backBtn =
+    document.getElementById(
+        "backBtn"
+    );
 
-document
-    .getElementById("backBtn")
-    ?.addEventListener(
+
+// ============================================================
+// BACK TO DASHBOARD
+// ============================================================
+
+if (backBtn) {
+
+    backBtn.addEventListener(
         "click",
         () => {
 
-            goBackOr("parent-dashboard.html");
+            goBackOr(
+                "parent-dashboard.html"
+            );
 
         }
     );
 
+}
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
 
 function escapeHTML(value) {
 
     return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
+
+// ============================================================
+// GET STUDENT NAME
+// ============================================================
 
 function getName(student) {
 
@@ -80,77 +115,173 @@ function getName(student) {
         `${student.firstName || ""} ${student.lastName || ""}`
             .trim();
 
-
     return (
+
         name ||
+
         student.name ||
+
         student.fullName ||
+
+        student.studentName ||
+
         "Unnamed Student"
+
     );
 
 }
 
+
+// ============================================================
+// GET STUDENT CLASS
+// ============================================================
 
 function getClass(student) {
 
     return (
+
         student.studentClass ||
+
         student.className ||
+
         student.class ||
-        ""
+
+        "N/A"
+
     );
 
 }
 
 
-async function getChildren(email) {
+// ============================================================
+// VERIFY PARENT ACCOUNT
+// ============================================================
 
-    const snapshot =
-        await getDocs(
-            studentsCollection
+async function verifyParent(user) {
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            user.uid
         );
 
 
-    return snapshot.docs
-        .map(
-            d => ({
-
-                firestoreId: d.id,
-
-                ...d.data()
-
-            })
-        )
-        .filter(
-            student => {
-
-                const parentEmail =
-                    String(
-                        student.parentEmail ||
-                        student.guardianEmail ||
-                        ""
-                    )
-                    .trim()
-                    .toLowerCase();
-
-
-                return (
-                    parentEmail ===
-                    email
-                        .trim()
-                        .toLowerCase()
-                );
-
-            }
+    const userSnapshot =
+        await getDoc(
+            userRef
         );
+
+
+    if (
+        !userSnapshot.exists()
+    ) {
+
+        throw new Error(
+            "Your parent account profile was not found."
+        );
+
+    }
+
+
+    const userData =
+        userSnapshot.data();
+
+
+    if (
+        userData.role !== "parent"
+    ) {
+
+        throw new Error(
+            "This account is not registered as a parent."
+        );
+
+    }
+
+
+    if (
+        userData.active === false
+    ) {
+
+        throw new Error(
+            "This parent account has been disabled."
+        );
+
+    }
+
+
+    return userData;
 
 }
 
 
-async function getFees(studentId) {
+// ============================================================
+// GET CHILDREN
+// ============================================================
 
-    const q =
+async function getChildren(
+    parentUid
+) {
+
+    const studentsCollection =
+        collection(
+            db,
+            "students"
+        );
+
+
+    const childrenQuery =
         query(
+
+            studentsCollection,
+
+            where(
+                "parentUid",
+                "==",
+                parentUid
+            )
+
+        );
+
+
+    const snapshot =
+        await getDocs(
+            childrenQuery
+        );
+
+
+    return snapshot.docs.map(
+        studentDoc => ({
+
+            firestoreId:
+                studentDoc.id,
+
+            ...studentDoc.data()
+
+        })
+    );
+
+}
+
+
+// ============================================================
+// GET FEES FOR CHILD
+// ============================================================
+
+async function getFees(
+    studentId
+) {
+
+    const feesCollection =
+        collection(
+            db,
+            "fees"
+        );
+
+
+    const feesQuery =
+        query(
+
             feesCollection,
 
             where(
@@ -158,25 +289,33 @@ async function getFees(studentId) {
                 "==",
                 studentId
             )
+
         );
 
 
     const snapshot =
-        await getDocs(q);
+        await getDocs(
+            feesQuery
+        );
 
 
     return snapshot.docs.map(
-        d => ({
+        feeDoc => ({
 
-            firestoreId: d.id,
+            firestoreId:
+                feeDoc.id,
 
-            ...d.data()
+            ...feeDoc.data()
 
         })
     );
 
 }
 
+
+// ============================================================
+// RENDER CHILD FEES
+// ============================================================
 
 function renderChild(
     student,
@@ -191,7 +330,7 @@ function renderChild(
     fees.forEach(
         fee => {
 
-            total +=
+            const amount =
                 Number(
                     fee.amount ||
                     fee.total ||
@@ -199,11 +338,15 @@ function renderChild(
                 );
 
 
+            total += amount;
+
+
             const status =
                 String(
                     fee.status ||
                     ""
                 )
+                .trim()
                 .toLowerCase();
 
 
@@ -211,12 +354,7 @@ function renderChild(
                 status === "paid"
             ) {
 
-                paid +=
-                    Number(
-                        fee.amount ||
-                        fee.total ||
-                        0
-                    );
+                paid += amount;
 
             }
 
@@ -295,23 +433,45 @@ function renderChild(
     `;
 
 
-    if (fees.length === 0) {
+    // ========================================================
+    // NO FEE RECORDS
+    // ========================================================
+
+    if (
+        fees.length === 0
+    ) {
 
         html += `
 
             <div class="empty-fees">
 
-                No fee records have been entered
-                for this student yet.
+                <h3>
+                    No Fee Records
+                </h3>
+
+                <p>
+                    No fee records have been
+                    entered for this student yet.
+                </p>
 
             </div>
 
         `;
 
-        return html + "</section>";
+
+        html += `
+            </section>
+        `;
+
+
+        return html;
 
     }
 
+
+    // ========================================================
+    // FEES TABLE
+    // ========================================================
 
     html += `
 
@@ -347,6 +507,7 @@ function renderChild(
 
                 </thead>
 
+
                 <tbody>
 
     `;
@@ -359,7 +520,17 @@ function renderChild(
                 String(
                     fee.status ||
                     "Pending"
-                );
+                )
+                .trim();
+
+
+            const statusClass =
+                status
+                    .toLowerCase()
+                    .replace(
+                        /\s+/g,
+                        "-"
+                    );
 
 
             html += `
@@ -369,10 +540,12 @@ function renderChild(
                     <td>
                         ${escapeHTML(
                             fee.description ||
+                            fee.title ||
                             fee.feeName ||
                             "School Fees"
                         )}
                     </td>
+
 
                     <td>
                         ${escapeHTML(
@@ -382,6 +555,7 @@ function renderChild(
                         )}
                     </td>
 
+
                     <td>
                         ${escapeHTML(
                             fee.term ||
@@ -389,20 +563,28 @@ function renderChild(
                         )}
                     </td>
 
+
                     <td>
+
                         ₦${Number(
                             fee.amount ||
                             fee.total ||
                             0
                         ).toLocaleString()}
+
                     </td>
 
+
                     <td
-                        class="${status.toLowerCase()}"
+                        class="${escapeHTML(
+                            statusClass
+                        )}"
                     >
+
                         ${escapeHTML(
                             status
                         )}
+
                     </td>
 
                 </tr>
@@ -424,93 +606,248 @@ function renderChild(
     `;
 
 
-    return html + "</section>";
+    html += `
+        </section>
+    `;
+
+
+    return html;
 
 }
 
 
-async function loadPage(user) {
+// ============================================================
+// LOAD PAGE
+// ============================================================
+
+async function loadPage(
+    user
+) {
 
     try {
 
+        console.log(
+            "Loading parent fees..."
+        );
+
+
+        // ----------------------------------------------------
+        // VERIFY PARENT
+        // ----------------------------------------------------
+
+        await verifyParent(
+            user
+        );
+
+
+        console.log(
+            "Parent account verified."
+        );
+
+
+        // ----------------------------------------------------
+        // GET ONLY THIS PARENT'S CHILDREN
+        // ----------------------------------------------------
+
         const children =
             await getChildren(
-                user.email
+                user.uid
             );
 
+
+        console.log(
+            "Children found:",
+            children.length
+        );
+
+
+        // ----------------------------------------------------
+        // NO CHILDREN
+        // ----------------------------------------------------
 
         if (
             children.length === 0
         ) {
 
-            container.innerHTML = `
+            if (container) {
 
-                <div class="empty-fees">
+                container.innerHTML = `
 
-                    No children are linked
-                    to this parent account.
+                    <div class="empty-fees">
 
-                </div>
+                        <h3>
+                            No Children Linked
+                        </h3>
 
-            `;
+                        <p>
+                            No student has been linked
+                            to this parent account yet.
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
 
             return;
 
         }
 
 
-        let html = "";
+        // ----------------------------------------------------
+        // LOAD FEES
+        // ----------------------------------------------------
+
+        const html = [];
 
 
         for (
             const child of children
         ) {
 
-            const fees =
-                await getFees(
-                    child.firestoreId
+            try {
+
+                const fees =
+                    await getFees(
+                        child.firestoreId
+                    );
+
+
+                html.push(
+
+                    renderChild(
+                        child,
+                        fees
+                    )
+
+                );
+
+            }
+
+            catch (
+                childError
+            ) {
+
+                console.error(
+                    "Fee error for child:",
+                    child.firestoreId,
+                    childError
                 );
 
 
-            html +=
-                renderChild(
-                    child,
-                    fees
-                );
+                html.push(`
+
+                    <section
+                        class="child-fees-card"
+                    >
+
+                        <div class="empty-fees">
+
+                            <h3>
+                                Unable to Load Fees
+                            </h3>
+
+                            <p>
+                                ${escapeHTML(
+                                    getName(child)
+                                )}
+                            </p>
+
+                            <small>
+                                ${escapeHTML(
+                                    childError.message ||
+                                    "Permission denied."
+                                )}
+                            </small>
+
+                        </div>
+
+                    </section>
+
+                `);
+
+            }
 
         }
 
 
-        container.innerHTML =
-            html;
+        // ----------------------------------------------------
+        // DISPLAY
+        // ----------------------------------------------------
+
+        if (container) {
+
+            container.innerHTML =
+                html.join("");
+
+        }
 
     }
 
     catch (err) {
 
-        console.error(err);
+        console.error(
+            "Parent fees error:",
+            err
+        );
 
-        error.textContent =
-            "Unable to load fee records.";
 
-        error.style.display =
-            "block";
+        if (error) {
+
+            if (
+                err.code ===
+                "permission-denied"
+            ) {
+
+                error.textContent =
+                    "Firebase denied access to the fee records. Check the Firestore rules for parent fee access.";
+
+            }
+
+            else {
+
+                error.textContent =
+                    err.message ||
+                    "Unable to load fee records.";
+
+            }
+
+
+            error.style.display =
+                "block";
+
+        }
 
     }
 
     finally {
 
-        loading.style.display =
-            "none";
+        if (loading) {
+
+            loading.style.display =
+                "none";
+
+        }
 
     }
 
 }
 
 
+// ============================================================
+// FIREBASE AUTH STATE
+// ============================================================
+
 onAuthStateChanged(
     auth,
     user => {
+
+        console.log(
+            "Parent fees authentication:",
+            user
+        );
+
 
         if (!user) {
 
@@ -522,7 +859,9 @@ onAuthStateChanged(
         }
 
 
-        loadPage(user);
+        loadPage(
+            user
+        );
 
     }
 );

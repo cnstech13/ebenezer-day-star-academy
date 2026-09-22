@@ -14,8 +14,8 @@ import { adminReady, withTimeout } from "./admin-guard.js";
    - Filter by section
    - Assign class teacher
    - Prevent duplicate classes
-   - Prevent duplicate class records when loading
-   - Prevent duplicate teacher options
+   - Show actual student enrollment
+   - Display Students as: 2 / 40
 ========================================================= */
 
 await adminReady;
@@ -37,6 +37,7 @@ import { db } from "./firebase-config.js";
 
 let classes = [];
 let teachers = [];
+let students = [];
 
 
 // =========================================================
@@ -83,6 +84,9 @@ const classesCollection =
 
 const teachersCollection =
     collection(db, "teachers");
+
+const studentsCollection =
+    collection(db, "students");
 
 
 // =========================================================
@@ -174,11 +178,6 @@ async function loadTeachers() {
                 }
 
 
-                /*
-                 * Use the Firebase document ID
-                 * as the primary unique key.
-                 */
-
                 if (
                     uniqueTeachers.has(
                         firestoreId
@@ -232,7 +231,6 @@ async function loadTeachers() {
 
 // =========================================================
 // POPULATE TEACHER DROPDOWN
-// NO DUPLICATE TEACHERS
 // =========================================================
 
 function populateTeacherDropdown() {
@@ -277,12 +275,6 @@ function populateTeacherDropdown() {
                 return;
             }
 
-
-            /*
-             * Name is used to prevent
-             * the same teacher appearing
-             * more than once.
-             */
 
             const teacherKey =
                 normalizeText(fullName);
@@ -330,6 +322,105 @@ function populateTeacherDropdown() {
 
 
 // =========================================================
+// LOAD STUDENTS
+// =========================================================
+
+async function loadStudents() {
+
+    try {
+
+        const snapshot =
+            await withTimeout(
+                getDocs(
+                    studentsCollection
+                )
+            );
+
+
+        students = [];
+
+
+        snapshot.forEach(
+            studentDocument => {
+
+                const data =
+                    studentDocument.data();
+
+
+                students.push({
+                    firestoreId:
+                        studentDocument.id,
+
+                    ...data
+                });
+
+            }
+        );
+
+
+        console.log(
+            "Students loaded:",
+            students.length
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error loading students:",
+            error
+        );
+
+
+        students = [];
+
+
+        await showError(
+            "Unable to Load Students",
+            getFirebaseErrorMessage(error)
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// GET STUDENT COUNT FOR A CLASS
+// =========================================================
+
+function getStudentCountForClass(
+    className
+) {
+
+    const normalizedClassName =
+        normalizeText(
+            className
+        );
+
+
+    return students.filter(
+        student => {
+
+            const studentClass =
+                normalizeText(
+                    student.studentClass
+                );
+
+
+            return (
+                studentClass ===
+                normalizedClassName
+            );
+
+        }
+    ).length;
+
+}
+
+
+// =========================================================
 // LOAD CLASSES
 // PREVENT DUPLICATE CLASS RECORDS
 // =========================================================
@@ -345,12 +436,6 @@ async function loadClasses() {
                 )
             );
 
-
-        /*
-         * Map guarantees that only one
-         * class with the same name and
-         * academic session is loaded.
-         */
 
         const uniqueClasses =
             new Map();
@@ -386,36 +471,14 @@ async function loadClasses() {
                     );
 
 
-                /*
-                 * Ignore empty records.
-                 */
-
                 if (!className) {
                     return;
                 }
 
 
-                /*
-                 * IMPORTANT:
-                 *
-                 * Nursery + 2026/2027
-                 *
-                 * is treated as one class.
-                 *
-                 * Primary 1 + 2026/2027
-                 *
-                 * is treated as another class.
-                 */
-
                 const uniqueKey =
                     `${normalizeText(className)}__${normalizeText(academicSession)}`;
 
-
-                /*
-                 * If a duplicate Firestore
-                 * document exists, keep only
-                 * the first one in memory.
-                 */
 
                 if (
                     uniqueClasses.has(
@@ -426,6 +489,18 @@ async function loadClasses() {
                     return;
 
                 }
+
+
+                /*
+                 * Calculate the REAL number
+                 * of students currently in
+                 * this class.
+                 */
+
+                const actualStudentCount =
+                    getStudentCountForClass(
+                        className
+                    );
 
 
                 uniqueClasses.set(
@@ -440,7 +515,15 @@ async function loadClasses() {
                             className,
 
                         academicSession:
-                            academicSession
+                            academicSession,
+
+                        studentCount:
+                            actualStudentCount,
+
+                        maxStudents:
+                            Number(
+                                data.maxStudents
+                            ) || 40
 
                     }
                 );
@@ -965,6 +1048,12 @@ if (classForm) {
                 status:
                     status,
 
+                /*
+                 * Keep the existing field,
+                 * but the displayed count is
+                 * always calculated from students.
+                 */
+
                 studentCount:
                     existingClass?.studentCount ||
                     0,
@@ -1070,12 +1159,7 @@ if (classForm) {
                 }
 
 
-                // =================================================
-                // RELOAD
-                // =================================================
-
                 await loadClasses();
-
 
                 closeClassModalFunction();
 
@@ -1241,6 +1325,27 @@ function renderClasses() {
                 );
 
 
+            /*
+             * Calculate the count again
+             * immediately before displaying.
+             *
+             * This guarantees that the
+             * Students column shows the
+             * current number.
+             */
+
+            const currentStudentCount =
+                getStudentCountForClass(
+                    classData.name
+                );
+
+
+            const maximumStudents =
+                Number(
+                    classData.maxStudents
+                ) || 40;
+
+
             row.innerHTML = `
 
                 <td>
@@ -1290,16 +1395,16 @@ function renderClasses() {
 
                 <td>
 
-                    ${escapeHTML(
-                        classData.studentCount ||
-                        0
-                    )}
+                    <strong>
+                        ${escapeHTML(
+                            currentStudentCount
+                        )}
+                    </strong>
 
                     /
 
                     ${escapeHTML(
-                        classData.maxStudents ||
-                        0
+                        maximumStudents
                     )}
 
                 </td>
@@ -1743,7 +1848,18 @@ async function initializeClassesPage() {
 
     try {
 
+        /*
+         * IMPORTANT:
+         *
+         * Students must be loaded BEFORE
+         * classes are rendered because the
+         * student count comes from the
+         * students collection.
+         */
+
         await loadTeachers();
+
+        await loadStudents();
 
         await loadClasses();
 

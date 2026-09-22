@@ -1,137 +1,132 @@
 // ============================================================
 // PARENT DASHBOARD
-// Ebenezer Day Star Academy
+// EBENEZER DAY STAR ACADEMY
+//
+// IMPORTANT:
+// Parent email verification is NOT required.
 // ============================================================
 
 
 import {
-
     onAuthStateChanged,
-
     signOut
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 
 import {
-
     collection,
-
     query,
-
     where,
-
     getDocs,
-
     doc,
-
-    getDoc
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+    getDoc,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 
 import {
-
     auth,
-
     db
-
-}
-from "./firebase-config.js";
+} from "./firebase-config.js";
 
 
 
+// ============================================================
+// SCRIPT CHECK
+// ============================================================
 
-async function loadNotifications() {
-    const el = document.getElementById("portalNotifications");
-    if (!el) return;
-    try {
-        const q = await getDocs(query(collection(db, "notifications"), where("audience", "array-contains", "parent")));
-        el.innerHTML = q.size ? [...q.docs].map(x => { const n=x.data(); return `<div style="padding:10px 0;border-bottom:1px solid #eee"><strong>${String(n.title||"")}</strong><div>${String(n.message||"")}</div></div>`; }).join("") : "<p>No notifications.</p>";
-    } catch (e) { el.textContent = "Unable to load notifications."; }
-}
+console.log(
+    "========================================"
+);
+
+console.log(
+    "PARENT DASHBOARD JAVASCRIPT STARTED"
+);
+
+console.log(
+    "========================================"
+);
+
+
 
 // ============================================================
 // ELEMENTS
 // ============================================================
 
 const welcomeText =
-    document.getElementById(
-        "welcomeText"
-    );
+    document.getElementById("welcomeText");
 
 
 const parentEmail =
-    document.getElementById(
-        "parentEmail"
-    );
-
-
-const childrenContainer =
-    document.getElementById(
-        "childrenContainer"
-    );
-
-
-const childrenCount =
-    document.getElementById(
-        "childrenCount"
-    );
+    document.getElementById("parentEmail");
 
 
 const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
+    document.getElementById("errorMessage");
+
+
+const childrenCount =
+    document.getElementById("childrenCount");
+
+
+const overviewChildrenCount =
+    document.getElementById("overviewChildrenCount");
+
+
+const childrenContainer =
+    document.getElementById("childrenContainer");
+
+
+const portalNotifications =
+    document.getElementById("portalNotifications");
 
 
 const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
+    document.getElementById("logoutBtn");
 
 
 
 // ============================================================
-// ESCAPE HTML
+// CHECK IMPORTANT ELEMENTS
 // ============================================================
 
-function escapeHTML(value) {
+console.log(
+    "Parent email element:",
+    parentEmail
+);
 
-    return String(
-        value ?? ""
-    )
+console.log(
+    "Children container:",
+    childrenContainer
+);
 
-    .replace(
-        /&/g,
-        "&amp;"
-    )
+console.log(
+    "Children count:",
+    childrenCount
+);
 
-    .replace(
-        /</g,
-        "&lt;"
-    )
+console.log(
+    "Overview children count:",
+    overviewChildrenCount
+);
 
-    .replace(
-        />/g,
-        "&gt;"
-    )
+console.log(
+    "Error element:",
+    errorMessage
+);
 
-    .replace(
-        /"/g,
-        "&quot;"
-    )
 
-    .replace(
-        /'/g,
-        "&#039;"
-    );
 
-}
+// ============================================================
+// VARIABLES
+// ============================================================
+
+let notificationsUnsubscribe =
+    null;
+
+
+let dashboardStarted =
+    false;
 
 
 
@@ -141,11 +136,186 @@ function escapeHTML(value) {
 
 function showError(message) {
 
+    console.error(
+        "PARENT DASHBOARD ERROR:",
+        message
+    );
+
+
+    if (!errorMessage) {
+        return;
+    }
+
+
     errorMessage.textContent =
         message;
 
+
     errorMessage.style.display =
         "block";
+}
+
+
+
+// ============================================================
+// HIDE ERROR
+// ============================================================
+
+function hideError() {
+
+    if (!errorMessage) {
+        return;
+    }
+
+
+    errorMessage.textContent =
+        "";
+
+
+    errorMessage.style.display =
+        "none";
+}
+
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
+
+
+
+// ============================================================
+// FIREBASE ERROR MESSAGE
+// ============================================================
+
+function getErrorMessage(error) {
+
+    console.error(
+        "Firebase error:",
+        error
+    );
+
+
+    if (
+        error &&
+        error.code ===
+            "permission-denied"
+    ) {
+
+        return (
+            "You do not have permission to access this information. " +
+            "Please contact the school administrator."
+        );
+    }
+
+
+    if (
+        error &&
+        error.code ===
+            "failed-precondition"
+    ) {
+
+        return (
+            "Firebase requires an additional database index for this request."
+        );
+    }
+
+
+    if (
+        error &&
+        error.code ===
+            "unavailable"
+    ) {
+
+        return (
+            "Firebase is temporarily unavailable. " +
+            "Please check your internet connection."
+        );
+    }
+
+
+    if (
+        error &&
+        error.code ===
+            "unauthenticated"
+    ) {
+
+        return (
+            "Your login session has expired. " +
+            "Please log in again."
+        );
+    }
+
+
+    return (
+        error?.message ||
+        "Unable to load this information."
+    );
+}
+
+
+
+// ============================================================
+// UPDATE CHILD COUNT
+// ============================================================
+
+function updateChildrenCount(count) {
+
+    const value =
+        String(count);
+
+
+    if (childrenCount) {
+
+        childrenCount.textContent =
+            value;
+    }
+
+
+    if (overviewChildrenCount) {
+
+        overviewChildrenCount.textContent =
+            value;
+    }
 
 }
 
@@ -157,6 +327,33 @@ function showError(message) {
 
 async function loadParentProfile(user) {
 
+    console.log(
+        "Loading parent profile..."
+    );
+
+
+    console.log(
+        "Parent UID:",
+        user.uid
+    );
+
+
+    // --------------------------------------------------------
+    // SHOW AUTH EMAIL IMMEDIATELY
+    // --------------------------------------------------------
+
+    if (parentEmail) {
+
+        parentEmail.textContent =
+            user.email ||
+            "Email unavailable";
+    }
+
+
+    // --------------------------------------------------------
+    // FIRESTORE USER PROFILE
+    // --------------------------------------------------------
+
     const userRef =
         doc(
             db,
@@ -165,70 +362,128 @@ async function loadParentProfile(user) {
         );
 
 
-    const snapshot =
+    console.log(
+        "Reading users document..."
+    );
+
+
+    const userSnapshot =
         await getDoc(
             userRef
         );
 
 
-    if (!snapshot.exists()) {
+    console.log(
+        "Users document request completed."
+    );
 
-        await signOut(auth);
 
-        window.location.href =
-            "parent-login.html";
+    if (
+        !userSnapshot.exists()
+    ) {
 
-        return;
-
+        throw new Error(
+            "Your parent profile was not found in the users collection. Please contact the school administrator."
+        );
     }
 
 
     const parent =
-        snapshot.data();
+        userSnapshot.data();
+
+
+    console.log(
+        "Parent profile:",
+        parent
+    );
+
+
+    // --------------------------------------------------------
+    // CHECK ROLE
+    // --------------------------------------------------------
+
+    const role =
+        String(
+            parent.role || ""
+        )
+        .trim()
+        .toLowerCase();
 
 
     if (
-        parent.role !==
-        "parent"
+        role !== "parent"
     ) {
 
-        await signOut(auth);
-
-        window.location.href =
-            "parent-login.html";
-
-        return;
-
+        throw new Error(
+            "This account is not registered as a parent account."
+        );
     }
 
+
+    // --------------------------------------------------------
+    // CHECK ACTIVE STATUS
+    // --------------------------------------------------------
+
+    if (
+        parent.active === false
+    ) {
+
+        throw new Error(
+            "Your parent account has been deactivated. Please contact the school."
+        );
+    }
+
+
+    // --------------------------------------------------------
+    // DISPLAY NAME
+    // --------------------------------------------------------
 
     const name =
         parent.name ||
         parent.fullName ||
-        parent.displayName ||
+        user.displayName ||
         "Parent";
 
 
-    const email =
-        parent.email ||
-        user.email ||
-        "";
+    if (welcomeText) {
+
+        welcomeText.textContent =
+            `Welcome, ${name}`;
+    }
 
 
-    welcomeText.textContent =
-        `Welcome, ${name}`;
+    // --------------------------------------------------------
+    // DISPLAY EMAIL
+    // --------------------------------------------------------
+
+    if (parentEmail) {
+
+        parentEmail.textContent =
+            user.email ||
+            parent.email ||
+            "Email unavailable";
+    }
 
 
-    parentEmail.textContent =
-        email;
-
+    // --------------------------------------------------------
+    // LOAD CHILDREN
+    // --------------------------------------------------------
 
     await loadChildren(
         user.uid
     );
 
-    await loadNotifications();
 
+    // --------------------------------------------------------
+    // LOAD NOTIFICATIONS
+    // --------------------------------------------------------
+
+    loadNotifications();
+
+
+    console.log(
+        "Parent profile loaded successfully."
+    );
 }
 
 
@@ -239,18 +494,73 @@ async function loadParentProfile(user) {
 
 async function loadChildren(parentUid) {
 
+    console.log(
+        "========================================"
+    );
+
+
+    console.log(
+        "STARTING CHILDREN LOAD"
+    );
+
+
+    console.log(
+        "Parent UID:",
+        parentUid
+    );
+
+
+    console.log(
+        "========================================"
+    );
+
+
+    if (!childrenContainer) {
+
+        console.error(
+            "childrenContainer was not found."
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // LOADING DISPLAY
+    // --------------------------------------------------------
+
+    childrenContainer.innerHTML = `
+
+        <div class="portal-loading">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading children's records...
+            </p>
+
+        </div>
+
+    `;
+
+
     try {
 
-        const studentsRef =
-            collection(
-                db,
-                "students"
-            );
+        // ----------------------------------------------------
+        // SEARCH STUDENTS
+        // ----------------------------------------------------
+
+        console.log(
+            "Creating students query..."
+        );
 
 
-        const childrenQuery =
+        const studentsQuery =
             query(
-                studentsRef,
+                collection(
+                    db,
+                    "students"
+                ),
 
                 where(
                     "parentUid",
@@ -260,221 +570,922 @@ async function loadChildren(parentUid) {
             );
 
 
+        console.log(
+            "Students query created."
+        );
+
+
+        console.log(
+            "Requesting students from Firestore..."
+        );
+
+
         const snapshot =
             await getDocs(
-                childrenQuery
+                studentsQuery
             );
 
 
-        childrenContainer.innerHTML =
-            "";
+        console.log(
+            "Students request completed."
+        );
 
 
-        childrenCount.textContent =
-            snapshot.size;
+        console.log(
+            "Number of students found:",
+            snapshot.size
+        );
 
 
-        if (snapshot.empty) {
+        // ----------------------------------------------------
+        // UPDATE COUNT
+        // ----------------------------------------------------
+
+        updateChildrenCount(
+            snapshot.size
+        );
+
+
+        // ----------------------------------------------------
+        // NO CHILDREN
+        // ----------------------------------------------------
+
+        if (
+            snapshot.empty
+        ) {
 
             childrenContainer.innerHTML = `
 
-                <div class="empty-children">
+                <div class="empty-state">
 
                     <h3>
                         No children linked
                     </h3>
 
                     <p>
-                        Your account has not yet
-                        been linked to a student.
+                        No student is currently
+                        linked to this parent account.
+                    </p>
+
+                    <p>
+                        The student's record must contain
+                        the parent's Firebase UID.
                     </p>
 
                 </div>
 
             `;
 
-            return;
 
+            console.log(
+                "No students are linked to this parent."
+            );
+
+
+            return;
         }
 
 
-        snapshot.forEach(
-            documentSnapshot => {
+        // ----------------------------------------------------
+        // DISPLAY CHILDREN
+        // ----------------------------------------------------
 
-                const student =
-                    documentSnapshot.data();
+        const childrenHTML =
+            snapshot.docs
+
+                .map(
+                    studentDocument => {
+
+                        const student =
+                            studentDocument.data();
 
 
-                createChildCard(
-                    student
-                );
+                        // ------------------------------------
+                        // NAME
+                        // ------------------------------------
 
-            }
+                        const fullName =
+                            `${student.firstName || ""} ${student.lastName || ""}`
+                                .trim()
+                            ||
+                            student.name
+                            ||
+                            "Student";
+
+
+                        // ------------------------------------
+                        // STUDENT ID
+                        // ------------------------------------
+
+                        const studentId =
+                            student.studentId ||
+                            student.id ||
+                            studentDocument.id;
+
+
+                        // ------------------------------------
+                        // CLASS
+                        // ------------------------------------
+
+                        const studentClass =
+                            student.studentClass ||
+                            student.className ||
+                            student.class ||
+                            "Not assigned";
+
+
+                        // ------------------------------------
+                        // GENDER
+                        // ------------------------------------
+
+                        const gender =
+                            student.gender ||
+                            "Not specified";
+
+
+                        // ------------------------------------
+                        // STATUS
+                        // ------------------------------------
+
+                        const status =
+                            student.status ||
+                            "Active";
+
+
+                        // ------------------------------------
+                        // RETURN CARD
+                        // ------------------------------------
+
+                        return `
+
+                            <div
+                                class="child-card"
+                                data-student-id="${escapeHTML(
+                                    studentDocument.id
+                                )}"
+                            >
+
+                                <div
+                                    class="child-card-header"
+                                >
+
+                                    <div
+                                        class="child-avatar"
+                                    >
+
+                                        ${escapeHTML(
+                                            fullName
+                                                .charAt(0)
+                                                .toUpperCase()
+                                        )}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <h3>
+                                            ${escapeHTML(
+                                                fullName
+                                            )}
+                                        </h3>
+
+
+                                        <p>
+                                            Student ID:
+                                            ${escapeHTML(
+                                                studentId
+                                            )}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div
+                                    class="child-details"
+                                >
+
+                                    <div
+                                        class="child-detail"
+                                    >
+
+                                        <span>
+                                            Class
+                                        </span>
+
+
+                                        <strong>
+                                            ${escapeHTML(
+                                                studentClass
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="child-detail"
+                                    >
+
+                                        <span>
+                                            Gender
+                                        </span>
+
+
+                                        <strong>
+                                            ${escapeHTML(
+                                                gender
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="child-detail"
+                                    >
+
+                                        <span>
+                                            Status
+                                        </span>
+
+
+                                        <strong>
+                                            ${escapeHTML(
+                                                status
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                )
+
+                .join("");
+
+
+        childrenContainer.innerHTML =
+            childrenHTML;
+
+
+        console.log(
+            "Children displayed successfully."
         );
 
     }
 
-    catch(error) {
+    catch (error) {
 
         console.error(
-            "Error loading children:",
+            "Children loading failed:",
             error
         );
 
 
-        childrenContainer.innerHTML =
-            "";
-
-
-        showError(
-            "Unable to load your children's records."
+        updateChildrenCount(
+            0
         );
 
-    }
 
+        childrenContainer.innerHTML = `
+
+            <div class="empty-state">
+
+                <h3>
+                    Unable to load children
+                </h3>
+
+                <p>
+                    ${escapeHTML(
+                        getErrorMessage(error)
+                    )}
+                </p>
+
+            </div>
+
+        `;
+    }
 }
 
 
 
 // ============================================================
-// CREATE CHILD CARD
+// LOAD NOTIFICATIONS
 // ============================================================
 
-function createChildCard(student) {
+function loadNotifications() {
 
-    const firstName =
-        student.firstName ||
-        "";
+    if (!portalNotifications) {
 
-
-    const lastName =
-        student.lastName ||
-        "";
-
-
-    const fullName =
-        `${firstName} ${lastName}`
-            .trim();
-
-
-    const initials =
-        (
-            firstName.charAt(0) +
-            lastName.charAt(0)
-        )
-        .toUpperCase();
-
-
-    const card =
-        document.createElement(
-            "article"
+        console.log(
+            "Notifications container not found."
         );
 
-
-    card.className =
-        "child-card";
-
-
-    card.innerHTML = `
-
-        <div class="child-avatar">
-
-            ${escapeHTML(
-                initials
-            )}
-
-        </div>
+        return;
+    }
 
 
-        <h3>
+    // --------------------------------------------------------
+    // STOP OLD LISTENER
+    // --------------------------------------------------------
 
-            ${escapeHTML(
-                fullName
-            )}
+    if (
+        notificationsUnsubscribe
+    ) {
 
-        </h3>
+        notificationsUnsubscribe();
 
 
-        <div class="child-info">
+        notificationsUnsubscribe =
+            null;
+    }
+
+
+    // --------------------------------------------------------
+    // LOADING DISPLAY
+    // --------------------------------------------------------
+
+    portalNotifications.innerHTML = `
+
+        <div class="portal-loading">
+
+            <div class="loading-spinner"></div>
 
             <span>
-                Student ID
-            </span>
-
-            <span>
-                ${escapeHTML(
-                    student.id ||
-                    "N/A"
-                )}
+                Loading notifications...
             </span>
 
         </div>
-
-
-        <div class="child-info">
-
-            <span>
-                Class
-            </span>
-
-            <span>
-                ${escapeHTML(
-                    student.studentClass ||
-                    "N/A"
-                )}
-            </span>
-
-        </div>
-
-
-        <div class="child-info">
-
-            <span>
-                Gender
-            </span>
-
-            <span>
-                ${escapeHTML(
-                    student.gender ||
-                    "N/A"
-                )}
-            </span>
-
-        </div>
-
-
-        <div class="child-info">
-
-            <span>
-                Admission Date
-            </span>
-
-            <span>
-                ${escapeHTML(
-                    student.admissionDate ||
-                    "N/A"
-                )}
-            </span>
-
-        </div>
-
-
-        <span class="child-status">
-
-            ${escapeHTML(
-                student.status ||
-                "Active"
-            )}
-
-        </span>
 
     `;
 
 
-    childrenContainer.appendChild(
-        card
+    try {
+
+        console.log(
+            "Starting parent notification listener..."
+        );
+
+
+        const notificationsQuery =
+            query(
+                collection(
+                    db,
+                    "notifications"
+                ),
+
+                where(
+                    "audience",
+                    "array-contains",
+                    "parent"
+                )
+            );
+
+
+        notificationsUnsubscribe =
+            onSnapshot(
+
+                notificationsQuery,
+
+
+                snapshot => {
+
+                    console.log(
+                        "Notifications received:",
+                        snapshot.size
+                    );
+
+
+                    const notifications =
+                        [];
+
+
+                    snapshot.forEach(
+                        notificationDocument => {
+
+                            const data =
+                                notificationDocument.data();
+
+
+                            // --------------------------------
+                            // PUBLISHED ONLY
+                            // --------------------------------
+
+                            if (
+                                data.status &&
+                                data.status !==
+                                    "published"
+                            ) {
+
+                                return;
+                            }
+
+
+                            // --------------------------------
+                            // ACTIVE ONLY
+                            // --------------------------------
+
+                            if (
+                                data.active === false
+                            ) {
+
+                                return;
+                            }
+
+
+                            notifications.push({
+
+                                id:
+                                    notificationDocument.id,
+
+                                ...data
+
+                            });
+
+                        }
+                    );
+
+
+                    // ------------------------------------------------
+                    // SORT NEWEST FIRST
+                    // ------------------------------------------------
+
+                    notifications.sort(
+                        (a, b) => {
+
+                            const aTime =
+                                a.createdAt?.toMillis?.() ||
+                                0;
+
+
+                            const bTime =
+                                b.createdAt?.toMillis?.() ||
+                                0;
+
+
+                            return (
+                                bTime -
+                                aTime
+                            );
+
+                        }
+                    );
+
+
+                    // ------------------------------------------------
+                    // NO NOTIFICATIONS
+                    // ------------------------------------------------
+
+                    if (
+                        notifications.length ===
+                            0
+                    ) {
+
+                        portalNotifications.innerHTML = `
+
+                            <div
+                                class="notification-empty"
+                            >
+
+                                <strong>
+                                    No notifications yet
+                                </strong>
+
+
+                                <p>
+                                    School notifications
+                                    will appear here.
+                                </p>
+
+                            </div>
+
+                        `;
+
+
+                        return;
+                    }
+
+
+                    // ------------------------------------------------
+                    // DISPLAY NOTIFICATIONS
+                    // ------------------------------------------------
+
+                    portalNotifications.innerHTML =
+                        notifications
+
+                            .map(
+                                notification => {
+
+                                    let date =
+                                        "Recently";
+
+
+                                    if (
+                                        notification.createdAt &&
+
+                                        typeof
+                                            notification
+                                                .createdAt
+                                                .toDate ===
+                                            "function"
+                                    ) {
+
+                                        date =
+                                            notification
+                                                .createdAt
+                                                .toDate()
+                                                .toLocaleDateString(
+                                                    "en-NG",
+                                                    {
+                                                        day:
+                                                            "numeric",
+
+                                                        month:
+                                                            "short",
+
+                                                        year:
+                                                            "numeric"
+                                                    }
+                                                );
+                                    }
+
+
+                                    return `
+
+                                        <div
+                                            class="notification-item"
+                                        >
+
+                                            <div
+                                                class="notification-item-header"
+                                            >
+
+                                                <div
+                                                    class="notification-item-icon"
+                                                >
+                                                    🔔
+                                                </div>
+
+
+                                                <div>
+
+                                                    <h3>
+                                                        ${escapeHTML(
+                                                            notification.title ||
+                                                            "School Notification"
+                                                        )}
+                                                    </h3>
+
+
+                                                    <span>
+                                                        ${escapeHTML(
+                                                            date
+                                                        )}
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <p>
+                                                ${escapeHTML(
+                                                    notification.message ||
+                                                    notification.body ||
+                                                    ""
+                                                )}
+                                            </p>
+
+                                        </div>
+
+                                    `;
+
+                                }
+                            )
+
+                            .join("");
+
+                },
+
+
+                error => {
+
+                    console.error(
+                        "Notification listener failed:",
+                        error
+                    );
+
+
+                    portalNotifications.innerHTML = `
+
+                        <div
+                            class="notification-error"
+                        >
+
+                            <strong>
+                                Unable to load notifications
+                            </strong>
+
+
+                            <p>
+                                ${escapeHTML(
+                                    getErrorMessage(error)
+                                )}
+                            </p>
+
+                        </div>
+
+                    `;
+
+                }
+
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Notification setup failed:",
+            error
+        );
+
+
+        portalNotifications.innerHTML = `
+
+            <div
+                class="notification-error"
+            >
+
+                <strong>
+                    Unable to load notifications
+                </strong>
+
+
+                <p>
+                    ${escapeHTML(
+                        getErrorMessage(error)
+                    )}
+                </p>
+
+            </div>
+
+        `;
+    }
+}
+
+
+
+// ============================================================
+// LOGOUT
+// ============================================================
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+
+        async () => {
+
+            try {
+
+                // ---------------------------------------------
+                // STOP NOTIFICATION LISTENER
+                // ---------------------------------------------
+
+                if (
+                    notificationsUnsubscribe
+                ) {
+
+                    notificationsUnsubscribe();
+
+
+                    notificationsUnsubscribe =
+                        null;
+                }
+
+
+                // ---------------------------------------------
+                // SIGN OUT
+                // ---------------------------------------------
+
+                await signOut(
+                    auth
+                );
+
+
+                // ---------------------------------------------
+                // RETURN TO LOGIN
+                // ---------------------------------------------
+
+                window.location.href =
+                    "parent-login.html";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+
+                showError(
+                    "Unable to log out. Please try again."
+                );
+            }
+        }
+    );
+}
+
+
+
+// ============================================================
+// SERVICE NAVIGATION
+// ============================================================
+
+function openService(service) {
+
+    if (
+        service ===
+        "results"
+    ) {
+
+        window.location.href =
+            "parent-results.html";
+
+        return;
+    }
+
+
+    if (
+        service ===
+        "attendance"
+    ) {
+
+        window.location.href =
+            "parent-attendance.html";
+
+        return;
+    }
+
+
+    if (
+        service ===
+        "fees"
+    ) {
+
+        window.location.href =
+            "parent-fees.html";
+
+        return;
+    }
+
+
+    if (
+        service ===
+        "reportCards"
+    ) {
+
+        window.location.href =
+            "parent-report-cards.html";
+
+        return;
+    }
+}
+
+
+
+// ============================================================
+// DATA-SERVICE BUTTONS
+// ============================================================
+
+document
+    .querySelectorAll(
+        "[data-service]"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+
+                () => {
+
+                    openService(
+                        button.dataset.service
+                    );
+
+                }
+            );
+
+        }
     );
 
+
+
+// ============================================================
+// OPTIONAL OLD BUTTON IDs
+// ============================================================
+
+const resultsBtn =
+    document.getElementById(
+        "resultsBtn"
+    );
+
+
+const attendanceBtn =
+    document.getElementById(
+        "attendanceBtn"
+    );
+
+
+const feesBtn =
+    document.getElementById(
+        "feesBtn"
+    );
+
+
+const reportCardsBtn =
+    document.getElementById(
+        "reportCardsBtn"
+    );
+
+
+
+if (resultsBtn) {
+
+    resultsBtn.addEventListener(
+        "click",
+
+        () => {
+
+            openService(
+                "results"
+            );
+
+        }
+    );
+}
+
+
+
+if (attendanceBtn) {
+
+    attendanceBtn.addEventListener(
+        "click",
+
+        () => {
+
+            openService(
+                "attendance"
+            );
+
+        }
+    );
+}
+
+
+
+if (feesBtn) {
+
+    feesBtn.addEventListener(
+        "click",
+
+        () => {
+
+            openService(
+                "fees"
+            );
+
+        }
+    );
+}
+
+
+
+if (reportCardsBtn) {
+
+    reportCardsBtn.addEventListener(
+        "click",
+
+        () => {
+
+            openService(
+                "reportCards"
+            );
+
+        }
+    );
 }
 
 
@@ -483,207 +1494,269 @@ function createChildCard(student) {
 // AUTHENTICATION
 // ============================================================
 
+console.log(
+    "Starting Firebase authentication listener..."
+);
+
+
 onAuthStateChanged(
+
     auth,
-    async function(user) {
+
+    async user => {
+
+        console.log(
+            "========================================"
+        );
+
+
+        console.log(
+            "AUTH STATE CHANGED"
+        );
+
+
+        console.log(
+            "User:",
+            user
+        );
+
+
+        console.log(
+            "========================================"
+        );
+
+
+        // ----------------------------------------------------
+        // NO USER
+        // ----------------------------------------------------
 
         if (!user) {
 
-            window.location.href =
-                "parent-login.html";
+            console.log(
+                "No authenticated Firebase user."
+            );
+
+
+            if (parentEmail) {
+
+                parentEmail.textContent =
+                    "Not signed in";
+            }
+
+
+            if (childrenContainer) {
+
+                childrenContainer.innerHTML = `
+
+                    <div class="empty-state">
+
+                        <h3>
+                            Not signed in
+                        </h3>
+
+                        <p>
+                            Please log in to access
+                            the parent dashboard.
+                        </p>
+
+                    </div>
+
+                `;
+            }
+
 
             return;
+        }
 
+
+        // ----------------------------------------------------
+        // PREVENT DUPLICATE START
+        // ----------------------------------------------------
+
+        if (dashboardStarted) {
+
+            console.log(
+                "Dashboard already started."
+            );
+
+
+            return;
+        }
+
+
+        dashboardStarted =
+            true;
+
+
+        hideError();
+
+
+        // ----------------------------------------------------
+        // DISPLAY EMAIL IMMEDIATELY
+        // ----------------------------------------------------
+
+        if (parentEmail) {
+
+            parentEmail.textContent =
+                user.email ||
+                "Email unavailable";
         }
 
 
         try {
 
+            console.log(
+                "Authenticated user UID:",
+                user.uid
+            );
+
+
+            console.log(
+                "Authenticated email:",
+                user.email
+            );
+
+
+            // ------------------------------------------------
+            // REFRESH USER
+            // ------------------------------------------------
+
+            await user.reload();
+
+
+            const currentUser =
+                auth.currentUser;
+
+
+            if (!currentUser) {
+
+                throw new Error(
+                    "Your Firebase login session could not be restored."
+                );
+            }
+
+
+            // ------------------------------------------------
+            // DISPLAY EMAIL AFTER REFRESH
+            // ------------------------------------------------
+
+            if (parentEmail) {
+
+                parentEmail.textContent =
+                    currentUser.email ||
+                    "Email unavailable";
+            }
+
+
+            // =================================================
+            // IMPORTANT
+            //
+            // NO EMAIL VERIFICATION CHECK HERE.
+            //
+            // Parents are allowed into the dashboard even
+            // when Firebase reports:
+            //
+            // currentUser.emailVerified === false
+            //
+            // =================================================
+
+
+            // ------------------------------------------------
+            // LOAD PARENT PROFILE
+            // ------------------------------------------------
+
             await loadParentProfile(
-                user
+                currentUser
+            );
+
+
+            console.log(
+                "========================================"
+            );
+
+
+            console.log(
+                "PARENT DASHBOARD LOADED SUCCESSFULLY"
+            );
+
+
+            console.log(
+                "========================================"
             );
 
         }
 
-        catch(error) {
+        catch (error) {
 
             console.error(
-                "Dashboard error:",
+                "Dashboard loading failed:",
                 error
             );
+
+
+            dashboardStarted =
+                false;
+
+
+            if (parentEmail) {
+
+                parentEmail.textContent =
+                    user.email ||
+                    "Unable to load email";
+            }
+
+
+            if (childrenContainer) {
+
+                childrenContainer.innerHTML = `
+
+                    <div class="empty-state">
+
+                        <h3>
+                            Unable to load dashboard
+                        </h3>
+
+
+                        <p>
+                            ${escapeHTML(
+                                getErrorMessage(error)
+                            )}
+                        </p>
+
+                    </div>
+
+                `;
+            }
 
 
             showError(
-                "Unable to load your parent dashboard."
+                getErrorMessage(error)
             );
-
         }
 
     }
 );
 
-// ============================================================
-// PARENT SERVICE BUTTONS
-// ============================================================
-
-const serviceButtons =
-    document.querySelectorAll(
-        ".service-card"
-    );
-
-
-serviceButtons.forEach(
-    button => {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const service =
-                    button.dataset.service;
-
-
-                switch (service) {
-
-                    case "results":
-
-                        openParentService(
-                            "results"
-                        );
-
-                        break;
-
-
-                    case "attendance":
-
-                        openParentService(
-                            "attendance"
-                        );
-
-                        break;
-
-
-                    case "fees":
-
-                        openParentService(
-                            "fees"
-                        );
-
-                        break;
-
-
-                    case "reportCards":
-
-                        openParentService(
-                            "reportCards"
-                        );
-
-                        break;
-
-                }
-
-            }
-        );
-
-    }
-);
-
 
 
 // ============================================================
-// OPEN PARENT SERVICE
+// CLEANUP
 // ============================================================
 
-function openParentService(
-    service
-) {
+window.addEventListener(
+    "beforeunload",
 
-    switch (service) {
+    () => {
 
-        case "results":
+        if (
+            notificationsUnsubscribe
+        ) {
 
-            window.location.href =
-                "parent-results.html";
-
-            break;
+            notificationsUnsubscribe();
 
 
-        case "attendance":
-
-            window.location.href =
-                "parent-attendance.html";
-
-            break;
-
-
-        case "fees":
-
-            window.location.href =
-                "parent-fees.html";
-
-            break;
-
-
-        case "reportCards":
-
-            window.location.href =
-                "parent-report-cards.html";
-
-            break;
-
-
-        default:
-
-            console.error(
-                "Unknown parent service:",
-                service
-            );
-
-    }
-
-}
-
-// ============================================================
-// LOGOUT
-// ============================================================
-
-logoutBtn.addEventListener(
-    "click",
-    async function() {
-
-        logoutBtn.disabled =
-            true;
-
-        logoutBtn.textContent =
-            "Logging out...";
-
-
-        try {
-
-            await signOut(
-                auth
-            );
-
-
-            window.location.href =
-                "parent-login.html";
-
-        }
-
-        catch(error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-
-
-            logoutBtn.disabled =
-                false;
-
-            logoutBtn.textContent =
-                "Logout";
-
+            notificationsUnsubscribe =
+                null;
         }
 
     }

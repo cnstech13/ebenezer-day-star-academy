@@ -24,48 +24,184 @@
             margin: 30px auto;
         }
 
+
         .panel {
             background: #fff;
             padding: 22px;
             border-radius: 16px;
             margin-bottom: 20px;
+
+            /*
+             * Prevent content from
+             * overflowing the panel.
+             */
+            min-width: 0;
+            overflow: hidden;
         }
+
 
         .gridform {
             display: grid;
+
             grid-template-columns:
                 repeat(
                     auto-fit,
                     minmax(180px, 1fr)
                 );
+
             gap: 10px;
         }
+
 
         input,
         select,
         button {
             padding: 11px;
+
             border: 1px solid #ccd8e2;
+
             border-radius: 8px;
+
+            box-sizing: border-box;
+
+            max-width: 100%;
         }
+
 
         button {
             background: #123b66;
+
             color: #fff;
+
             border: 0;
+
+            cursor: pointer;
         }
 
-        table {
+
+        /* =================================================
+           TABLE SCROLL CONTAINER
+        ================================================= */
+
+        .table-container {
+
             width: 100%;
-            border-collapse: collapse;
+
+            max-width: 100%;
+
+            overflow-x: auto;
+
+            overflow-y: hidden;
+
+            -webkit-overflow-scrolling: touch;
+
+            border-radius: 10px;
+
             margin-top: 15px;
         }
 
-        td,
-        th {
-            padding: 10px;
-            border-bottom: 1px solid #e5ebef;
+
+        /* =================================================
+           FEE TABLE
+        ================================================= */
+
+        table {
+
+            width: 100%;
+
+            min-width: 700px;
+
+            border-collapse: collapse;
+
+            margin-top: 0;
+
+            table-layout: auto;
+        }
+
+
+        th,
+        td {
+
+            padding: 12px;
+
+            border-bottom:
+                1px solid #e5ebef;
+
             text-align: left;
+
+            white-space: nowrap;
+        }
+
+
+        th {
+
+            background: #f5f8fb;
+
+            font-weight: 600;
+        }
+
+
+        tbody tr:hover {
+
+            background: #f8fafc;
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 600px) {
+
+            main {
+
+                width: 94%;
+
+                margin:
+                    20px auto;
+            }
+
+
+            .panel {
+
+                padding: 16px;
+
+                border-radius: 14px;
+            }
+
+
+            .panel h2 {
+
+                font-size: 20px;
+            }
+
+
+            .gridform {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .table-container {
+
+                margin-top: 12px;
+            }
+
+
+            table {
+
+                min-width: 700px;
+            }
+
+
+            th,
+            td {
+
+                padding: 10px;
+
+                font-size: 14px;
+            }
+
         }
 
     </style>
@@ -113,7 +249,9 @@
     <main>
 
 
-        <!-- RECORD FEE -->
+        <!-- =================================================
+             RECORD FEE
+        ================================================= -->
 
         <div class="panel">
 
@@ -130,6 +268,7 @@
 
                     <input
                         id="studentId"
+                        type="text"
                         placeholder="Student ID"
                         required
                     >
@@ -137,6 +276,7 @@
 
                     <input
                         id="title"
+                        type="text"
                         placeholder="Fee description"
                         required
                     >
@@ -153,19 +293,19 @@
 
                     <select id="status">
 
-                        <option>
+                        <option value="Pending">
                             Pending
                         </option>
 
-                        <option>
+                        <option value="Paid">
                             Paid
                         </option>
 
-                        <option>
+                        <option value="Partially Paid">
                             Partially Paid
                         </option>
 
-                        <option>
+                        <option value="Waived">
                             Waived
                         </option>
 
@@ -174,12 +314,14 @@
 
                     <input
                         id="session"
+                        type="text"
                         placeholder="Session e.g. 2026/2027"
                     >
 
 
                     <input
                         id="term"
+                        type="text"
                         placeholder="Term e.g. First Term"
                     >
 
@@ -204,7 +346,9 @@
 
 
 
-        <!-- FEE RECORDS -->
+        <!-- =================================================
+             FEE RECORDS
+        ================================================= -->
 
         <div class="panel">
 
@@ -213,44 +357,49 @@
             </h2>
 
 
-            <table>
+            <!-- TABLE SCROLL AREA -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Session
+                            </th>
+
+                        </tr>
+
+                    </thead>
 
 
-                <thead>
+                    <tbody id="rows">
 
-                    <tr>
+                    </tbody>
 
-                        <th>
-                            Student
-                        </th>
+                </table>
 
-                        <th>
-                            Description
-                        </th>
+            </div>
 
-                        <th>
-                            Amount
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Session
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="rows">
-
-                </tbody>
-
-
-            </table>
 
         </div>
 

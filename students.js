@@ -1,1597 +1,1092 @@
-import { adminReady, withTimeout } from "./admin-guard.js";
-// ============================================================
-// STUDENTS MANAGEMENT
-// Ebenezer Day Star Academy
-// Firebase 12 Modular Firestore
-//
-// Features:
-// - Add student
-// - Edit student
-// - Delete student
-// - Search students
-// - Filter by class
-// - Generate student ID
-// - Save parent details only
-//
-// SweetAlert2 added for:
-// - Success messages
-// - Error messages
-// - Delete confirmation
-// - Loading state
-//
-// IMPORTANT:
-// - No parent account creation
-// - No parent account linking
-// - No parent UID
-// - No localStorage
-// ============================================================
-
-await adminReady;
-
+/* =========================================================
+   STUDENTS MANAGEMENT
+   EBENEZER DAY STAR ACADEMY
+   Firebase Firestore Version
+========================================================= */
 
 import {
     collection,
-    getDocs,
     addDoc,
+    getDocs,
+    getDoc,
+    doc,
     updateDoc,
     deleteDoc,
-    doc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-
-import { db } from "./firebase-config.js";
-
-
-
-// ============================================================
-// STUDENTS DATA
-// ============================================================
-
-let students = [];
+import {
+    db
+} from "./firebase-config.js";
 
 
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
-// ============================================================
-// FIRESTORE COLLECTION
-// ============================================================
+const studentSearch = document.getElementById("studentSearch");
+const classFilter = document.getElementById("classFilter");
 
-const studentsCollection =
-    collection(
-        db,
-        "students"
-    );
+const addStudentBtn = document.getElementById("addStudentBtn");
 
+const studentModal = document.getElementById("studentModal");
+const studentForm = document.getElementById("studentForm");
 
-
-// ============================================================
-// ELEMENTS
-// ============================================================
-
-const studentModal =
-    document.getElementById(
-        "studentModal"
-    );
-
-
-const studentForm =
-    document.getElementById(
-        "studentForm"
-    );
-
+const editingStudentId =
+    document.getElementById("editingStudentId");
 
 const studentsTableBody =
-    document.getElementById(
-        "studentsTableBody"
-    );
-
+    document.getElementById("studentsTableBody");
 
 const emptyStudents =
-    document.getElementById(
-        "emptyStudents"
+    document.getElementById("emptyStudents");
+
+
+/* =========================================================
+   COLLECTIONS
+========================================================= */
+
+const studentsRef = collection(db, "students");
+const classesRef = collection(db, "classes");
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let students = [];
+let classes = [];
+
+
+/* =========================================================
+   DOM READY
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    try {
+
+        await loadClasses();
+
+        await loadStudents();
+
+        setupEvents();
+
+    } catch (error) {
+
+        console.error("Students page error:", error);
+
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message || "Unable to load students."
+        });
+
+    }
+
+});
+
+
+/* =========================================================
+   LOAD CLASSES
+========================================================= */
+
+async function loadClasses() {
+
+    const snapshot = await getDocs(classesRef);
+
+    const classMap = new Map();
+
+    snapshot.forEach((docSnap) => {
+
+        const data = docSnap.data();
+
+        const className =
+            String(data.name || "").trim();
+
+        if (!className) return;
+
+        const normalized =
+            className.toLowerCase();
+
+        if (!classMap.has(normalized)) {
+
+            classMap.set(normalized, {
+
+                firestoreId: docSnap.id,
+
+                ...data,
+
+                name: className
+
+            });
+
+        }
+
+    });
+
+    classes = Array.from(classMap.values());
+
+    classes.sort((a, b) =>
+        a.name.localeCompare(
+            b.name,
+            undefined,
+            {
+                numeric: true,
+                sensitivity: "base"
+            }
+        )
     );
 
 
-const studentSearch =
-    document.getElementById(
-        "studentSearch"
-    );
+    populateStudentClassSelect();
+
+    populateClassFilter();
+
+}
 
 
-const classFilter =
-    document.getElementById(
-        "classFilter"
-    );
+/* =========================================================
+   POPULATE STUDENT CLASS SELECT
+========================================================= */
+
+function populateStudentClassSelect() {
+
+    const select =
+        document.getElementById("studentClass");
+
+    if (!select) return;
 
 
-const addStudentBtn =
-    document.getElementById(
-        "addStudentBtn"
-    );
+    select.innerHTML = `
+        <option value="">Select Class</option>
+    `;
 
 
-const closeStudentModal =
-    document.getElementById(
-        "closeStudentModal"
-    );
+    classes.forEach((classItem) => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = classItem.name;
+
+        option.textContent = classItem.name;
+
+        option.dataset.classId =
+            classItem.firestoreId;
+
+        select.appendChild(option);
+
+    });
+
+}
 
 
-const cancelStudentBtn =
-    document.getElementById(
-        "cancelStudentBtn"
-    );
+/* =========================================================
+   POPULATE CLASS FILTER
+========================================================= */
+
+function populateClassFilter() {
+
+    if (!classFilter) return;
 
 
-const saveStudentBtn =
-    studentForm?.querySelector(
-        'button[type="submit"]'
-    );
+    classFilter.innerHTML = `
+        <option value="">All Classes</option>
+    `;
 
 
+    classes.forEach((classItem) => {
 
-// ============================================================
-// CHECK REQUIRED ELEMENTS
-// ============================================================
+        const option =
+            document.createElement("option");
 
-if (!studentModal) {
+        option.value = classItem.name;
 
-    console.error(
-        "studentModal was not found."
+        option.textContent = classItem.name;
+
+        classFilter.appendChild(option);
+
+    });
+
+}
+
+
+/* =========================================================
+   LOAD STUDENTS
+========================================================= */
+
+async function loadStudents() {
+
+    const snapshot =
+        await getDocs(studentsRef);
+
+    students = [];
+
+    snapshot.forEach((docSnap) => {
+
+        students.push({
+
+            firestoreId: docSnap.id,
+
+            ...docSnap.data()
+
+        });
+
+    });
+
+
+    students.sort((a, b) => {
+
+        const nameA =
+            `${a.firstName || ""} ${a.lastName || ""}`
+                .trim()
+                .toLowerCase();
+
+        const nameB =
+            `${b.firstName || ""} ${b.lastName || ""}`
+                .trim()
+                .toLowerCase();
+
+        return nameA.localeCompare(nameB);
+
+    });
+
+
+    renderStudents();
+
+}
+
+
+/* =========================================================
+   RENDER STUDENTS
+========================================================= */
+
+function renderStudents() {
+
+    if (!studentsTableBody) return;
+
+
+    const search =
+        (studentSearch?.value || "")
+            .trim()
+            .toLowerCase();
+
+    const selectedClass =
+        classFilter?.value || "";
+
+
+    const filtered =
+        students.filter((student) => {
+
+            const fullName =
+                `${student.firstName || ""} ${student.lastName || ""}`
+                    .trim()
+                    .toLowerCase();
+
+            const matchesSearch =
+                !search ||
+                fullName.includes(search) ||
+                String(student.parentName || "")
+                    .toLowerCase()
+                    .includes(search) ||
+                String(student.parentPhone || "")
+                    .toLowerCase()
+                    .includes(search);
+
+
+            const matchesClass =
+                !selectedClass ||
+                student.studentClass === selectedClass;
+
+
+            return matchesSearch && matchesClass;
+
+        });
+
+
+    studentsTableBody.innerHTML = "";
+
+
+    if (filtered.length === 0) {
+
+        if (emptyStudents) {
+            emptyStudents.style.display = "block";
+        }
+
+        return;
+
+    }
+
+
+    if (emptyStudents) {
+        emptyStudents.style.display = "none";
+    }
+
+
+    filtered.forEach((student) => {
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${escapeHTML(student.id || "-")}
+            </td>
+
+            <td>
+                <strong>
+                    ${escapeHTML(student.firstName || "")}
+                    ${escapeHTML(student.lastName || "")}
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHTML(student.gender || "-")}
+            </td>
+
+            <td>
+                ${escapeHTML(student.studentClass || "-")}
+            </td>
+
+            <td>
+                ${escapeHTML(student.parentName || "-")}
+            </td>
+
+            <td>
+                ${escapeHTML(student.parentPhone || "-")}
+            </td>
+
+            <td>
+                <span class="status-badge ${
+                    String(student.status || "")
+                        .toLowerCase() === "active"
+                        ? "active"
+                        : "inactive"
+                }">
+                    ${escapeHTML(student.status || "-")}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="edit-student-btn"
+                    data-id="${student.firestoreId}"
+                >
+                    Edit
+                </button>
+
+                <button
+                    type="button"
+                    class="delete-student-btn"
+                    data-id="${student.firestoreId}"
+                >
+                    Delete
+                </button>
+
+            </td>
+
+        `;
+
+
+        studentsTableBody.appendChild(row);
+
+    });
+
+
+    attachRowButtons();
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+function setupEvents() {
+
+    if (addStudentBtn) {
+
+        addStudentBtn.addEventListener(
+            "click",
+            openAddStudentModal
+        );
+
+    }
+
+
+    if (studentSearch) {
+
+        studentSearch.addEventListener(
+            "input",
+            renderStudents
+        );
+
+    }
+
+
+    if (classFilter) {
+
+        classFilter.addEventListener(
+            "change",
+            renderStudents
+        );
+
+    }
+
+
+    if (studentForm) {
+
+        studentForm.addEventListener(
+            "submit",
+            saveStudent
+        );
+
+    }
+
+
+    document.addEventListener(
+        "click",
+        (event) => {
+
+            if (
+                event.target === studentModal
+            ) {
+
+                closeStudentModal();
+
+            }
+
+        }
     );
 
 }
 
 
-if (!studentForm) {
+/* =========================================================
+   ROW BUTTONS
+========================================================= */
 
-    console.error(
-        "studentForm was not found."
-    );
+function attachRowButtons() {
+
+    document
+        .querySelectorAll(".edit-student-btn")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    editStudent(
+                        button.dataset.id
+                    );
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".delete-student-btn")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    deleteStudent(
+                        button.dataset.id
+                    );
+
+                }
+            );
+
+        });
 
 }
 
 
-if (!studentsTableBody) {
+/* =========================================================
+   OPEN ADD MODAL
+========================================================= */
 
-    console.error(
-        "studentsTableBody was not found."
-    );
+function openAddStudentModal() {
+
+    if (!studentForm) return;
+
+    studentForm.reset();
+
+
+    if (editingStudentId) {
+        editingStudentId.value = "";
+    }
+
+
+    const title =
+        studentModal?.querySelector(
+            ".modal-title"
+        );
+
+    if (title) {
+        title.textContent = "Add Student";
+    }
+
+
+    if (studentModal) {
+
+        studentModal.style.display = "flex";
+
+    }
 
 }
 
 
-if (!addStudentBtn) {
+/* =========================================================
+   EDIT STUDENT
+========================================================= */
 
-    console.error(
-        "addStudentBtn was not found."
+async function editStudent(studentId) {
+
+    const student =
+        students.find(
+            (item) =>
+                item.firestoreId === studentId
+        );
+
+
+    if (!student) {
+
+        Swal.fire(
+            "Error",
+            "Student record not found.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (editingStudentId) {
+        editingStudentId.value =
+            student.firestoreId;
+    }
+
+
+    setValue(
+        "firstName",
+        student.firstName
     );
+
+    setValue(
+        "lastName",
+        student.lastName
+    );
+
+    setValue(
+        "dateOfBirth",
+        student.dateOfBirth
+    );
+
+    setValue(
+        "gender",
+        student.gender
+    );
+
+    setValue(
+        "studentClass",
+        student.studentClass
+    );
+
+    setValue(
+        "admissionDate",
+        student.admissionDate
+    );
+
+    setValue(
+        "parentName",
+        student.parentName
+    );
+
+    setValue(
+        "parentPhone",
+        student.parentPhone
+    );
+
+    setValue(
+        "parentEmail",
+        student.parentEmail
+    );
+
+    setValue(
+        "studentStatus",
+        student.status
+    );
+
+    setValue(
+        "studentAddress",
+        student.address
+    );
+
+
+    const title =
+        studentModal?.querySelector(
+            ".modal-title"
+        );
+
+    if (title) {
+        title.textContent = "Edit Student";
+    }
+
+
+    if (studentModal) {
+        studentModal.style.display = "flex";
+    }
 
 }
 
 
+/* =========================================================
+   SAVE STUDENT
+========================================================= */
 
-// ============================================================
-// GENERATE STUDENT ID
-// ============================================================
+async function saveStudent(event) {
 
-function generateStudentId() {
+    event.preventDefault();
+
+
+    const firstName =
+        getValue("firstName");
+
+    const lastName =
+        getValue("lastName");
+
+    const dateOfBirth =
+        getValue("dateOfBirth");
+
+    const gender =
+        getValue("gender");
+
+    const studentClass =
+        getValue("studentClass");
+
+    const admissionDate =
+        getValue("admissionDate");
+
+    const parentName =
+        getValue("parentName");
+
+    const parentPhone =
+        getValue("parentPhone");
+
+    const parentEmail =
+        getValue("parentEmail");
+
+    const status =
+        getValue("studentStatus");
+
+    const address =
+        getValue("studentAddress");
+
+
+    if (
+        !firstName ||
+        !lastName ||
+        !studentClass
+    ) {
+
+        Swal.fire({
+            icon: "warning",
+            title: "Incomplete Form",
+            text:
+                "Please enter the student's name and select a class."
+        });
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       FIND CLASS DOCUMENT
+    ===================================================== */
+
+    const selectedClass =
+        classes.find(
+            (classItem) =>
+                classItem.name === studentClass
+        );
+
+
+    if (!selectedClass) {
+
+        Swal.fire({
+            icon: "error",
+            title: "Class Not Found",
+            text:
+                "The selected class could not be found in Firestore."
+        });
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       STUDENT DATA
+    ===================================================== */
+
+    const studentData = {
+
+        firstName,
+
+        lastName,
+
+        dateOfBirth,
+
+        gender,
+
+        studentClass,
+
+        /*
+         * IMPORTANT
+         * This is the Firestore class document ID.
+         * Example: CLS-001
+         */
+        classId:
+            selectedClass.firestoreId,
+
+        admissionDate,
+
+        parentName,
+
+        parentPhone,
+
+        parentEmail,
+
+        status,
+
+        address,
+
+        updatedAt:
+            serverTimestamp()
+
+    };
+
+
+    try {
+
+        if (
+            editingStudentId &&
+            editingStudentId.value
+        ) {
+
+            /* =================================================
+               UPDATE EXISTING STUDENT
+            ================================================= */
+
+            const studentRef =
+                doc(
+                    db,
+                    "students",
+                    editingStudentId.value
+                );
+
+
+            await updateDoc(
+                studentRef,
+                studentData
+            );
+
+
+            Swal.fire({
+                icon: "success",
+                title: "Updated",
+                text: "Student updated successfully.",
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+        } else {
+
+            /* =================================================
+               CREATE NEW STUDENT
+            ================================================= */
+
+            const studentId =
+                await generateStudentId();
+
+
+            await addDoc(
+                studentsRef,
+                {
+
+                    id: studentId,
+
+                    ...studentData,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+            );
+
+
+            Swal.fire({
+                icon: "success",
+                title: "Student Added",
+                text: "Student added successfully.",
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+        }
+
+
+        closeStudentModal();
+
+        await loadStudents();
+
+
+    } catch (error) {
+
+        console.error(
+            "Saving student failed:",
+            error
+        );
+
+
+        Swal.fire({
+            icon: "error",
+            title: "Save Failed",
+            text:
+                error.message ||
+                "Unable to save student."
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   GENERATE STUDENT ID
+========================================================= */
+
+async function generateStudentId() {
 
     const year =
         new Date().getFullYear();
 
 
-    let number =
-        students.length + 1;
+    let highestNumber = 0;
 
 
-    let id =
-        `STU-${year}-${String(number).padStart(4, "0")}`;
+    students.forEach((student) => {
+
+        const id =
+            String(student.id || "");
 
 
-    while (
-
-        students.some(
-            student =>
-                student.id === id
-        )
-
-    ) {
-
-        number++;
-
-
-        id =
-            `STU-${year}-${String(number).padStart(4, "0")}`;
-
-    }
-
-
-    return id;
-
-}
-
-
-
-// ============================================================
-// LOAD STUDENTS FROM FIRESTORE
-// ============================================================
-
-async function loadStudents() {
-
-    try {
-
-        const snapshot =
-            await withTimeout(getDocs(
-                studentsCollection
-            ));
-
-
-        students =
-            snapshot.docs.map(
-                documentSnapshot => ({
-
-                    firestoreId:
-                        documentSnapshot.id,
-
-                    ...documentSnapshot.data()
-
-                })
+        const match =
+            id.match(
+                new RegExp(
+                    `STU-${year}-(\\d+)`
+                )
             );
 
 
-        renderStudents();
+        if (match) {
 
-    }
+            const number =
+                parseInt(
+                    match[1],
+                    10
+                );
 
-    catch (error) {
-
-        console.error(
-            "Error loading students:",
-            error
-        );
-
-
-        students = [];
-
-
-        renderStudents();
-
-
-        showError(
-            "Unable to Load Students",
-            getFirebaseErrorMessage(error)
-        );
-
-    }
-
-}
-
-
-
-// ============================================================
-// OPEN STUDENT MODAL
-// ============================================================
-
-function openStudentModal(
-    student = null
-) {
-
-    if (!studentModal) {
-
-        return;
-
-    }
-
-
-    studentModal.classList.add(
-        "show"
-    );
-
-
-    // ========================================================
-    // EDIT MODE
-    // ========================================================
-
-    if (student) {
-
-        document.getElementById(
-            "modalTitle"
-        ).textContent =
-            "Edit Student";
-
-
-        document.getElementById(
-            "editingStudentId"
-        ).value =
-            student.firestoreId || "";
-
-
-        document.getElementById(
-            "firstName"
-        ).value =
-            student.firstName || "";
-
-
-        document.getElementById(
-            "lastName"
-        ).value =
-            student.lastName || "";
-
-
-        document.getElementById(
-            "dateOfBirth"
-        ).value =
-            student.dateOfBirth || "";
-
-
-        document.getElementById(
-            "gender"
-        ).value =
-            student.gender || "";
-
-
-        document.getElementById(
-            "studentClass"
-        ).value =
-            student.studentClass || "";
-
-
-        document.getElementById(
-            "admissionDate"
-        ).value =
-            student.admissionDate || "";
-
-
-        document.getElementById(
-            "parentName"
-        ).value =
-            student.parentName || "";
-
-
-        document.getElementById(
-            "parentPhone"
-        ).value =
-            student.parentPhone || "";
-
-
-        document.getElementById(
-            "parentEmail"
-        ).value =
-            student.parentEmail || "";
-
-
-        document.getElementById(
-            "studentStatus"
-        ).value =
-            student.status || "Active";
-
-
-        document.getElementById(
-            "studentAddress"
-        ).value =
-            student.address || "";
-
-    }
-
-
-    // ========================================================
-    // ADD MODE
-    // ========================================================
-
-    else {
-
-        studentForm.reset();
-
-
-        document.getElementById(
-            "modalTitle"
-        ).textContent =
-            "Add Student";
-
-
-        document.getElementById(
-            "editingStudentId"
-        ).value =
-            "";
-
-
-        document.getElementById(
-            "studentStatus"
-        ).value =
-            "Active";
-
-    }
-
-}
-
-
-
-// ============================================================
-// CLOSE STUDENT MODAL
-// ============================================================
-
-function closeStudentModalFunction() {
-
-    if (!studentModal) {
-
-        return;
-
-    }
-
-
-    studentModal.classList.remove(
-        "show"
-    );
-
-
-    if (studentForm) {
-
-        studentForm.reset();
-
-    }
-
-
-    const editingStudentId =
-        document.getElementById(
-            "editingStudentId"
-        );
-
-
-    if (editingStudentId) {
-
-        editingStudentId.value =
-            "";
-
-    }
-
-
-    const modalTitle =
-        document.getElementById(
-            "modalTitle"
-        );
-
-
-    if (modalTitle) {
-
-        modalTitle.textContent =
-            "Add Student";
-
-    }
-
-
-    if (saveStudentBtn) {
-
-        saveStudentBtn.disabled =
-            false;
-
-        saveStudentBtn.textContent =
-            "Save Student";
-
-    }
-
-}
-
-
-
-// ============================================================
-// OPEN ADD STUDENT MODAL
-// ============================================================
-
-if (addStudentBtn) {
-
-    addStudentBtn.addEventListener(
-        "click",
-        function () {
-
-            openStudentModal();
-
-        }
-    );
-
-}
-
-
-
-// ============================================================
-// CLOSE BUTTON
-// ============================================================
-
-if (closeStudentModal) {
-
-    closeStudentModal.addEventListener(
-        "click",
-        closeStudentModalFunction
-    );
-
-}
-
-
-
-// ============================================================
-// CANCEL BUTTON
-// ============================================================
-
-if (cancelStudentBtn) {
-
-    cancelStudentBtn.addEventListener(
-        "click",
-        closeStudentModalFunction
-    );
-
-}
-
-
-
-// ============================================================
-// CLICK OUTSIDE MODAL
-// ============================================================
-
-if (studentModal) {
-
-    studentModal.addEventListener(
-        "click",
-        function (event) {
 
             if (
-                event.target ===
-                studentModal
+                number >
+                highestNumber
             ) {
 
-                closeStudentModalFunction();
+                highestNumber = number;
 
             }
 
         }
-    );
 
-}
+    });
 
 
-
-// ============================================================
-// SAVE / UPDATE STUDENT
-// ============================================================
-
-if (studentForm) {
-
-    studentForm.addEventListener(
-        "submit",
-        async function (event) {
-
-            event.preventDefault();
-
-
-            // ------------------------------------------------
-            // PREVENT DOUBLE CLICK
-            // ------------------------------------------------
-
-            if (
-                saveStudentBtn &&
-                saveStudentBtn.disabled
-            ) {
-
-                return;
-
-            }
-
-
-            // ------------------------------------------------
-            // BUTTON STATE
-            // ------------------------------------------------
-
-            if (saveStudentBtn) {
-
-                saveStudentBtn.disabled =
-                    true;
-
-                saveStudentBtn.textContent =
-                    "Saving...";
-
-            }
-
-
-            try {
-
-                // =================================================
-                // EDITING ID
-                // =================================================
-
-                const editingId =
-                    document.getElementById(
-                        "editingStudentId"
-                    )
-                    .value
-                    .trim();
-
-
-
-                // =================================================
-                // FORM VALUES
-                // =================================================
-
-                const firstName =
-                    document.getElementById(
-                        "firstName"
-                    )
-                    .value
-                    .trim();
-
-
-                const lastName =
-                    document.getElementById(
-                        "lastName"
-                    )
-                    .value
-                    .trim();
-
-
-                const dateOfBirth =
-                    document.getElementById(
-                        "dateOfBirth"
-                    )
-                    .value;
-
-
-                const gender =
-                    document.getElementById(
-                        "gender"
-                    )
-                    .value;
-
-
-                const studentClass =
-                    document.getElementById(
-                        "studentClass"
-                    )
-                    .value;
-
-
-                const admissionDate =
-                    document.getElementById(
-                        "admissionDate"
-                    )
-                    .value;
-
-
-                const parentName =
-                    document.getElementById(
-                        "parentName"
-                    )
-                    .value
-                    .trim();
-
-
-                const parentPhone =
-                    document.getElementById(
-                        "parentPhone"
-                    )
-                    .value
-                    .trim();
-
-
-                const parentEmail =
-                    document.getElementById(
-                        "parentEmail"
-                    )
-                    .value
-                    .trim()
-                    .toLowerCase();
-
-
-                const status =
-                    document.getElementById(
-                        "studentStatus"
-                    )
-                    .value;
-
-
-                const address =
-                    document.getElementById(
-                        "studentAddress"
-                    )
-                    .value
-                    .trim();
-
-
-
-                // =================================================
-                // VALIDATION
-                // =================================================
-
-                if (
-
-                    !firstName ||
-                    !lastName ||
-                    !dateOfBirth ||
-                    !gender ||
-                    !studentClass ||
-                    !admissionDate ||
-                    !parentName ||
-                    !parentPhone
-
-                ) {
-
-                    throw new Error(
-                        "Please complete all required fields."
-                    );
-
-                }
-
-
-
-                // =================================================
-                // EMAIL VALIDATION
-                // =================================================
-
-                if (parentEmail) {
-
-                    const emailPattern =
-                        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-                    if (
-                        !emailPattern.test(
-                            parentEmail
-                        )
-                    ) {
-
-                        throw new Error(
-                            "Please enter a valid parent email address."
-                        );
-
-                    }
-
-                }
-
-
-
-                // =================================================
-                // DUPLICATE STUDENT NAME
-                // =================================================
-
-                const duplicateStudent =
-                    students.find(
-                        student =>
-
-                            String(
-                                student.firstName || ""
-                            )
-                                .trim()
-                                .toLowerCase() ===
-                            firstName.toLowerCase()
-
-                            &&
-
-                            String(
-                                student.lastName || ""
-                            )
-                                .trim()
-                                .toLowerCase() ===
-                            lastName.toLowerCase()
-
-                            &&
-
-                            student.firestoreId !==
-                            editingId
-                    );
-
-
-                if (duplicateStudent) {
-
-                    throw new Error(
-                        "A student with this name already exists."
-                    );
-
-                }
-
-
-
-                // =================================================
-                // STUDENT DATA
-                // =================================================
-
-                const studentData = {
-
-                    firstName,
-
-                    lastName,
-
-                    dateOfBirth,
-
-                    gender,
-
-                    studentClass,
-
-                    admissionDate,
-
-                    parentName,
-
-                    parentPhone,
-
-                    parentEmail,
-
-                    status,
-
-                    address,
-
-                    updatedAt:
-                        serverTimestamp()
-
-                };
-
-
-
-                // =================================================
-                // SHOW LOADING
-                // =================================================
-
-                showLoading(
-                    editingId
-                        ? "Updating Student"
-                        : "Saving Student",
-
-                    editingId
-                        ? "Please wait while the student information is being updated..."
-                        : "Please wait while the student is being saved..."
-                );
-
-
-
-                // =================================================
-                // UPDATE EXISTING STUDENT
-                // =================================================
-
-                if (editingId) {
-
-                    const studentRef =
-                        doc(
-                            db,
-                            "students",
-                            editingId
-                        );
-
-
-                    await withTimeout(updateDoc(
-                        studentRef,
-                        studentData
-                    ));
-
-
-                    Swal.close();
-
-
-                    await showSuccess(
-                        "Student Updated!",
-                        `${firstName} ${lastName} has been updated successfully.`
-                    );
-
-                }
-
-
-
-                // =================================================
-                // ADD NEW STUDENT
-                // =================================================
-
-                else {
-
-                    const studentId =
-                        generateStudentId();
-
-
-                    const newStudent = {
-
-                        id:
-                            studentId,
-
-                        ...studentData,
-
-                        createdAt:
-                            serverTimestamp()
-
-                    };
-
-
-                    await withTimeout(addDoc(
-                        studentsCollection,
-                        newStudent
-                    ));
-
-
-                    Swal.close();
-
-
-                    await showSuccess(
-                        "Student Added!",
-                        `${firstName} ${lastName} has been saved successfully.\n\nStudent ID: ${studentId}`
-                    );
-
-                }
-
-
-
-                // =================================================
-                // RELOAD STUDENTS
-                // =================================================
-
-                await loadStudents();
-
-
-
-                // =================================================
-                // CLOSE MODAL
-                // =================================================
-
-                closeStudentModalFunction();
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Error saving student:",
-                    error
-                );
-
-
-                Swal.close();
-
-
-                showError(
-                    "Unable to Save Student",
-                    getFirebaseErrorMessage(error)
-                );
-
-            }
-
-            finally {
-
-                if (saveStudentBtn) {
-
-                    saveStudentBtn.disabled =
-                        false;
-
-                    saveStudentBtn.textContent =
-                        "Save Student";
-
-                }
-
-            }
-
-        }
-    );
-
-}
-
-
-
-// ============================================================
-// RENDER STUDENTS
-// ============================================================
-
-function renderStudents() {
-
-    if (!studentsTableBody) {
-
-        return;
-
-    }
-
-
-    const search =
-        studentSearch
-
-            ? studentSearch.value
-                .trim()
-                .toLowerCase()
-
-            : "";
-
-
-    const selectedClass =
-        classFilter
-            ? classFilter.value
-            : "";
-
-
-
-    // ========================================================
-    // FILTER STUDENTS
-    // ========================================================
-
-    const filteredStudents =
-        students.filter(
-            student => {
-
-                const fullName =
-                    `${student.firstName || ""} ${student.lastName || ""}`
-                        .trim()
-                        .toLowerCase();
-
-
-                const studentId =
-                    String(
-                        student.id || ""
-                    )
-                    .toLowerCase();
-
-
-                const parentPhone =
-                    String(
-                        student.parentPhone || ""
-                    )
-                    .toLowerCase();
-
-
-                const parentEmail =
-                    String(
-                        student.parentEmail || ""
-                    )
-                    .toLowerCase();
-
-
-                const matchesSearch =
-
-                    !search ||
-
-                    fullName.includes(
-                        search
-                    ) ||
-
-                    studentId.includes(
-                        search
-                    ) ||
-
-                    parentPhone.includes(
-                        search
-                    ) ||
-
-                    parentEmail.includes(
-                        search
-                    );
-
-
-                const matchesClass =
-
-                    !selectedClass ||
-
-                    student.studentClass ===
-                    selectedClass;
-
-
-                return (
-
-                    matchesSearch &&
-                    matchesClass
-
-                );
-
-            }
+    const nextNumber =
+        String(
+            highestNumber + 1
+        ).padStart(
+            4,
+            "0"
         );
 
 
-
-    // ========================================================
-    // CLEAR TABLE
-    // ========================================================
-
-    studentsTableBody.innerHTML =
-        "";
-
-
-
-    // ========================================================
-    // EMPTY
-    // ========================================================
-
-    if (
-        filteredStudents.length ===
-        0
-    ) {
-
-        if (emptyStudents) {
-
-            emptyStudents.style.display =
-                "block";
-
-        }
-
-        return;
-
-    }
-
-
-
-    if (emptyStudents) {
-
-        emptyStudents.style.display =
-            "none";
-
-    }
-
-
-
-    // ========================================================
-    // CREATE TABLE ROWS
-    // ========================================================
-
-    filteredStudents.forEach(
-        student => {
-
-            const row =
-                document.createElement(
-                    "tr"
-                );
-
-
-            const firstInitial =
-                student.firstName
-                    ? student.firstName[0]
-                    : "";
-
-
-            const lastInitial =
-                student.lastName
-                    ? student.lastName[0]
-                    : "";
-
-
-            const initials =
-                (
-                    firstInitial +
-                    lastInitial
-                ).toUpperCase();
-
-
-
-            row.innerHTML = `
-
-                <!-- STUDENT ID -->
-
-                <td>
-
-                    <span class="student-id">
-
-                        ${escapeHTML(
-                            student.id
-                        )}
-
-                    </span>
-
-                </td>
-
-
-
-                <!-- STUDENT NAME -->
-
-                <td>
-
-                    <div class="student-name">
-
-                        <div class="student-avatar">
-
-                            ${escapeHTML(
-                                initials
-                            )}
-
-                        </div>
-
-
-                        <strong>
-
-                            ${escapeHTML(
-                                student.firstName || ""
-                            )}
-
-                            ${escapeHTML(
-                                student.lastName || ""
-                            )}
-
-                        </strong>
-
-                    </div>
-
-                </td>
-
-
-
-                <!-- GENDER -->
-
-                <td>
-
-                    ${escapeHTML(
-                        student.gender || ""
-                    )}
-
-                </td>
-
-
-
-                <!-- CLASS -->
-
-                <td>
-
-                    ${escapeHTML(
-                        student.studentClass || ""
-                    )}
-
-                </td>
-
-
-
-                <!-- PARENT PHONE -->
-
-                <td>
-
-                    ${escapeHTML(
-                        student.parentPhone || ""
-                    )}
-
-                </td>
-
-
-
-                <!-- STATUS -->
-
-                <td>
-
-                    <span class="
-                        status-badge
-                        ${
-                            student.status ===
-                            "Active"
-
-                                ? "status-active"
-
-                                : "status-inactive"
-                        }
-                    ">
-
-                        ${escapeHTML(
-                            student.status || ""
-                        )}
-
-                    </span>
-
-                </td>
-
-
-
-                <!-- ACTIONS -->
-
-                <td>
-
-                    <div class="table-actions">
-
-
-                        <button
-                            type="button"
-                            class="table-action"
-                            title="Edit"
-                            data-action="edit"
-                            data-id="${escapeHTML(
-                                student.firestoreId
-                            )}"
-                        >
-
-                            ✏️
-
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="table-action"
-                            title="Delete"
-                            data-action="delete"
-                            data-id="${escapeHTML(
-                                student.firestoreId
-                            )}"
-                        >
-
-                            🗑️
-
-                        </button>
-
-
-                    </div>
-
-                </td>
-
-            `;
-
-
-            studentsTableBody.appendChild(
-                row
-            );
-
-        }
-    );
+    return `STU-${year}-${nextNumber}`;
 
 }
 
 
+/* =========================================================
+   DELETE STUDENT
+========================================================= */
 
-// ============================================================
-// TABLE ACTIONS
-// ============================================================
-
-if (studentsTableBody) {
-
-    studentsTableBody.addEventListener(
-        "click",
-        async function (event) {
-
-            const button =
-                event.target.closest(
-                    "button[data-action]"
-                );
-
-
-            if (!button) {
-
-                return;
-
-            }
-
-
-            const action =
-                button.dataset.action;
-
-
-            const firestoreId =
-                button.dataset.id;
-
-
-
-            // =================================================
-            // EDIT
-            // =================================================
-
-            if (
-                action ===
-                "edit"
-            ) {
-
-                editStudent(
-                    firestoreId
-                );
-
-            }
-
-
-
-            // =================================================
-            // DELETE
-            // =================================================
-
-            if (
-                action ===
-                "delete"
-            ) {
-
-                await deleteStudent(
-                    firestoreId
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-
-// ============================================================
-// EDIT STUDENT
-// ============================================================
-
-function editStudent(
-    firestoreId
-) {
+async function deleteStudent(studentId) {
 
     const student =
         students.find(
-            item =>
-                item.firestoreId ===
-                firestoreId
+            (item) =>
+                item.firestoreId === studentId
         );
 
 
-    if (!student) {
+    if (!student) return;
 
-        showError(
-            "Student Not Found",
-            "The student record could not be found."
-        );
 
+    const result =
+        await Swal.fire({
+
+            icon: "warning",
+
+            title: "Delete Student?",
+
+            text:
+                `${student.firstName || ""} ${student.lastName || ""} will be permanently deleted.`,
+
+            showCancelButton: true,
+
+            confirmButtonText:
+                "Yes, Delete",
+
+            cancelButtonText:
+                "Cancel"
+
+        });
+
+
+    if (!result.isConfirmed) {
         return;
-
     }
-
-
-    openStudentModal(
-        student
-    );
-
-}
-
-
-
-// ============================================================
-// DELETE STUDENT
-// ============================================================
-
-async function deleteStudent(
-    firestoreId
-) {
-
-    const student =
-        students.find(
-            item =>
-                item.firestoreId ===
-                firestoreId
-        );
-
-
-    if (!student) {
-
-        showError(
-            "Student Not Found",
-            "The student record could not be found."
-        );
-
-        return;
-
-    }
-
-
-    const studentName =
-        `${student.firstName || ""} ${student.lastName || ""}`
-            .trim();
-
-
-
-    // ========================================================
-    // SWEETALERT DELETE CONFIRMATION
-    // ========================================================
-
-    const confirmed =
-        await confirmDelete(
-            "Delete Student?",
-            `Are you sure you want to delete ${studentName}?\n\nThis action cannot be undone.`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
 
 
     try {
 
-        // ====================================================
-        // SHOW LOADING
-        // ====================================================
-
-        showLoading(
-            "Deleting Student",
-            `Please wait while ${studentName} is being deleted...`
-        );
-
-
-        const studentRef =
+        await deleteDoc(
             doc(
                 db,
                 "students",
-                firestoreId
-            );
-
-
-        await withTimeout(deleteDoc(
-            studentRef
-        ));
-
-
-        Swal.close();
-
-
-        await showSuccess(
-            "Student Deleted!",
-            `${studentName} has been deleted successfully.`
+                studentId
+            )
         );
+
+
+        Swal.fire({
+            icon: "success",
+            title: "Deleted",
+            text: "Student deleted successfully.",
+            timer: 1500,
+            showConfirmButton: false
+        });
 
 
         await loadStudents();
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "Error deleting student:",
+            "Delete student error:",
             error
         );
 
 
-        Swal.close();
-
-
-        showError(
-            "Delete Failed",
-            getFirebaseErrorMessage(error)
-        );
+        Swal.fire({
+            icon: "error",
+            title: "Delete Failed",
+            text:
+                error.message ||
+                "Unable to delete student."
+        });
 
     }
 
 }
 
 
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
 
-// ============================================================
-// SEARCH
-// ============================================================
+function closeStudentModal() {
 
-if (studentSearch) {
+    if (!studentModal) return;
 
-    studentSearch.addEventListener(
-        "input",
-        renderStudents
-    );
+    studentModal.style.display = "none";
 
 }
 
 
+/* =========================================================
+   HELPERS
+========================================================= */
 
-// ============================================================
-// CLASS FILTER
-// ============================================================
+function getValue(id) {
 
-if (classFilter) {
+    const element =
+        document.getElementById(id);
 
-    classFilter.addEventListener(
-        "change",
-        renderStudents
-    );
+    return element
+        ? element.value.trim()
+        : "";
 
 }
 
 
+function setValue(id, value) {
 
-// ============================================================
-// ESCAPE HTML
-// ============================================================
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+
+        element.value =
+            value || "";
+
+    }
+
+}
+
 
 function escapeHTML(value) {
 
-    return String(
-        value ?? ""
-    )
-
+    return String(value ?? "")
         .replace(
             /&/g,
             "&amp;"
         )
-
         .replace(
             /</g,
             "&lt;"
         )
-
         .replace(
             />/g,
             "&gt;"
         )
-
         .replace(
             /"/g,
             "&quot;"
         )
-
         .replace(
             /'/g,
             "&#039;"
@@ -1600,104 +1095,9 @@ function escapeHTML(value) {
 }
 
 
+/* =========================================================
+   GLOBAL CLOSE FUNCTION
+========================================================= */
 
-// ============================================================
-// FIREBASE ERROR MESSAGE
-// ============================================================
-
-function getFirebaseErrorMessage(
-    error
-) {
-
-    if (!error) {
-
-        return "Unknown error.";
-
-    }
-
-
-    if (
-        error.code ===
-        "permission-denied"
-    ) {
-
-        return (
-
-            "Firestore permission denied. " +
-
-            "Make sure you are signed in " +
-
-            "and your Firestore Rules allow " +
-
-            "the operation."
-
-        );
-
-    }
-
-
-    if (
-        error.code ===
-        "unauthenticated"
-    ) {
-
-        return (
-
-            "You are not authenticated. " +
-
-            "Please log in again."
-
-        );
-
-    }
-
-
-    if (
-        error.code ===
-        "failed-precondition"
-    ) {
-
-        return (
-
-            "Firestore could not complete the operation. " +
-
-            "Please check your Firebase configuration."
-
-        );
-
-    }
-
-
-    if (
-        error.code ===
-        "unavailable"
-    ) {
-
-        return (
-
-            "Firebase is temporarily unavailable. " +
-
-            "Check your internet connection."
-
-        );
-
-    }
-
-
-    return (
-
-        error.message ||
-
-        "An unexpected Firebase error occurred."
-
-    );
-
-}
-
-
-
-// ============================================================
-// INITIAL LOAD
-// ============================================================
-
-loadStudents();
+window.closeStudentModal =
+    closeStudentModal;

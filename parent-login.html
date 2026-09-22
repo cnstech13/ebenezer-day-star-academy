@@ -9,122 +9,293 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    
-    <meta name="theme-color" content="lightblue">
 
-    <title>Parent Login | Ebenezer Day Star Academy</title>
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <meta
+        name="description"
+        content="Parent Login Portal - Ebenezer Day Star Academy"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
+
+    <title>
+        Parent Login | Ebenezer Day Star Academy
+    </title>
+
+
+    <!-- =====================================================
+         MAIN STYLES
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <link
         rel="stylesheet"
         href="parent-login.css"
     >
+
     <link
         rel="stylesheet"
         href="glass.css"
     >
 
-    <meta name="robots" content="noindex, nofollow, noarchive">
+
+    <!-- =====================================================
+         LOGO STYLING
+    ====================================================== -->
+
+    <style>
+
+        /* =================================================
+           LOGIN LOGO
+        ================================================== */
+
+        .school-logo {
+
+            width: 85px;
+
+            height: 85px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            background: transparent;
+
+        }
+
+
+        .school-logo img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+            display: block;
+
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================== */
+
+        @media (max-width: 480px) {
+
+            .school-logo {
+
+                width: 72px;
+
+                height: 72px;
+
+                margin-bottom: 16px;
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <main class="login-container">
 
-        <section class="login-card">
+<!-- =========================================================
+     LOGIN PAGE
+========================================================= -->
 
-            <div class="school-logo">
-                P
+<main class="login-container">
+
+
+    <!-- =====================================================
+         LOGIN CARD
+    ====================================================== -->
+
+    <section class="login-card">
+
+
+        <!-- =================================================
+             SCHOOL LOGO
+        ================================================== -->
+
+        <div class="school-logo">
+
+            <img
+                src="school-logo.png"
+                alt="Ebenezer Day Star Academy Logo"
+            >
+
+        </div>
+
+
+        <!-- =================================================
+             PAGE TITLE
+        ================================================== -->
+
+        <h1>
+            Parent Portal
+        </h1>
+
+
+        <p class="subtitle">
+            Ebenezer Day Star Academy
+        </p>
+
+
+        <!-- =================================================
+             ERROR MESSAGE
+        ================================================== -->
+
+        <div
+            id="errorMessage"
+            class="message error"
+        ></div>
+
+
+        <!-- =================================================
+             SUCCESS MESSAGE
+        ================================================== -->
+
+        <div
+            id="successMessage"
+            class="message success"
+        ></div>
+
+
+        <!-- =================================================
+             LOGIN FORM
+        ================================================== -->
+
+        <form id="parentLoginForm">
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
             </div>
 
-            <h1>Parent Portal</h1>
 
-            <p class="subtitle">
-                Ebenezer Day Star Academy
-            </p>
+            <!-- PASSWORD -->
 
+            <div class="form-group">
 
-            <div
-                id="errorMessage"
-                class="message error"
-            ></div>
+                <label for="password">
+                    Password
+                </label>
 
-
-            <div
-                id="successMessage"
-                class="message success"
-            ></div>
-
-
-            <form id="parentLoginForm">
-
-                <div class="form-group">
-
-                    <label for="email">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email"
-                        autocomplete="email"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="password">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    id="loginBtn"
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
                 >
-                    Login
-                </button>
 
-            </form>
+            </div>
 
+
+            <!-- LOGIN BUTTON -->
 
             <button
-                type="button"
-                id="forgotPassword"
-                class="forgot-password"
+                type="submit"
+                id="loginBtn"
             >
-                Forgot Password?
+                Login
             </button>
 
-<p class="register-link">
-    New Parent?
-    <a href="parent-register.html">Create an account</a>
-</p>
 
-        </section>
+        </form>
 
 
+        <!-- =================================================
+             FORGOT PASSWORD
+        ================================================== -->
 
-    </main>
+        <button
+            type="button"
+            id="forgotPassword"
+            class="forgot-password"
+        >
+            Forgot Password?
+        </button>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script
-        type="module"
-        src="parent-login.js"
-    ></script>
+
+        <!-- =================================================
+             REGISTRATION
+        ================================================== -->
+
+        <p class="register-link">
+
+            New Parent?
+
+            <a href="parent-register.html">
+                Create an account
+            </a>
+
+        </p>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     SWEETALERT2
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
+
+
+<!-- =========================================================
+     PARENT LOGIN JAVASCRIPT
+========================================================= -->
+
+<script
+    type="module"
+    src="parent-login.js"
+></script>
+
 
 </body>
 

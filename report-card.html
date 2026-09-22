@@ -9,395 +9,2027 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    <meta name="theme-color" content="lightblue">
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
 
     <title>
         Report Cards | Ebenezer Day Star Academy
     </title>
 
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <style>
 
-    <link
-        rel="stylesheet"
-        href="report-card.css"
-    >
+        * {
+            box-sizing: border-box;
+        }
 
-    <meta name="robots" content="noindex, nofollow, noarchive">
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #26384f;
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+
+            top: 0;
+
+            width: 250px;
+
+            height: 100vh;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #071a33,
+                    #0b1f3a,
+                    #163f70
+                );
+
+            color: white;
+
+            z-index: 1000;
+
+            overflow-y: auto;
+
+            transition:
+                transform 0.3s ease;
+
+        }
+
+
+        .sidebar-header {
+
+            padding: 24px 18px;
+
+            text-align: center;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.12);
+
+        }
+
+
+        .school-logo {
+
+            width: 65px;
+
+            height: 65px;
+
+            margin: 0 auto 12px;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8d6,
+                    #f4d35e
+                );
+
+            font-size: 30px;
+
+        }
+
+
+        .sidebar-header h2 {
+
+            margin: 0;
+
+            font-size: 17px;
+
+        }
+
+
+        .sidebar-header p {
+
+            margin: 6px 0 0;
+
+            color: #f4d35e;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+        }
+
+
+        .sidebar-menu {
+
+            padding: 18px 12px;
+
+        }
+
+
+        .sidebar-menu a,
+        .logout-btn {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 13px 14px;
+
+            margin-bottom: 5px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: transparent;
+
+            color: #dce6f3;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            text-align: left;
+
+        }
+
+
+        .sidebar-menu a:hover,
+        .logout-btn:hover {
+
+            background:
+                rgba(255,255,255,0.10);
+
+            color: white;
+
+        }
+
+
+        .sidebar-menu a.active {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d4af37,
+                    #f4d35e
+                );
+
+            color: #071a33;
+
+            font-weight: bold;
+
+        }
+
+
+        .menu-icon {
+
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 16px;
+
+        }
+
+
+        .logout-area {
+
+            margin-top: 20px;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.12);
+
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+
+            height: 72px;
+
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 28px;
+
+            box-shadow:
+                0 2px 12px
+                rgba(0,0,0,0.06);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 500;
+
+        }
+
+
+        .menu-toggle {
+
+            display: none;
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #0b1f3a;
+
+        }
+
+
+        .page-heading h1 {
+
+            margin: 0;
+
+            color: #0b1f3a;
+
+            font-size: 21px;
+
+        }
+
+
+        .page-heading p {
+
+            margin: 4px 0 0;
+
+            color: #718096;
+
+            font-size: 12px;
+
+        }
+
+
+        .admin-info {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .admin-avatar {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8d6,
+                    #f4d35e
+                );
+
+            color: #0b1f3a;
+
+            font-weight: bold;
+
+        }
+
+
+        .admin-name {
+
+            color: #0b1f3a;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+
+            padding: 28px;
+
+        }
+
+
+        /* =====================================================
+           PAGE CARD
+        ===================================================== */
+
+        .page-card {
+
+            background: white;
+
+            border-radius: 17px;
+
+            padding: 23px;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,0.05);
+
+            border:
+                1px solid
+                #edf1f5;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .section-title {
+
+            margin: 0 0 5px;
+
+            color: #0b1f3a;
+
+            font-size: 19px;
+
+        }
+
+
+        .section-subtitle {
+
+            margin: 0 0 20px;
+
+            color: #718096;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           FILTERS
+        ===================================================== */
+
+        .filter-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+        }
+
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .form-group label {
+
+            margin-bottom: 7px;
+
+            color: #0b1f3a;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+        }
+
+
+        .form-group select,
+        .form-group input {
+
+            width: 100%;
+
+            min-height: 44px;
+
+            padding: 10px 12px;
+
+            border:
+                1px solid
+                #dce3eb;
+
+            border-radius: 9px;
+
+            background: white;
+
+            color: #26384f;
+
+            font-size: 13px;
+
+            outline: none;
+
+        }
+
+
+        .form-group select:focus,
+        .form-group input:focus {
+
+            border-color: #d4af37;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(212,175,55,0.12);
+
+        }
+
+
+        .generate-area {
+
+            margin-top: 18px;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+        }
+
+
+        .primary-btn {
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d4af37,
+                    #f4d35e
+                );
+
+            color: #071a33;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .primary-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 5px 14px
+                rgba(0,0,0,0.12);
+
+        }
+
+
+        /* =====================================================
+           REPORT CARD
+        ===================================================== */
+
+        #reportCard {
+
+            display: none;
+
+        }
+
+
+        .report-container {
+
+            background: white;
+
+            border-radius: 17px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,0.05);
+
+            border:
+                1px solid
+                #edf1f5;
+
+        }
+
+
+        /* =====================================================
+           REPORT HEADER
+        ===================================================== */
+
+        .report-header {
+
+            text-align: center;
+
+            padding-bottom: 20px;
+
+            border-bottom:
+                3px solid
+                #d4af37;
+
+        }
+
+
+        .report-header h1 {
+
+            margin: 0;
+
+            color: #0b1f3a;
+
+            font-size: 25px;
+
+        }
+
+
+        .report-header h2 {
+
+            margin: 6px 0 0;
+
+            color: #163f70;
+
+            font-size: 17px;
+
+        }
+
+
+        .report-header p {
+
+            margin: 5px 0 0;
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        .motto {
+
+            margin-top: 8px;
+
+            color: #b38b00;
+
+            font-weight: bold;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           STUDENT INFORMATION
+        ===================================================== */
+
+        .student-info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+            margin: 20px 0;
+
+        }
+
+
+        .student-info-item {
+
+            padding: 12px;
+
+            background: #f7f9fc;
+
+            border-radius: 9px;
+
+            border-left:
+                3px solid
+                #d4af37;
+
+        }
+
+
+        .student-info-label {
+
+            color: #718096;
+
+            font-size: 10px;
+
+            margin-bottom: 4px;
+
+        }
+
+
+        .student-info-value {
+
+            color: #0b1f3a;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-section {
+
+            margin-top: 20px;
+
+        }
+
+
+        .table-title {
+
+            color: #0b1f3a;
+
+            font-size: 15px;
+
+            margin: 0 0 10px;
+
+        }
+
+
+        /*
+           IMPORTANT MOBILE FIX:
+           The table is intentionally wider than the phone.
+           The wrapper allows horizontal scrolling.
+        */
+
+        .results-table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            overflow-y: hidden;
+
+            -webkit-overflow-scrolling: touch;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 10px;
+
+        }
+
+
+        .results-table {
+
+            width: 100%;
+
+            min-width: 1050px;
+
+            border-collapse: collapse;
+
+            background: white;
+
+        }
+
+
+        .results-table th {
+
+            background: #0b1f3a;
+
+            color: white;
+
+            padding: 12px 8px;
+
+            border-right:
+                1px solid
+                rgba(255,255,255,0.15);
+
+            font-size: 10px;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+        }
+
+
+        .results-table td {
+
+            padding: 12px 8px;
+
+            border-bottom:
+                1px solid
+                #e5eaf0;
+
+            border-right:
+                1px solid
+                #edf1f5;
+
+            text-align: center;
+
+            color: #26384f;
+
+            font-size: 11px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .results-table td:nth-child(2) {
+
+            text-align: left;
+
+            font-weight: bold;
+
+            color: #0b1f3a;
+
+        }
+
+
+        .results-table tbody tr:nth-child(even) {
+
+            background: #fffdf0;
+
+        }
+
+
+        .results-table tbody tr:hover {
+
+            background: #f7f9fc;
+
+        }
+
+
+        .score-grade {
+
+            font-weight: bold;
+
+            color: #0b1f3a;
+
+        }
+
+
+        /* =====================================================
+           SUMMARY
+        ===================================================== */
+
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .summary-card {
+
+            padding: 18px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            border:
+                1px solid
+                #e0e6ed;
+
+            border-radius: 14px;
+
+        }
+
+
+        .summary-card h4 {
+
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 12px;
+
+        }
+
+
+        .summary-card strong {
+
+            display: block;
+
+            margin-top: 9px;
+
+            color: #0b1f3a;
+
+            font-size: 25px;
+
+        }
+
+
+        /* =====================================================
+           ATTENDANCE
+        ===================================================== */
+
+        .attendance-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 14px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .attendance-card {
+
+            text-align: center;
+
+            padding: 17px;
+
+            background: #f7f9fc;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                #e5eaf0;
+
+        }
+
+
+        .attendance-card span {
+
+            display: block;
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        .attendance-card strong {
+
+            display: block;
+
+            margin-top: 7px;
+
+            color: #0b1f3a;
+
+            font-size: 23px;
+
+        }
+
+
+        /* =====================================================
+           CONDUCT
+        ===================================================== */
+
+        .conduct-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 10px;
+
+        }
+
+
+        .conduct-table th {
+
+            background: #0b1f3a;
+
+            color: white;
+
+            padding: 10px;
+
+            font-size: 11px;
+
+            text-align: left;
+
+        }
+
+
+        .conduct-table td {
+
+            padding: 9px 10px;
+
+            border-bottom:
+                1px solid
+                #e5eaf0;
+
+            font-size: 11px;
+
+        }
+
+
+        .conduct-table select {
+
+            padding: 7px;
+
+            border:
+                1px solid
+                #dce3eb;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           COMMENTS
+        ===================================================== */
+
+        .comments-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .comment-box {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .comment-box label {
+
+            margin-bottom: 7px;
+
+            color: #0b1f3a;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+        }
+
+
+        .comment-box textarea {
+
+            min-height: 90px;
+
+            resize: vertical;
+
+            padding: 10px;
+
+            border:
+                1px solid
+                #dce3eb;
+
+            border-radius: 9px;
+
+            font-family: inherit;
+
+            font-size: 12px;
+
+            outline: none;
+
+        }
+
+
+        .comment-box textarea:focus {
+
+            border-color: #d4af37;
+
+        }
+
+
+        /* =====================================================
+           PROMOTION
+        ===================================================== */
+
+        .promotion-box {
+
+            margin-top: 15px;
+
+        }
+
+
+        .promotion-box label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #0b1f3a;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+        }
+
+
+        .promotion-box select {
+
+            width: 100%;
+
+            min-height: 43px;
+
+            padding: 9px;
+
+            border:
+                1px solid
+                #dce3eb;
+
+            border-radius: 8px;
+
+        }
+
+
+        /* =====================================================
+           REPORT ACTIONS
+        ===================================================== */
+
+        .report-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 25px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                #e5eaf0;
+
+        }
+
+
+        .secondary-btn {
+
+            border: none;
+
+            padding: 11px 18px;
+
+            border-radius: 9px;
+
+            background: #0b1f3a;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        .secondary-btn:hover {
+
+            background: #163f70;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #718096;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .filter-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .student-info-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                transform:
+                    translateX(-100%);
+
+            }
+
+
+            .sidebar.open {
+
+                transform:
+                    translateX(0);
+
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+            }
+
+
+            .menu-toggle {
+
+                display: block;
+
+            }
+
+
+            .topbar {
+
+                padding:
+                    0 16px;
+
+            }
+
+
+            .admin-name {
+
+                display: none;
+
+            }
+
+
+            .page-heading h1 {
+
+                font-size: 17px;
+
+            }
+
+
+            .content {
+
+                padding: 15px;
+
+            }
+
+
+            .page-card,
+            .report-container {
+
+                padding: 16px;
+
+            }
+
+
+            .filter-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .student-info-grid {
+
+                grid-template-columns: 1fr 1fr;
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns: 1fr 1fr;
+
+            }
+
+
+            .attendance-grid {
+
+                grid-template-columns:
+                    1fr 1fr 1fr;
+
+                gap: 7px;
+
+            }
+
+
+            .comments-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .report-header h1 {
+
+                font-size: 20px;
+
+            }
+
+
+            .report-header h2 {
+
+                font-size: 15px;
+
+            }
+
+
+            .generate-area {
+
+                justify-content: stretch;
+
+            }
+
+
+            .generate-area .primary-btn {
+
+                width: 100%;
+
+            }
+
+
+            .report-actions {
+
+                flex-direction: column;
+
+            }
+
+
+            .report-actions button {
+
+                width: 100%;
+
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .student-info-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns: 1fr 1fr;
+
+            }
+
+
+            .attendance-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .summary-card strong {
+
+                font-size: 22px;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PRINT
+        ===================================================== */
+
+        @media print {
+
+            body {
+
+                background: white;
+
+            }
+
+
+            .sidebar,
+            .topbar,
+            .page-card,
+            .footer,
+            .report-actions {
+
+                display: none !important;
+
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+            }
+
+
+            .content {
+
+                padding: 0;
+
+            }
+
+
+            #reportCard {
+
+                display: block !important;
+
+            }
+
+
+            .report-container {
+
+                box-shadow: none;
+
+                border: none;
+
+                padding: 0;
+
+            }
+
+
+            .results-table-wrapper {
+
+                overflow: visible;
+
+            }
+
+
+            .results-table {
+
+                min-width: 0;
+
+                width: 100%;
+
+            }
+
+        }
+
+    </style>
+
 </head>
 
 
 <body>
 
-<div class="admin-layout">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside
+    class="sidebar"
+    id="sidebar"
+>
+
+    <div class="sidebar-header">
+
+        <div class="school-logo">
+            🏫
+        </div>
+
+        <h2>
+            Ebenezer Day Star Academy
+        </h2>
+
+        <p>
+            ADMIN PORTAL
+        </p>
+
+    </div>
 
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+    <nav class="sidebar-menu">
 
-    <aside class="admin-sidebar">
+        <a href="dashboard.html">
 
-        <div class="admin-brand">
+            <span class="menu-icon">
+                🏠
+            </span>
 
-            <div class="logo-icon">
-                BF
-            </div>
+            Dashboard
 
-            <div>
+        </a>
 
-                <strong>
-                    Ebenezer Day Star
-                </strong>
 
-                <small>
-                    Admin Portal
-                </small>
+        <a href="students.html">
+
+            <span class="menu-icon">
+                👨‍🎓
+            </span>
+
+            Students
+
+        </a>
+
+
+        <a href="teachers.html">
+
+            <span class="menu-icon">
+                👨‍🏫
+            </span>
+
+            Teachers
+
+        </a>
+
+
+        <a href="classes.html">
+
+            <span class="menu-icon">
+                🏫
+            </span>
+
+            Classes
+
+        </a>
+
+
+        <a href="subjects.html">
+
+            <span class="menu-icon">
+                📚
+            </span>
+
+            Subjects
+
+        </a>
+
+
+        <a href="admissions.html">
+
+            <span class="menu-icon">
+                📝
+            </span>
+
+            Admissions
+
+        </a>
+
+
+        <a href="results.html">
+
+            <span class="menu-icon">
+                📊
+            </span>
+
+            Results
+
+        </a>
+
+
+        <a href="attendance.html">
+
+            <span class="menu-icon">
+                📋
+            </span>
+
+            Attendance
+
+        </a>
+
+
+        <a
+            href="report-card.html"
+            class="active"
+        >
+
+            <span class="menu-icon">
+                📄
+            </span>
+
+            Report Cards
+
+        </a>
+
+
+        <a href="fees.html">
+
+            <span class="menu-icon">
+                💰
+            </span>
+
+            Fees
+
+        </a>
+
+
+        <a href="news.html">
+
+            <span class="menu-icon">
+                🔔
+            </span>
+
+            News
+
+        </a>
+
+
+        <a href="messages.html">
+
+            <span class="menu-icon">
+                💬
+            </span>
+
+            Messages
+
+        </a>
+
+
+        <div class="logout-area">
+
+            <button
+                class="logout-btn"
+                id="logoutBtn"
+                type="button"
+            >
+
+                <span class="menu-icon">
+                    🚪
+                </span>
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </nav>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
+
+    <header class="topbar">
+
+        <div
+            style="
+                display:flex;
+                align-items:center;
+                gap:12px;
+            "
+        >
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                type="button"
+            >
+                ☰
+            </button>
+
+
+            <div class="page-heading">
+
+                <h1>
+                    Report Cards
+                </h1>
+
+                <p>
+                    Generate and manage student report cards
+                </p>
 
             </div>
 
         </div>
 
 
-        <nav>
-            <a
-                href="logout.html"
-                id="logoutBtn"
-            >
-                🚪 Logout
-            </a>
-
-        </nav>
-
-    </aside>
-
-
-
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
-    <main class="admin-main">
-
-
-        <!-- HEADER -->
-
-        <header class="admin-header">
-
-            <strong>
-                Report Cards
-            </strong>
-
-            <span>
-                Administrator
-            </span>
-
-        </header>
-
-
-
-        <!-- CONTENT -->
-
-        <section class="admin-content">
-
-
-            <!-- PAGE TITLE -->
-
-            <div class="admin-title">
-
-                <h1>
-                    Student Report Card
-                </h1>
-
-                <p>
-                    Generate and print academic report cards.
-                </p>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 SELECTION CARD
-            ================================================== -->
-
-            <div class="admin-card">
-
-
-                <div class="form-grid">
-
-
-                    <!-- SESSION -->
-
-                    <div class="form-group">
-
-                        <label for="reportSession">
-                            Academic Session
-                        </label>
-
-                        <select
-                            id="reportSession"
-                        >
-
-                            <option value="">
-                                Select Session
-                            </option>
-
-                            <option value="2026/2027">
-                                2026/2027
-                            </option>
-
-                            <option value="2025/2026">
-                                2025/2026
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-
-                    <!-- TERM -->
-
-                    <div class="form-group">
-
-                        <label for="reportTerm">
-                            Term
-                        </label>
-
-                        <select
-                            id="reportTerm"
-                        >
-
-                            <option value="">
-                                Select Term
-                            </option>
-
-                            <option value="First Term">
-                                First Term
-                            </option>
-
-                            <option value="Second Term">
-                                Second Term
-                            </option>
-
-                            <option value="Third Term">
-                                Third Term
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-
-                    <!-- CLASS -->
-
-                    <div class="form-group">
-
-                        <label for="reportClass">
-                            Class
-                        </label>
-
-                        <select
-                            id="reportClass"
-                        >
-
-                                    <option value="Nursery">Nursery</option>
-        <option value="Primary 1">Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="JSS 1">JSS 1</option>
-        <option value="JSS 2">JSS 2</option>
-
-                        </select>
-
-                    </div>
-
-
-
-                    <!-- STUDENT -->
-
-                    <div class="form-group">
-
-                        <label for="reportStudent">
-                            Student
-                        </label>
-
-                        <select
-                            id="reportStudent"
-                        >
-
-                            <option value="">
-                                Select Student
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- GENERATE -->
-
-                <div
-                    style="
-                        margin-top:20px;
-                    "
-                >
-
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        id="generateReportBtn"
-                    >
-                        Generate Report Card
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 REPORT CARD
-            ================================================== -->
+        <div class="admin-info">
 
             <div
-                id="reportCard"
-                class="report-card"
-                style="display:none;"
+                class="admin-avatar"
+                id="adminAvatar"
             >
+                A
+            </div>
 
 
-                <!-- SCHOOL HEADER -->
+            <div
+                class="admin-name"
+                id="currentAdminName"
+            >
+                Administrator
+            </div>
 
-                <div class="report-school-header">
+        </div>
 
-                    <div class="school-logo">
-                        BF
+    </header>
+
+
+    <!-- =================================================
+         CONTENT
+    ================================================== -->
+
+    <section class="content">
+
+
+        <!-- =================================================
+             SELECTION
+        ================================================== -->
+
+        <div class="page-card">
+
+            <h2 class="section-title">
+                Generate Report Card
+            </h2>
+
+
+            <p class="section-subtitle">
+
+                Select the academic session, term, class
+                and student to generate the report card.
+
+            </p>
+
+
+            <div class="filter-grid">
+
+
+                <!-- SESSION -->
+
+                <div class="form-group">
+
+                    <label for="reportSession">
+                        Academic Session
+                    </label>
+
+                    <select id="reportSession">
+
+                        <option value="">
+                            Select Session
+                        </option>
+
+                        <option value="2026/2027">
+                            2026/2027
+                        </option>
+
+                        <option value="2025/2026">
+                            2025/2026
+                        </option>
+
+                        <option value="2024/2025">
+                            2024/2025
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TERM -->
+
+                <div class="form-group">
+
+                    <label for="reportTerm">
+                        Term
+                    </label>
+
+                    <select id="reportTerm">
+
+                        <option value="">
+                            Select Term
+                        </option>
+
+                        <option value="First Term">
+                            First Term
+                        </option>
+
+                        <option value="Second Term">
+                            Second Term
+                        </option>
+
+                        <option value="Third Term">
+                            Third Term
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- CLASS -->
+
+                <div class="form-group">
+
+                    <label for="reportClass">
+                        Class
+                    </label>
+
+                    <select id="reportClass">
+
+                        <option value="">
+                            Loading classes...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- STUDENT -->
+
+                <div class="form-group">
+
+                    <label for="reportStudent">
+                        Student
+                    </label>
+
+                    <select id="reportStudent">
+
+                        <option value="">
+                            Select Student
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="generate-area">
+
+                <button
+                    type="button"
+                    id="generateReportBtn"
+                    class="primary-btn"
+                >
+
+                    📄 Generate Report Card
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             REPORT CARD
+        ================================================== -->
+
+        <div
+            id="reportCard"
+            class="report-container"
+        >
+
+
+            <!-- REPORT HEADER -->
+
+            <div class="report-header">
+
+                <h1>
+                    EBENEZER DAY STAR ACADEMY
+                </h1>
+
+                <h2>
+                    STUDENT REPORT CARD
+                </h2>
+
+                <p>
+                    Ikeje-Igah, Olamaboro LGA,
+                    Kogi State, Nigeria
+                </p>
+
+                <div class="motto">
+                    In God We Trust
+                </div>
+
+            </div>
+
+
+            <!-- STUDENT INFORMATION -->
+
+            <div class="student-info-grid">
+
+
+                <div class="student-info-item">
+
+                    <div class="student-info-label">
+                        Student Name
                     </div>
 
-
-                    <div>
-
-                        <h1>
-                            Ebenezer Day Star Academy
-                        </h1>
-
-                        <p>
-                            Excellence • Discipline • Knowledge
-                        </p>
-
-                        <p>
-                            123 School Road, Olubojo, Ikeje-Igah, Olamaboro LGA, Kogi State
-                        </p>
-
-                        <p>
-                            Tel: +2348078046655
-                        </p>
-
+                    <div
+                        class="student-info-value"
+                        id="reportStudentName"
+                    >
+                        —
                     </div>
 
                 </div>
 
 
+                <div class="student-info-item">
 
-                <!-- REPORT TITLE -->
-
-                <div class="report-title">
-
-                    <h2>
-                        STUDENT TERMINAL REPORT
-                    </h2>
-
-                    <p id="reportTermTitle">
-                    </p>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     STUDENT INFORMATION
-                ================================================== -->
-
-                <div class="student-report-info">
-
-
-                    <div>
-
-                        <strong>
-                            Student Name:
-                        </strong>
-
-                        <span
-                            id="reportStudentName"
-                        >
-                        </span>
-
+                    <div class="student-info-label">
+                        Admission Number
                     </div>
 
-
-                    <div>
-
-                        <strong>
-                            Admission No:
-                        </strong>
-
-                        <span
-                            id="reportAdmissionNo"
-                        >
-                        </span>
-
-                    </div>
-
-
-                    <div>
-
-                        <strong>
-                            Class:
-                        </strong>
-
-                        <span
-                            id="reportClassName"
-                        >
-                        </span>
-
-                    </div>
-
-
-                    <div>
-
-                        <strong>
-                            Session:
-                        </strong>
-
-                        <span
-                            id="reportSessionName"
-                        >
-                        </span>
-
+                    <div
+                        class="student-info-value"
+                        id="reportAdmissionNo"
+                    >
+                        —
                     </div>
 
                 </div>
 
 
+                <div class="student-info-item">
 
-                <!-- =================================================
-                     RESULTS TABLE
-                ================================================== -->
+                    <div class="student-info-label">
+                        Class
+                    </div>
 
-                <div class="report-table-wrapper">
+                    <div
+                        class="student-info-value"
+                        id="reportClassName"
+                    >
+                        —
+                    </div>
 
-                    <table class="report-table">
+                </div>
+
+
+                <div class="student-info-item">
+
+                    <div class="student-info-label">
+                        Academic Session
+                    </div>
+
+                    <div
+                        class="student-info-value"
+                        id="reportSessionName"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                style="
+                    text-align:center;
+                    margin-bottom:15px;
+                    color:#0b1f3a;
+                    font-size:14px;
+                    font-weight:bold;
+                "
+                id="reportTermTitle"
+            >
+                —
+            </div>
+
+
+            <!-- =================================================
+                 RESULTS
+            ================================================== -->
+
+            <div class="table-section">
+
+                <h3 class="table-title">
+                    Academic Performance
+                </h3>
+
+
+                <div class="results-table-wrapper">
+
+                    <table class="results-table">
 
                         <thead>
 
@@ -412,51 +2044,43 @@
                                 </th>
 
                                 <th>
-                                    CW 1
-                                    <br>
-                                    <small>/5</small>
+                                    CW 1<br>
+                                    /5
                                 </th>
 
                                 <th>
-                                    CW 2
-                                    <br>
-                                    <small>/5</small>
+                                    CW 2<br>
+                                    /5
                                 </th>
 
                                 <th>
-                                    Assignment 1
-                                    <br>
-                                    <small>/5</small>
+                                    Assignment 1<br>
+                                    /5
                                 </th>
 
                                 <th>
-                                    Assignment 2
-                                    <br>
-                                    <small>/5</small>
+                                    Assignment 2<br>
+                                    /5
                                 </th>
 
                                 <th>
-                                    CA 1
-                                    <br>
-                                    <small>/10</small>
+                                    CA 1<br>
+                                    /10
                                 </th>
 
                                 <th>
-                                    CA 2
-                                    <br>
-                                    <small>/10</small>
+                                    CA 2<br>
+                                    /10
                                 </th>
 
                                 <th>
-                                    Exam
-                                    <br>
-                                    <small>/60</small>
+                                    Exam<br>
+                                    /60
                                 </th>
 
                                 <th>
-                                    Total
-                                    <br>
-                                    <small>/100</small>
+                                    Total<br>
+                                    /100
                                 </th>
 
                                 <th>
@@ -472,161 +2096,165 @@
                         </thead>
 
 
-                        <tbody
-                            id="reportResultsBody"
-                        >
+                        <tbody id="reportResultsBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="12"
+                                    style="
+                                        text-align:center;
+                                        padding:25px;
+                                    "
+                                >
+                                    No results loaded.
+                                </td>
+
+                            </tr>
+
                         </tbody>
 
                     </table>
 
                 </div>
 
+            </div>
 
 
-                <!-- =================================================
-                     SUMMARY
-                ================================================== -->
+            <!-- =================================================
+                 SUMMARY
+            ================================================== -->
 
-                <div class="report-summary">
+            <div class="summary-grid">
 
 
-                    <div>
+                <div class="summary-card">
 
-                        <strong>
-                            Subjects Offered
-                        </strong>
+                    <h4>
+                        Subjects Offered
+                    </h4>
 
-                        <span
-                            id="subjectsOffered"
-                        >
+                    <strong id="subjectsOffered">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h4>
+                        Total Score
+                    </h4>
+
+                    <strong id="totalScore">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h4>
+                        Average
+                    </h4>
+
+                    <strong id="averageScore">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <h4>
+                        Position
+                    </h4>
+
+                    <strong id="studentPosition">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ATTENDANCE
+            ================================================== -->
+
+            <div class="table-section">
+
+                <h3 class="table-title">
+                    Attendance Record
+                </h3>
+
+
+                <div class="attendance-grid">
+
+
+                    <div class="attendance-card">
+
+                        <span>
+                            School Days
+                        </span>
+
+                        <strong id="schoolDays">
                             0
-                        </span>
+                        </strong>
 
                     </div>
 
 
-                    <div>
+                    <div class="attendance-card">
 
-                        <strong>
-                            Total Score
-                        </strong>
+                        <span>
+                            Days Present
+                        </span>
 
-                        <span
-                            id="totalScore"
-                        >
+                        <strong id="daysPresent">
                             0
-                        </span>
+                        </strong>
 
                     </div>
 
 
-                    <div>
+                    <div class="attendance-card">
 
-                        <strong>
-                            Average
-                        </strong>
-
-                        <span
-                            id="averageScore"
-                        >
-                            0%
+                        <span>
+                            Days Absent
                         </span>
 
-                    </div>
-
-
-                    <div>
-
-                        <strong>
-                            Position
+                        <strong id="daysAbsent">
+                            0
                         </strong>
-
-                        <span
-                            id="studentPosition"
-                        >
-                            -
-                        </span>
 
                     </div>
 
                 </div>
 
+            </div>
 
 
-                <!-- =================================================
-                     ATTENDANCE
-                ================================================== -->
+            <!-- =================================================
+                 CONDUCT
+            ================================================== -->
 
-                <div class="report-section">
+            <div class="table-section">
 
-                    <h3>
-                        Attendance Record
-                    </h3>
-
-
-                    <div class="attendance-grid">
+                <h3 class="table-title">
+                    Conduct and Character
+                </h3>
 
 
-                        <div>
-
-                            <strong>
-                                School Days
-                            </strong>
-
-                            <span
-                                id="schoolDays"
-                            >
-                                0
-                            </span>
-
-                        </div>
-
-
-                        <div>
-
-                            <strong>
-                                Days Present
-                            </strong>
-
-                            <span
-                                id="daysPresent"
-                            >
-                                0
-                            </span>
-
-                        </div>
-
-
-                        <div>
-
-                            <strong>
-                                Days Absent
-                            </strong>
-
-                            <span
-                                id="daysAbsent"
-                            >
-                                0
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     CONDUCT
-                ================================================== -->
-
-                <div class="report-section">
-
-                    <h3>
-                        Psychomotor & Behavioural Assessment
-                    </h3>
-
+                <div
+                    style="
+                        overflow-x:auto;
+                    "
+                >
 
                     <table class="conduct-table">
 
@@ -647,22 +2275,28 @@
                         </thead>
 
 
-                        <tbody
-                            id="conductBody"
-                        >
+                        <tbody id="conductBody">
                         </tbody>
 
                     </table>
 
                 </div>
 
+            </div>
 
 
-                <!-- =================================================
-                     COMMENTS
-                ================================================== -->
+            <!-- =================================================
+                 COMMENTS
+            ================================================== -->
 
-                <div class="comments-section">
+            <div class="table-section">
+
+                <h3 class="table-title">
+                    Comments
+                </h3>
+
+
+                <div class="comments-grid">
 
 
                     <div class="comment-box">
@@ -695,59 +2329,17 @@
                 </div>
 
 
-
-                <!-- =================================================
-                     SIGNATURES
-                ================================================== -->
-
-                <div class="signature-section">
-
-
-                    <div>
-
-                        <div
-                            class="signature-line"
-                        >
-                        </div>
-
-                        <span>
-                            Class Teacher
-                        </span>
-
-                    </div>
-
-
-                    <div>
-
-                        <div
-                            class="signature-line"
-                        >
-                        </div>
-
-                        <span>
-                            Principal
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     PROMOTION
-                ================================================== -->
-
                 <div class="promotion-box">
 
                     <label for="promotionStatus">
                         Promotion Status
                     </label>
 
+                    <select id="promotionStatus">
 
-                    <select
-                        id="promotionStatus"
-                    >
+                        <option value="">
+                            Select Promotion Status
+                        </option>
 
                         <option value="Promoted">
                             Promoted
@@ -757,74 +2349,93 @@
                             Promoted on Trial
                         </option>
 
-                        <option value="Repeat">
-                            Repeat
-                        </option>
-
-                        <option value="Graduated">
-                            Graduated
+                        <option value="Not Promoted">
+                            Not Promoted
                         </option>
 
                     </select>
 
                 </div>
 
+            </div>
 
 
-                <!-- =================================================
-                     ACTIONS
-                ================================================== -->
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
 
-                <div class="report-actions">
-
-
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        id="saveReportCardBtn"
-                    >
-                        💾 Save Report Card
-                    </button>
+            <div class="report-actions">
 
 
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        id="printReportBtn"
-                    >
-                        🖨️ Print Report
-                    </button>
+                <button
+                    type="button"
+                    id="saveReportCardBtn"
+                    class="primary-btn"
+                >
 
-                </div>
+                    💾 Save Report Card
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="printReportBtn"
+                    class="secondary-btn"
+                >
+
+                    🖨️ Print Report Card
+
+                </button>
 
             </div>
 
-        </section>
 
-    </main>
+        </div>
 
-</div>
-
+    </section>
 
 
-<!-- =========================================================
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        © 2026 Ebenezer Day Star Academy.
+        All Rights Reserved.
+
+    </footer>
+
+
+</main>
+
+
+<!-- =====================================================
+     SWEETALERT
+===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
+
+<!-- =====================================================
      ADMIN LOGIN
-========================================================= -->
+===================================================== -->
 
 <script
     src="admin-login.js"
 ></script>
 
 
+<!-- =====================================================
+     REPORT CARD JS
+===================================================== -->
 
-<!-- =========================================================
-     REPORT CARD JAVASCRIPT
-========================================================= -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script
     type="module"
     src="report-card.js"
 ></script>
+
 
 </body>
 

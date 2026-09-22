@@ -1,1 +1,478 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Notifications</title><link rel="stylesheet" href="portal-dashboard.css"><style>main{width:min(900px,92%);margin:30px auto}.panel{background:#fff;padding:22px;border-radius:16px}.form{display:grid;gap:12px}input,textarea,select,button{padding:12px;border:1px solid #ccd8e2;border-radius:8px}button{background:#123b66;color:#fff;border:0}.aud{display:flex;gap:15px;flex-wrap:wrap}</style></head><body><header><strong>Admin • Notifications</strong><nav><a href="dashboard.html">Dashboard</a><a href="users.html">Users</a><a href="fees.html">Fees</a><a href="notifications.html">Notifications</a><button id=logout>Logout</button></nav></header><main><div class=panel><h2>Send Notification</h2><form id=form class=form><input id=title placeholder="Title" required><textarea id=message rows=6 placeholder="Message" required></textarea><div class=aud><label><input type=checkbox value=teacher> Teachers</label><label><input type=checkbox value=student> Students</label><label><input type=checkbox value=parent> Parents</label></div><input id=classId placeholder="Optional class ID (leave blank for all selected roles)"><button>Publish Notification</button><p id=msg></p></form></div></main><script type=module src=notifications.js></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="lightblue"
+    >
+
+    <title>
+        Notifications | Ebenezer Day Star Academy
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="portal-dashboard.css"
+    >
+
+    <style>
+
+        main {
+            width: min(1100px, 92%);
+            margin: 30px auto;
+        }
+
+        .panel {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .panel-description {
+            color: #667085;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea,
+        select,
+        button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd8e2;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #123b66;
+        }
+
+        .audience-box {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(180px, 1fr)
+                );
+            gap: 10px;
+        }
+
+        .audience-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid #dce4ea;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+        }
+
+        .audience-option input {
+            width: auto;
+            margin: 0;
+        }
+
+        .publish-btn {
+            width: auto;
+            min-width: 180px;
+            background: #123b66;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .publish-btn:hover {
+            opacity: 0.9;
+        }
+
+        #msg {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .class-help {
+            display: block;
+            margin-top: 6px;
+            font-size: 13px;
+            color: #667085;
+        }
+
+        @media (max-width: 600px) {
+
+            main {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .publish-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <strong>
+            Admin • Notifications
+        </strong>
+
+
+        <nav>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="fees.html">
+                Fees
+            </a>
+
+            <a href="users.html">
+                Users
+            </a>
+
+            <a href="notifications.html">
+                Notifications
+            </a>
+
+            <button id="logout">
+                Logout
+            </button>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+
+        <!-- ================= CREATE NOTIFICATION ================= -->
+
+        <div class="panel">
+
+            <h2>
+                Create Notification
+            </h2>
+
+            <p class="panel-description">
+                Send important announcements and information
+                to parents, students, teachers or specific classes.
+            </p>
+
+
+            <form id="form">
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="title">
+                        Notification Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="e.g. Resumption Date"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- MESSAGE -->
+
+                <div class="form-group">
+
+                    <label for="message">
+                        Message
+                    </label>
+
+                    <textarea
+                        id="message"
+                        name="message"
+                        placeholder="Write your notification message here..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- AUDIENCE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Send To
+                    </label>
+
+
+                    <div class="audience-box">
+
+
+                        <label class="audience-option">
+
+                            <input
+                                type="checkbox"
+                                value="parents"
+                            >
+
+                            <span>
+                                Parents
+                            </span>
+
+                        </label>
+
+
+                        <label class="audience-option">
+
+                            <input
+                                type="checkbox"
+                                value="students"
+                            >
+
+                            <span>
+                                Students
+                            </span>
+
+                        </label>
+
+
+                        <label class="audience-option">
+
+                            <input
+                                type="checkbox"
+                                value="teachers"
+                            >
+
+                            <span>
+                                Teachers
+                            </span>
+
+                        </label>
+
+
+                        <label class="audience-option">
+
+                            <input
+                                type="checkbox"
+                                value="all"
+                            >
+
+                            <span>
+                                Everyone
+                            </span>
+
+                        </label>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CLASS -->
+
+                <div class="form-group">
+
+                    <label for="classId">
+                        Specific Class
+                    </label>
+
+
+                    <select id="classId">
+
+                        <option value="">
+                            All Classes
+                        </option>
+
+                        <option value="Nursery">
+                            Nursery
+                        </option>
+
+                        <option value="Primary 1">
+                            Primary 1
+                        </option>
+
+                        <option value="Primary 2">
+                            Primary 2
+                        </option>
+
+                        <option value="Primary 3">
+                            Primary 3
+                        </option>
+
+                        <option value="Primary 4">
+                            Primary 4
+                        </option>
+
+                        <option value="JSS 1">
+                            JSS 1
+                        </option>
+
+                        <option value="JSS 2">
+                            JSS 2
+                        </option>
+
+                        <option value="JSS 3">
+                            JSS 3
+                        </option>
+
+                    </select>
+
+
+                    <small class="class-help">
+                        Leave this as "All Classes" if the notification
+                        applies to everyone in the selected audience.
+                    </small>
+
+                </div>
+
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="publish-btn"
+                >
+                    Publish Notification
+                </button>
+
+
+                <!-- MESSAGE -->
+
+                <p id="msg"></p>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ================= INFORMATION ================= -->
+
+        <div class="panel">
+
+            <h2>
+                Notification Information
+            </h2>
+
+            <p>
+                Notifications published here are stored in
+                Firebase Firestore and can be displayed in the
+                Parent/Student Portal.
+            </p>
+
+            <p>
+                You can use notifications for announcements such as:
+            </p>
+
+            <ul>
+
+                <li>
+                    School resumption dates
+                </li>
+
+                <li>
+                    Examination announcements
+                </li>
+
+                <li>
+                    Fee payment reminders
+                </li>
+
+                <li>
+                    PTA meetings
+                </li>
+
+                <li>
+                    School events
+                </li>
+
+                <li>
+                    Important notices for parents and students
+                </li>
+
+            </ul>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script
+        type="module"
+        src="notifications.js"
+    ></script>
+
+
+</body>
+
+</html>

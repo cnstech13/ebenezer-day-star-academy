@@ -1,39 +1,27 @@
-import { goBackOr } from "./back-navigation.js";
 // ============================================================
 // PARENT ATTENDANCE
 // Ebenezer Day Star Academy
 // ============================================================
 
+import { goBackOr } from "./back-navigation.js";
 
 import {
-
     collection,
     query,
     where,
-    getDocs
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
-
+    getDocs,
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 import {
-
     onAuthStateChanged
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 import {
-
     auth,
     db
-
-}
-from "./firebase-config.js";
-
+} from "./firebase-config.js";
 
 
 // ============================================================
@@ -41,28 +29,16 @@ from "./firebase-config.js";
 // ============================================================
 
 const container =
-    document.getElementById(
-        "childrenAttendanceContainer"
-    );
-
+    document.getElementById("childrenAttendanceContainer");
 
 const loadingMessage =
-    document.getElementById(
-        "loadingMessage"
-    );
-
+    document.getElementById("loadingMessage");
 
 const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
-
+    document.getElementById("errorMessage");
 
 const backBtn =
-    document.getElementById(
-        "backBtn"
-    );
-
+    document.getElementById("backBtn");
 
 
 // ============================================================
@@ -72,34 +48,12 @@ const backBtn =
 function escapeHTML(value) {
 
     return String(value ?? "")
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
-
 
 
 // ============================================================
@@ -109,14 +63,9 @@ function escapeHTML(value) {
 function hideLoading() {
 
     if (loadingMessage) {
-
-        loadingMessage.style.display =
-            "none";
-
+        loadingMessage.style.display = "none";
     }
-
 }
-
 
 
 // ============================================================
@@ -125,116 +74,125 @@ function hideLoading() {
 
 function showError(message) {
 
-    console.error(
-        message
-    );
-
+    console.error(message);
 
     if (errorMessage) {
 
-        errorMessage.textContent =
-            message;
+        errorMessage.textContent = message;
 
-        errorMessage.style.display =
-            "block";
-
+        errorMessage.style.display = "block";
     }
-
 }
 
 
-
 // ============================================================
-// BACK TO DASHBOARD
+// BACK BUTTON
 // ============================================================
 
 if (backBtn) {
 
-    backBtn.addEventListener(
-        "click",
-        function () {
+    backBtn.addEventListener("click", () => {
 
-            goBackOr("parent-dashboard.html");
+        goBackOr("parent-dashboard.html");
 
-        }
-    );
+    });
 
 }
-
 
 
 // ============================================================
 // STUDENT NAME
 // ============================================================
 
-function getStudentName(
-    student
-) {
+function getStudentName(student) {
 
     const firstName =
-        student.firstName ||
-        "";
-
+        student.firstName || "";
 
     const lastName =
-        student.lastName ||
-        "";
-
+        student.lastName || "";
 
     const fullName =
-        `${firstName} ${lastName}`
-            .trim();
-
+        `${firstName} ${lastName}`.trim();
 
     return (
-
         fullName ||
-
         student.name ||
-
         student.fullName ||
-
         student.studentName ||
-
         "Unnamed Student"
-
     );
-
 }
-
 
 
 // ============================================================
 // STUDENT CLASS
 // ============================================================
 
-function getStudentClass(
-    student
-) {
+function getStudentClass(student) {
 
     return (
-
         student.studentClass ||
-
         student.className ||
-
         student.class ||
-
         "N/A"
-
     );
-
 }
 
+
+// ============================================================
+// VERIFY PARENT ACCOUNT
+// ============================================================
+
+async function verifyParent(user) {
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            user.uid
+        );
+
+    const userSnap =
+        await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+
+        throw new Error(
+            "Parent account profile was not found."
+        );
+    }
+
+    const userData =
+        userSnap.data();
+
+    if (
+        userData.role !== "parent"
+    ) {
+
+        throw new Error(
+            "This account is not registered as a parent."
+        );
+    }
+
+    if (
+        userData.active === false
+    ) {
+
+        throw new Error(
+            "This parent account has been disabled."
+        );
+    }
+
+    return userData;
+}
 
 
 // ============================================================
 // GET CHILDREN
 // ============================================================
 
-async function getChildren(
-    parentUid
-) {
+async function getChildren(parentUid) {
 
     const studentsRef =
         collection(
@@ -242,24 +200,18 @@ async function getChildren(
             "students"
         );
 
-
     const q =
         query(
-
             studentsRef,
-
             where(
                 "parentUid",
                 "==",
                 parentUid
             )
-
         );
-
 
     const snapshot =
         await getDocs(q);
-
 
     return snapshot.docs.map(
         studentDoc => ({
@@ -271,29 +223,23 @@ async function getChildren(
 
         })
     );
-
 }
 
 
-
 // ============================================================
-// GET ATTENDANCE
+// GET INDIVIDUAL STUDENT ATTENDANCE
 // ============================================================
 
-async function getAttendance(
-    studentId
-) {
+async function getAttendance(studentId) {
 
     const attendanceRef =
         collection(
             db,
-            "attendance"
+            "studentAttendance"
         );
-
 
     const q =
         query(
-
             attendanceRef,
 
             where(
@@ -301,27 +247,49 @@ async function getAttendance(
                 "==",
                 studentId
             )
-
         );
-
 
     const snapshot =
         await getDocs(q);
 
+    const records =
+        snapshot.docs.map(
+            attendanceDoc => ({
 
-    return snapshot.docs.map(
-        attendanceDoc => ({
+                firestoreId:
+                    attendanceDoc.id,
 
-            firestoreId:
-                attendanceDoc.id,
+                ...attendanceDoc.data()
 
-            ...attendanceDoc.data()
+            })
+        );
 
-        })
+
+    // --------------------------------------------------------
+    // SORT BY DATE — NEWEST FIRST
+    // --------------------------------------------------------
+
+    records.sort(
+        (a, b) => {
+
+            const dateA =
+                new Date(
+                    a.date || 0
+                ).getTime();
+
+            const dateB =
+                new Date(
+                    b.date || 0
+                ).getTime();
+
+            return dateB - dateA;
+
+        }
     );
 
-}
 
+    return records;
+}
 
 
 // ============================================================
@@ -334,85 +302,60 @@ function renderAttendance(
 ) {
 
     let present = 0;
-
     let absent = 0;
-
     let late = 0;
 
 
-    records.forEach(
-        record => {
+    // --------------------------------------------------------
+    // CALCULATE SUMMARY
+    // --------------------------------------------------------
 
-            const status =
-                String(
-                    record.status ||
-                    ""
-                )
-                .trim()
-                .toLowerCase();
+    records.forEach(record => {
 
-
-            if (
-                status === "present"
-            ) {
-
-                present++;
-
-            }
+        const status =
+            String(
+                record.status || ""
+            )
+            .trim()
+            .toLowerCase();
 
 
-            else if (
-                status === "absent"
-            ) {
+        if (status === "present") {
 
-                absent++;
+            present++;
 
-            }
+        } else if (status === "absent") {
 
+            absent++;
 
-            else if (
-                status === "late"
-            ) {
+        } else if (status === "late") {
 
-                late++;
-
-            }
+            late++;
 
         }
-    );
+
+    });
 
 
     let html = `
 
-        <section
-            class="child-attendance-card"
-        >
-
+        <section class="child-attendance-card">
 
             <div class="child-header">
 
                 <div>
 
                     <h2>
-
                         ${escapeHTML(
-                            getStudentName(
-                                student
-                            )
+                            getStudentName(student)
                         )}
-
                     </h2>
 
-
                     <p>
-
                         Class:
                         ${escapeHTML(
-                            getStudentClass(
-                                student
-                            )
+                            getStudentClass(student)
                         )}
-
                     </p>
 
                 </div>
@@ -420,11 +363,7 @@ function renderAttendance(
             </div>
 
 
-
-            <div
-                class="attendance-summary"
-            >
-
+            <div class="attendance-summary">
 
                 <div class="summary-card">
 
@@ -437,7 +376,6 @@ function renderAttendance(
                     </span>
 
                 </div>
-
 
 
                 <div class="summary-card">
@@ -453,7 +391,6 @@ function renderAttendance(
                 </div>
 
 
-
                 <div class="summary-card">
 
                     <strong>
@@ -466,57 +403,41 @@ function renderAttendance(
 
                 </div>
 
-
             </div>
-
     `;
-
 
 
     // ========================================================
     // NO RECORDS
     // ========================================================
 
-    if (
-        records.length === 0
-    ) {
+    if (records.length === 0) {
 
         html += `
 
-            <div
-                class="empty-attendance"
-            >
+            <div class="empty-attendance">
 
                 <h3>
                     No Attendance Records
                 </h3>
 
                 <p>
-
-                    No attendance records
-                    have been entered for
-                    this student yet.
-
+                    No attendance records have been
+                    entered for this student yet.
                 </p>
 
             </div>
 
+        </section>
+
         `;
-
-
-        html += `
-            </section>
-        `;
-
 
         return html;
-
     }
 
 
-
     // ========================================================
-    // TABLE
+    // ATTENDANCE TABLE
     // ========================================================
 
     html += `
@@ -549,91 +470,71 @@ function renderAttendance(
 
                 </thead>
 
-
                 <tbody>
-
     `;
 
 
+    records.forEach(record => {
 
-    records.forEach(
-        record => {
-
-            const status =
-                String(
-                    record.status ||
-                    "Unknown"
-                )
-                .trim();
+        const status =
+            String(
+                record.status ||
+                "Unknown"
+            ).trim();
 
 
-            const statusClass =
-                status
-                    .toLowerCase()
-                    .replace(
-                        /\s+/g,
-                        "-"
-                    );
+        const statusClass =
+            status
+                .toLowerCase()
+                .replace(
+                    /\s+/g,
+                    "-"
+                );
 
 
-            html += `
+        html += `
 
-                <tr>
+            <tr>
 
-                    <td>
+                <td>
+                    ${escapeHTML(
+                        record.date ||
+                        "N/A"
+                    )}
+                </td>
 
-                        ${escapeHTML(
-                            record.date ||
-                            "N/A"
-                        )}
+                <td>
+                    ${escapeHTML(
+                        record.session ||
+                        record.academicSession ||
+                        "N/A"
+                    )}
+                </td>
 
-                    </td>
+                <td>
+                    ${escapeHTML(
+                        record.term ||
+                        "N/A"
+                    )}
+                </td>
 
+                <td>
 
-                    <td>
+                    <span
+                        class="attendance-status ${escapeHTML(
+                            statusClass
+                        )}"
+                    >
+                        ${escapeHTML(status)}
+                    </span>
 
-                        ${escapeHTML(
-                            record.session ||
-                            record.academicSession ||
-                            "N/A"
-                        )}
+                </td>
 
-                    </td>
+            </tr>
 
+        `;
 
-                    <td>
-
-                        ${escapeHTML(
-                            record.term ||
-                            "N/A"
-                        )}
-
-                    </td>
-
-
-                    <td>
-
-                        <span
-                            class="attendance-status ${escapeHTML(
-                                statusClass
-                            )}"
-                        >
-
-                            ${escapeHTML(
-                                status
-                            )}
-
-                        </span>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
-
+    });
 
 
     html += `
@@ -644,35 +545,37 @@ function renderAttendance(
 
         </div>
 
-    `;
-
-
-
-    html += `
-
         </section>
 
     `;
 
 
     return html;
-
 }
-
 
 
 // ============================================================
 // LOAD PAGE
 // ============================================================
 
-async function loadPage(
-    user
-) {
+async function loadPage(user) {
 
     try {
 
         console.log(
-            "Loading parent attendance..."
+            "Parent attendance: checking account..."
+        );
+
+
+        // ----------------------------------------------------
+        // VERIFY PARENT
+        // ----------------------------------------------------
+
+        await verifyParent(user);
+
+
+        console.log(
+            "Parent account verified."
         );
 
 
@@ -692,50 +595,38 @@ async function loadPage(
         );
 
 
-
         // ----------------------------------------------------
         // NO CHILDREN
         // ----------------------------------------------------
 
-        if (
-            children.length === 0
-        ) {
+        if (children.length === 0) {
 
             container.innerHTML = `
 
-                <div
-                    class="empty-attendance"
-                >
+                <div class="empty-attendance">
 
                     <h3>
                         No Children Linked
                     </h3>
 
                     <p>
-
-                        No student has been
-                        linked to this parent
-                        account.
-
+                        No student has been linked
+                        to this parent account yet.
                     </p>
 
                 </div>
 
             `;
 
-
             return;
-
         }
 
 
-
         // ----------------------------------------------------
-        // LOAD ATTENDANCE
+        // LOAD EACH CHILD'S ATTENDANCE
         // ----------------------------------------------------
 
         const attendanceHTML = [];
-
 
 
         for (
@@ -751,23 +642,18 @@ async function loadPage(
 
 
                 attendanceHTML.push(
-
                     renderAttendance(
                         child,
                         records
                     )
-
                 );
 
-            }
 
-
-            catch (
-                childError
-            ) {
+            } catch (childError) {
 
                 console.error(
-                    "Attendance error:",
+                    "Attendance error for child:",
+                    child.firestoreId,
                     childError
                 );
 
@@ -778,34 +664,33 @@ async function loadPage(
                         class="child-attendance-card"
                     >
 
-                        <div
-                            class="empty-attendance"
-                        >
+                        <div class="empty-attendance">
 
                             <h3>
                                 Unable to Load Attendance
                             </h3>
 
                             <p>
-
                                 ${escapeHTML(
-                                    getStudentName(
-                                        child
-                                    )
+                                    getStudentName(child)
                                 )}
-
                             </p>
+
+                            <small>
+                                ${escapeHTML(
+                                    childError.message ||
+                                    "Permission denied."
+                                )}
+                            </small>
 
                         </div>
 
                     </section>
 
                 `);
-
             }
 
         }
-
 
 
         // ----------------------------------------------------
@@ -816,10 +701,7 @@ async function loadPage(
             attendanceHTML.join("");
 
 
-    }
-
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "Parent attendance error:",
@@ -827,25 +709,30 @@ async function loadPage(
         );
 
 
-        showError(
+        if (
+            error.code ===
+            "permission-denied"
+        ) {
 
-            error.message ||
+            showError(
+                "Firebase denied access to the attendance records. Check the Firestore rules for parents."
+            );
 
-            "Unable to load attendance records."
+        } else {
 
-        );
+            showError(
+                error.message ||
+                "Unable to load attendance records."
+            );
 
-    }
+        }
 
-
-    finally {
+    } finally {
 
         hideLoading();
 
     }
-
 }
-
 
 
 // ============================================================
@@ -853,9 +740,7 @@ async function loadPage(
 // ============================================================
 
 onAuthStateChanged(
-
     auth,
-
     user => {
 
         console.log(
@@ -870,14 +755,10 @@ onAuthStateChanged(
                 "parent-login.html";
 
             return;
-
         }
 
 
-        loadPage(
-            user
-        );
+        loadPage(user);
 
     }
-
 );

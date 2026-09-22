@@ -9,65 +9,442 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    
-    <meta name="theme-color" content="lightblue">
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <meta
+        name="description"
+        content="Parent Portal Dashboard - Ebenezer Day Star Academy"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
 
     <title>
         Parent Dashboard | Ebenezer Day Star Academy
     </title>
+
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         PARENT DASHBOARD CSS
+    ====================================================== -->
 
     <link
         rel="stylesheet"
         href="parent-dashboard.css"
     >
 
-    <meta name="robots" content="noindex, nofollow, noarchive">
+
+    <!-- =====================================================
+         LOGO STYLING
+    ====================================================== -->
+
+    <style>
+
+        /* =================================================
+           PAGE LOADER LOGO
+        ================================================== */
+
+        .loader-logo {
+
+            width: 76px;
+
+            height: 76px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            background: transparent;
+
+        }
+
+
+        .loader-logo img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+            display: block;
+
+        }
+
+
+        /* =================================================
+           TOPBAR LOGO
+        ================================================== */
+
+        .brand-logo {
+
+            width: 52px;
+
+            height: 52px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            background: transparent;
+
+        }
+
+
+        .brand-logo img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+            display: block;
+
+        }
+
+
+        /* =================================================
+           FOOTER LOGO
+        ================================================== */
+
+        .footer-logo {
+
+            width: 46px;
+
+            height: 46px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            background: transparent;
+
+        }
+
+
+        .footer-logo img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+            display: block;
+
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================== */
+
+        @media (max-width: 600px) {
+
+            .brand-logo {
+
+                width: 44px;
+
+                height: 44px;
+
+            }
+
+
+            .loader-logo {
+
+                width: 68px;
+
+                height: 68px;
+
+            }
+
+
+            .footer-logo {
+
+                width: 42px;
+
+                height: 42px;
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
 
-<header class="topbar">
+<!-- =========================================================
+     PAGE LOADER
+========================================================= -->
 
-    <div>
+<div
+    id="pageLoader"
+    class="page-loader"
+>
 
-        <h1>
-            Parent Portal
-        </h1>
+    <div class="loader-content">
+
+
+        <!-- =================================================
+             SCHOOL LOGO
+        ================================================== -->
+
+        <div class="loader-logo">
+
+            <img
+                src="school-logo.png"
+                alt="Ebenezer Day Star Academy Logo"
+            >
+
+        </div>
+
+
+        <div class="loader-spinner"></div>
+
 
         <p>
-            Ebenezer Day Star Academy
+            Loading Parent Portal...
         </p>
 
     </div>
 
+</div>
 
-    <button id="logoutBtn">
-        Logout
-    </button>
+
+
+<!-- =========================================================
+     TOP NAVIGATION
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+
+        <!-- =================================================
+             BRAND
+        ================================================== -->
+
+        <div class="brand">
+
+
+            <!-- SCHOOL LOGO -->
+
+            <div class="brand-logo">
+
+                <img
+                    src="school-logo.png"
+                    alt="Ebenezer Day Star Academy School Logo"
+                >
+
+            </div>
+
+
+            <!-- SCHOOL NAME -->
+
+            <div class="brand-text">
+
+                <h1>
+                    Ebenezer Day Star Academy
+                </h1>
+
+                <p>
+                    Parent Portal
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             USER AREA
+        ================================================== -->
+
+        <div class="topbar-actions">
+
+
+            <div class="portal-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Parent Portal
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-btn"
+            >
+
+                <span class="logout-icon">
+                    ⇥
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </button>
+
+        </div>
+
+
+    </div>
 
 </header>
 
 
 
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
 <main class="dashboard-container">
 
 
+
     <!-- =====================================================
-         WELCOME
-         ===================================================== -->
+         WELCOME HERO
+    ====================================================== -->
 
     <section class="welcome-card">
 
-        <div>
+
+        <div class="welcome-content">
+
+
+            <div class="welcome-badge">
+
+                <span>
+                    👋
+                </span>
+
+                <span>
+                    Welcome Back
+                </span>
+
+            </div>
+
 
             <h2 id="welcomeText">
                 Welcome, Parent
             </h2>
 
-            <p id="parentEmail">
-                Loading...
+
+            <p class="welcome-description">
+
+                Stay connected with your child's academic
+                progress, attendance, fees and school activities.
+
             </p>
+
+
+            <div class="welcome-meta">
+
+                <span>
+
+                    <span class="meta-icon">
+                        🏫
+                    </span>
+
+                    Ebenezer Day Star Academy
+
+                </span>
+
+
+                <span>
+
+                    <span class="meta-icon">
+                        📅
+                    </span>
+
+                    Parent Portal
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- WELCOME ILLUSTRATION -->
+
+        <div class="welcome-illustration">
+
+            <div
+                class="illustration-circle circle-one"
+            ></div>
+
+            <div
+                class="illustration-circle circle-two"
+            ></div>
+
+            <div class="school-icon">
+                🏫
+            </div>
 
         </div>
 
@@ -76,8 +453,37 @@
 
 
     <!-- =====================================================
-         ERROR
-         ===================================================== -->
+         PARENT ACCOUNT
+    ====================================================== -->
+
+    <section class="account-card">
+
+
+        <div class="account-icon">
+            👤
+        </div>
+
+
+        <div class="account-details">
+
+            <span class="account-label">
+                Signed in as
+            </span>
+
+
+            <strong id="parentEmail">
+                Loading...
+            </strong>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ERROR MESSAGE
+    ====================================================== -->
 
     <div
         id="errorMessage"
@@ -87,32 +493,136 @@
 
 
     <!-- =====================================================
-         CHILDREN
-         ===================================================== -->
+         QUICK OVERVIEW
+    ====================================================== -->
 
-    <section>
+    <section class="overview-section">
+
 
         <div class="section-heading">
 
-            <h2>
-                My Children
-            </h2>
+            <div>
 
-            <span id="childrenCount">
-                0
-            </span>
+                <span class="section-label">
+                    OVERVIEW
+                </span>
+
+
+                <h2>
+                    Your Dashboard
+                </h2>
+
+            </div>
 
         </div>
 
 
-        <div
-            id="childrenContainer"
-            class="children-grid"
-        >
 
-            <div class="loading">
-                Loading children's records...
+        <div class="overview-grid">
+
+
+            <!-- CHILDREN -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon children-icon">
+                    👨‍👩‍👧
+                </div>
+
+
+                <div>
+
+                    <span>
+                        My Children
+                    </span>
+
+
+                    <strong id="overviewChildrenCount">
+                        0
+                    </strong>
+
+                </div>
+
             </div>
+
+
+
+            <!-- RESULTS -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon result-icon">
+                    📊
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Academic
+                    </span>
+
+
+                    <strong>
+                        Results
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ATTENDANCE -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon attendance-icon">
+                    📅
+                </div>
+
+
+                <div>
+
+                    <span>
+                        School
+                    </span>
+
+
+                    <strong>
+                        Attendance
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NOTIFICATIONS -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon notification-icon">
+                    🔔
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Updates
+                    </span>
+
+
+                    <strong>
+                        Notifications
+                    </strong>
+
+                </div>
+
+            </div>
+
 
         </div>
 
@@ -120,125 +630,494 @@
 
 
 
-<section class="services">
+    <!-- =====================================================
+         MY CHILDREN
+    ====================================================== -->
 
-    <h2>
-        Parent Services
-    </h2>
-
-
-    <div class="services-grid">
+    <section class="children-section">
 
 
-        <button
-            type="button"
-            class="service-card"
-            data-service="results"
+        <div class="section-heading">
+
+
+            <div>
+
+                <span class="section-label">
+                    FAMILY
+                </span>
+
+
+                <h2>
+                    My Children
+                </h2>
+
+
+                <p>
+                    View your children's school information.
+                </p>
+
+            </div>
+
+
+            <div
+                id="childrenCount"
+                class="count-badge"
+            >
+                0
+            </div>
+
+        </div>
+
+
+
+        <div
+            id="childrenContainer"
+            class="children-grid"
         >
 
-            <span class="service-icon">
-                📊
-            </span>
 
-            <strong>
-                Results
-            </strong>
+            <div class="loading-card">
 
-            <small>
-                View academic results
-            </small>
-
-        </button>
+                <div class="loading-spinner"></div>
 
 
+                <p>
+                    Loading children's records...
+                </p>
 
-        <button
-            type="button"
-            class="service-card"
-            data-service="attendance"
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PARENT SERVICES
+    ====================================================== -->
+
+    <section class="services-section">
+
+
+        <div class="section-heading">
+
+
+            <div>
+
+                <span class="section-label">
+                    SERVICES
+                </span>
+
+
+                <h2>
+                    Parent Services
+                </h2>
+
+
+                <p>
+                    Access important information about your child's
+                    education and school activities.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="services-grid">
+
+
+            <!-- RESULTS -->
+
+            <button
+                type="button"
+                class="service-card results-card"
+                data-service="results"
+            >
+
+                <div class="service-top">
+
+                    <div class="service-icon">
+                        📊
+                    </div>
+
+
+                    <span class="service-arrow">
+                        →
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    Results
+                </strong>
+
+
+                <small>
+                    View academic results and performance.
+                </small>
+
+            </button>
+
+
+
+            <!-- ATTENDANCE -->
+
+            <button
+                type="button"
+                class="service-card attendance-card"
+                data-service="attendance"
+            >
+
+                <div class="service-top">
+
+                    <div class="service-icon">
+                        📅
+                    </div>
+
+
+                    <span class="service-arrow">
+                        →
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    Attendance
+                </strong>
+
+
+                <small>
+                    Check your child's attendance records.
+                </small>
+
+            </button>
+
+
+
+            <!-- FEES -->
+
+            <button
+                type="button"
+                class="service-card fees-card"
+                data-service="fees"
+            >
+
+                <div class="service-top">
+
+                    <div class="service-icon">
+                        ₦
+                    </div>
+
+
+                    <span class="service-arrow">
+                        →
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    School Fees
+                </strong>
+
+
+                <small>
+                    View fees and payment information.
+                </small>
+
+            </button>
+
+
+
+            <!-- REPORT CARDS -->
+
+            <button
+                type="button"
+                class="service-card report-card"
+                data-service="reportCards"
+            >
+
+                <div class="service-top">
+
+                    <div class="service-icon">
+                        📄
+                    </div>
+
+
+                    <span class="service-arrow">
+                        →
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    Report Cards
+                </strong>
+
+
+                <small>
+                    View your child's complete report card.
+                </small>
+
+            </button>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         NOTIFICATIONS
+    ====================================================== -->
+
+    <section class="notifications-section">
+
+
+        <div class="section-heading">
+
+
+            <div>
+
+                <span class="section-label">
+                    SCHOOL UPDATES
+                </span>
+
+
+                <h2>
+                    Notifications
+                </h2>
+
+
+                <p>
+                    Important announcements from the school.
+                </p>
+
+            </div>
+
+
+            <div class="notification-bell">
+                🔔
+            </div>
+
+        </div>
+
+
+
+        <div
+            id="portalNotifications"
+            class="notifications-container"
         >
 
-            <span class="service-icon">
-                📅
-            </span>
 
-            <strong>
-                Attendance
-            </strong>
+            <div class="notification-loading">
 
-            <small>
-                View attendance records
-            </small>
-
-        </button>
+                <div class="loading-spinner"></div>
 
 
+                <span>
+                    Loading notifications...
+                </span>
 
-        <button
-            type="button"
-            class="service-card"
-            data-service="fees"
-        >
+            </div>
 
-            <span class="service-icon">
-                💰
-            </span>
 
-            <strong>
-                Fees
-            </strong>
+        </div>
 
-            <small>
-                View school fees
-            </small>
-
-        </button>
+    </section>
 
 
 
-        <button
-            type="button"
-            class="service-card"
-            data-service="reportCards"
-        >
+    <!-- =====================================================
+         SCHOOL FOOTER
+    ====================================================== -->
 
-            <span class="service-icon">
-                📄
-            </span>
-
-            <strong>
-                Report Cards
-            </strong>
-
-            <small>
-                View report cards
-            </small>
-
-        </button>
+    <footer class="dashboard-footer">
 
 
-    </div>
-
-</section>
-
-<section style="max-width:1100px;margin:20px auto;padding:20px;background:#fff;border-radius:16px"><h2>Notifications</h2><div id="portalNotifications">Loading notifications...</div></section></main>
+        <div class="footer-brand">
 
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <!-- SCHOOL LOGO -->
+
+            <div class="footer-logo">
+
+                <img
+                    src="school-logo.png"
+                    alt="Ebenezer Day Star Academy Logo"
+                >
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Ebenezer Day Star Academy
+                </strong>
+
+
+                <span>
+                    In God We Trust
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <p>
+
+            © 2026 Ebenezer Day Star Academy.
+            Parent Portal.
+
+        </p>
+
+    </footer>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     SWEETALERT
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
+
+
+<!-- =========================================================
+     PARENT DASHBOARD JAVASCRIPT
+========================================================= -->
+
 <script
     type="module"
     src="parent-dashboard.js"
 ></script>
 
+
+
+<!-- =========================================================
+     BACK NAVIGATION
+========================================================= -->
+
 <script type="module">
-import { goBackOr } from "./back-navigation.js";
-document.querySelectorAll("[data-smart-back]").forEach((el) => {
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
-    goBackOr(el.dataset.smartBack || "portal-login.html");
-  });
-});
+
+import {
+    goBackOr
+} from "./back-navigation.js";
+
+
+document
+    .querySelectorAll("[data-smart-back]")
+    .forEach((el) => {
+
+        el.addEventListener("click", (e) => {
+
+            e.preventDefault();
+
+
+            goBackOr(
+                el.dataset.smartBack ||
+                "portal-login.html"
+            );
+
+        });
+
+    });
+
 </script>
+
+
+
+<!-- =========================================================
+     SMALL UI ENHANCEMENTS
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+        const loader =
+            document.getElementById("pageLoader");
+
+
+        setTimeout(() => {
+
+            if (loader) {
+
+                loader.classList.add("hidden");
+
+            }
+
+        }, 700);
+
+
+
+        /*
+         * Update overview children count
+         * whenever the main children count changes.
+         */
+
+        const childrenCount =
+            document.getElementById(
+                "childrenCount"
+            );
+
+
+        const overviewCount =
+            document.getElementById(
+                "overviewChildrenCount"
+            );
+
+
+        if (
+            childrenCount &&
+            overviewCount
+        ) {
+
+
+            const observer =
+                new MutationObserver(() => {
+
+                    overviewCount.textContent =
+                        childrenCount.textContent;
+
+                });
+
+
+            observer.observe(
+                childrenCount,
+                {
+                    childList: true,
+                    characterData: true,
+                    subtree: true
+                }
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+
 </body>
 
 </html>

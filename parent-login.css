@@ -14,6 +14,11 @@
 
 }
 
+img{
+    height: 20%;
+    width: 15%;
+    align-items: center;
+}
 
 body {
 
@@ -63,7 +68,7 @@ body {
 
 .login-card {
 
-    background: #ffffff;
+    background: url('badge.jpg');
 
     padding: 35px;
 
@@ -81,31 +86,22 @@ body {
    ============================================================ */
 
 .school-logo {
-
     width: 72px;
-
     height: 72px;
-
     border-radius: 50%;
-
-    background: #0d6efd;
-
-    color: white;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     margin: 0 auto 18px;
-
-    font-size: 30px;
-
-    font-weight: bold;
-
+    overflow: hidden;
 }
 
+.school-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
 
 /* ============================================================
    HEADINGS

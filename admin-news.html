@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <title>
+        News & Notifications | Ebenezer Day Star Academy
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        :root {
+            --navy: #0b1f3a;
+            --navy-light: #12345d;
+            --gold: #d4af37;
+            --gold-light: #f4d35e;
+            --background: #f5f7fb;
+            --white: #ffffff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --danger: #dc2626;
+            --success: #15803d;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+
+        .news-page {
+            width: min(1150px, 94%);
+            margin: 30px auto 50px;
+        }
+
+
+        /* ================================================
+           PAGE HEADER
+        ================================================ */
+
+        .page-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--navy),
+                    var(--navy-light)
+                );
+
+            color: white;
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 12px 35px rgba(11,31,58,.12);
+        }
+
+
+        .page-header h1 {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+
+        .page-header p {
+            margin: 0;
+
+            color:
+                rgba(255,255,255,.75);
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        /* ================================================
+           GRID
+        ================================================ */
+
+        .news-grid {
+            display: grid;
+
+            grid-template-columns:
+                380px 1fr;
+
+            gap: 22px;
+
+            align-items: start;
+        }
+
+
+        /* ================================================
+           CARDS
+        ================================================ */
+
+        .news-card {
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 8px 28px rgba(11,31,58,.06);
+        }
+
+
+        .news-card h2 {
+            color: var(--navy);
+
+            margin-top: 0;
+
+            margin-bottom: 20px;
+
+            font-size: 19px;
+        }
+
+
+        /* ================================================
+           FORM
+        ================================================ */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: var(--text);
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+
+            width: 100%;
+
+            padding: 12px 13px;
+
+            border:
+                1px solid #d9dee7;
+
+            border-radius: 10px;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            outline: none;
+
+            background: #fff;
+
+            color: var(--text);
+
+            transition:
+                border-color .2s,
+                box-shadow .2s;
+        }
+
+
+        .form-group textarea {
+
+            min-height: 130px;
+
+            resize: vertical;
+        }
+
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+
+            border-color:
+                var(--gold);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(212,175,55,.12);
+        }
+
+
+        /* ================================================
+           PUBLISH BUTTON
+        ================================================ */
+
+        .publish-btn {
+
+            width: 100%;
+
+            border: 0;
+
+            border-radius: 11px;
+
+            padding: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--gold-light),
+                    var(--gold)
+                );
+
+            color: var(--navy);
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .25s;
+        }
+
+
+        .publish-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(212,175,55,.25);
+        }
+
+
+        .publish-btn:disabled {
+
+            opacity: .7;
+
+            cursor:
+                not-allowed;
+
+            transform: none;
+        }
+
+
+        /* ================================================
+           CANCEL BUTTON
+        ================================================ */
+
+        .cancel-btn {
+
+            width: 100%;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 11px;
+
+            padding: 12px;
+
+            background: white;
+
+            color: var(--muted);
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 9px;
+
+            transition: .2s;
+        }
+
+
+        .cancel-btn:hover {
+
+            background:
+                #f8fafc;
+
+            color:
+                var(--navy);
+        }
+
+
+        .cancel-btn.hidden {
+
+            display: none;
+        }
+
+
+        /* ================================================
+           ANNOUNCEMENT
+        ================================================ */
+
+        .announcement {
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 15px;
+
+            padding: 18px;
+
+            margin-bottom: 13px;
+
+            transition: .2s;
+
+            background: #fff;
+        }
+
+
+        .announcement:hover {
+
+            border-color:
+                rgba(212,175,55,.5);
+
+            box-shadow:
+                0 7px 20px
+                rgba(11,31,58,.06);
+        }
+
+
+        .announcement:last-child {
+
+            margin-bottom: 0;
+        }
+
+
+        .announcement-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            align-items:
+                flex-start;
+        }
+
+
+        .announcement-title {
+
+            color: var(--navy);
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            margin: 0;
+
+            line-height: 1.4;
+        }
+
+
+        .announcement-message {
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.7;
+
+            margin: 10px 0;
+
+            white-space:
+                pre-wrap;
+
+            word-break:
+                break-word;
+        }
+
+
+        .announcement-meta {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+            margin-top: 12px;
+
+            align-items: center;
+        }
+
+
+        /* ================================================
+           BADGES
+        ================================================ */
+
+        .badge {
+
+            display: inline-flex;
+
+            padding: 5px 9px;
+
+            border-radius: 50px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+
+        .badge-published {
+
+            background:
+                #ecfdf5;
+
+            color:
+                var(--success);
+        }
+
+
+        .badge-draft {
+
+            background:
+                #fff7ed;
+
+            color:
+                #c2410c;
+        }
+
+
+        .badge-audience {
+
+            background:
+                #eff6ff;
+
+            color:
+                #1d4ed8;
+        }
+
+
+        .announcement-date {
+
+            color:
+                #9ca3af;
+
+            font-size: 10px;
+        }
+
+
+        /* ================================================
+           ACTION BUTTONS
+        ================================================ */
+
+        .announcement-actions {
+
+            display: flex;
+
+            gap: 7px;
+
+            flex-shrink: 0;
+        }
+
+
+        .action-btn {
+
+            border: 0;
+
+            width: 34px;
+
+            height: 34px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            transition: .2s;
+        }
+
+
+        .action-btn:hover {
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .edit-btn {
+
+            background:
+                #eff6ff;
+
+            color:
+                #1d4ed8;
+        }
+
+
+        .delete-btn {
+
+            background:
+                #fff1f2;
+
+            color:
+                var(--danger);
+        }
+
+
+        /* ================================================
+           EMPTY / LOADING
+        ================================================ */
+
+        .empty-state {
+
+            text-align: center;
+
+            padding: 45px 20px;
+
+            color: var(--muted);
+        }
+
+
+        .empty-icon {
+
+            font-size: 42px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .loading {
+
+            text-align: center;
+
+            color: var(--muted);
+
+            padding: 30px;
+        }
+
+
+        /* ================================================
+           RESPONSIVE
+        ================================================ */
+
+        @media (max-width: 850px) {
+
+            .news-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .news-page {
+
+                width: 94%;
+
+                margin-top: 20px;
+            }
+
+
+            .page-header {
+
+                padding: 22px;
+            }
+
+
+            .page-header h1 {
+
+                font-size: 22px;
+            }
+
+
+            .news-card {
+
+                padding: 18px;
+            }
+
+
+            .announcement-header {
+
+                flex-direction:
+                    column;
+            }
+
+
+            .announcement-actions {
+
+                width: 100%;
+            }
+
+
+            .action-btn {
+
+                width: 38px;
+
+                height: 38px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<main class="news-page">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <section class="page-header">
+
+        <h1>
+            📰 News & Notifications
+        </h1>
+
+        <p>
+            Publish important announcements and updates
+            to parents, teachers, students and other users
+            through their respective portals.
+        </p>
+
+    </section>
+
+
+
+    <section class="news-grid">
+
+
+        <!-- =================================================
+             CREATE / EDIT NOTIFICATION
+        ================================================== -->
+
+        <div class="news-card">
+
+            <h2 id="formTitle">
+                Publish Notification
+            </h2>
+
+
+            <form id="notificationForm">
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="notificationTitle">
+                        Notification Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="notificationTitle"
+                        placeholder="e.g. School Resumption"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- MESSAGE -->
+
+                <div class="form-group">
+
+                    <label for="notificationMessage">
+                        Message
+                    </label>
+
+                    <textarea
+                        id="notificationMessage"
+                        placeholder="Write your announcement here..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- AUDIENCE -->
+
+                <div class="form-group">
+
+                    <label for="notificationAudience">
+                        Audience
+                    </label>
+
+                    <select
+                        id="notificationAudience"
+                        required
+                    >
+
+                        <option value="parents">
+                            Parents
+                        </option>
+
+                        <option value="teachers">
+                            Teachers
+                        </option>
+
+                        <option value="students">
+                            Students
+                        </option>
+
+                        <option value="admin">
+                            Admin
+                        </option>
+
+                        <option value="all">
+                            All Users
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- STATUS -->
+
+                <div class="form-group">
+
+                    <label for="notificationStatus">
+                        Status
+                    </label>
+
+                    <select
+                        id="notificationStatus"
+                        required
+                    >
+
+                        <option value="published">
+                            Published
+                        </option>
+
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- PUBLISH -->
+
+                <button
+                    type="button"
+                    class="publish-btn"
+                    id="publishBtn"
+                >
+                    Publish Notification
+                </button>
+
+
+
+                <!-- CANCEL EDIT -->
+
+                <button
+                    type="button"
+                    class="cancel-btn hidden"
+                    id="cancelEditBtn"
+                >
+                    Cancel Edit
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- =================================================
+             NOTIFICATION LIST
+        ================================================== -->
+
+        <div class="news-card">
+
+            <h2>
+                Published Notifications
+            </h2>
+
+
+            <div id="notificationsList">
+
+                <div class="loading">
+                    Loading notifications...
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     SWEETALERT2
+====================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
+
+
+<!-- =====================================================
+     ADMIN NEWS JAVASCRIPT
+====================================================== -->
+
+<script
+    type="module"
+    src="admin-news.js"
+></script>
+
+
+</body>
+
+</html>

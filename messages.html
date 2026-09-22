@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <meta
+        name="description"
+        content="Ebenezer Day Star Academy Admin Messages"
+    >
+
+    <title>Messages | Ebenezer Day Star Academy</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="global.css">
+
+    <!-- Page CSS -->
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background:
+                linear-gradient(
+                    rgba(245, 248, 252, 0.96),
+                    rgba(245, 248, 252, 0.96)
+                );
+            color: #222;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .messages-header {
+            background: #0b1f3a;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .school-logo {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: white;
+            padding: 4px;
+        }
+
+        .header-text h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .header-text p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .back-btn {
+            border: none;
+            background: #d4af37;
+            color: #0b1f3a;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .messages-container {
+            width: min(1200px, 94%);
+            margin: 25px auto 50px;
+        }
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            border-left: 5px solid #d4af37;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stat-number {
+            display: block;
+            margin-top: 8px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #0b1f3a;
+        }
+
+        /* =========================
+           TOOLBAR
+        ========================= */
+
+        .toolbar {
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .toolbar-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .search-box input,
+        .filter-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5d9df;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box input:focus,
+        .filter-select:focus {
+            border-color: #d4af37;
+        }
+
+        .filter-wrapper {
+            width: 180px;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #0b1f3a;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .refresh-btn:hover {
+            background: #142f54;
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .loading-spinner {
+            width: 38px;
+            height: 38px;
+            border: 4px solid #ddd;
+            border-top: 4px solid #d4af37;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           MESSAGE LIST
+        ========================= */
+
+        #messagesList {
+            display: grid;
+            gap: 15px;
+        }
+
+        .message-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            border-left: 5px solid #0b1f3a;
+            transition: 0.2s;
+        }
+
+        .message-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.11);
+        }
+
+        .message-card.unread {
+            border-left-color: #d4af37;
+        }
+
+        .message-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .sender-info h3 {
+            margin: 0 0 5px;
+            color: #0b1f3a;
+            font-size: 18px;
+        }
+
+        .sender-info p {
+            margin: 3px 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .message-badges {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-unread {
+            background: #fff2bf;
+            color: #745c00;
+        }
+
+        .badge-read {
+            background: #e5e7eb;
+            color: #555;
+        }
+
+        .badge-admission {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-contact {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message-subject {
+            margin: 15px 0 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .message-preview {
+            color: #555;
+            line-height: 1.6;
+            white-space: pre-line;
+            max-height: 100px;
+            overflow: hidden;
+        }
+
+        .message-date {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .message-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 9px 13px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .view-btn {
+            background: #0b1f3a;
+            color: white;
+        }
+
+        .reply-btn {
+            background: #d4af37;
+            color: #0b1f3a;
+        }
+
+        .read-btn {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .action-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* =========================
+           ADMISSION DETAILS
+        ========================= */
+
+        .admission-details {
+            margin-top: 15px;
+            background: #f7f9fc;
+            border-radius: 10px;
+            padding: 15px;
+            display: none;
+        }
+
+        .admission-details.show {
+            display: block;
+        }
+
+        .details-title {
+            color: #0b1f3a;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px 20px;
+        }
+
+        .detail-item {
+            font-size: 13px;
+            padding: 5px 0;
+        }
+
+        .detail-item strong {
+            color: #333;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            background: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: #0b1f3a;
+        }
+
+        .empty-state p {
+            color: #777;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .messages-header {
+                align-items: flex-start;
+            }
+
+            .header-text h1 {
+                font-size: 17px;
+            }
+
+            .header-text p {
+                font-size: 11px;
+            }
+
+            .school-logo {
+                width: 44px;
+                height: 44px;
+            }
+
+            .back-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-wrapper {
+                width: 100%;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .message-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="messages-header">
+
+        <div class="header-left">
+
+            <img
+                src="badge.jpg"
+                alt="Ebenezer Day Star Academy"
+                class="school-logo"
+            >
+
+            <div class="header-text">
+
+                <h1>School Messages</h1>
+
+                <p>
+                    Ebenezer Day Star Academy
+                </p>
+
+            </div>
+
+        </div>
+
+        <button
+            class="back-btn"
+            id="backBtn"
+        >
+            ← Dashboard
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="messages-container">
+
+        <!-- STATISTICS -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <h3>Total Messages</h3>
+
+                <span
+                    class="stat-number"
+                    id="totalMessages"
+                >
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Unread Messages</h3>
+
+                <span
+                    class="stat-number"
+                    id="unreadMessages"
+                >
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Read Messages</h3>
+
+                <span
+                    class="stat-number"
+                    id="readMessages"
+                >
+                    0
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- TOOLBAR -->
+
+        <section class="toolbar">
+
+            <div class="toolbar-row">
+
+                <div class="search-box">
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search messages..."
+                    >
+
+                </div>
+
+
+                <div class="filter-wrapper">
+
+                    <select
+                        id="statusFilter"
+                        class="filter-select"
+                    >
+
+                        <option value="all">
+                            All Messages
+                        </option>
+
+                        <option value="unread">
+                            Unread
+                        </option>
+
+                        <option value="read">
+                            Read
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-wrapper">
+
+                    <select
+                        id="typeFilter"
+                        class="filter-select"
+                    >
+
+                        <option value="all">
+                            All Types
+                        </option>
+
+                        <option value="admission">
+                            Admission
+                        </option>
+
+                        <option value="contact">
+                            Contact
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    class="refresh-btn"
+                    id="refreshBtn"
+                >
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- LOADING -->
+
+        <div
+            class="loading"
+            id="loading"
+        >
+
+            <div class="loading-spinner"></div>
+
+            <p>
+                Loading messages...
+            </p>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        <section id="messagesList"></section>
+
+
+        <!-- EMPTY -->
+
+        <div
+            class="empty-state"
+            id="emptyState"
+            style="display:none;"
+        >
+
+            <h3>No Messages Found</h3>
+
+            <p>
+                There are currently no messages matching your search or filter.
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         EMAILJS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+
+    <!-- SWEETALERT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <!-- PAGE JAVASCRIPT -->
+
+    <script
+        type="module"
+        src="messages.js"
+    ></script>
+
+</body>
+
+</html>

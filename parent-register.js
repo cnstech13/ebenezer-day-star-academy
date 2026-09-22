@@ -1,64 +1,43 @@
 // ============================================================
 // PARENT REGISTRATION
 // Ebenezer Day Star Academy
-// Firebase Authentication + Firestore
 //
 // Registration flow:
 //
 // 1. Validate parent information
 // 2. Create Firebase Authentication account
-// 3. Parent becomes authenticated
-// 4. Search students using parentEmail
-// 5. Create users/{Firebase UID}
-// 6. Link matching students using parentUid
-// 7. Redirect to parent login
+// 3. Create users/{UID} parent profile
+// 4. Find students using parentEmail
+// 5. Link matching students using parentUid
+// 6. Redirect to Parent Login
 // ============================================================
 
 
 import {
-
     createUserWithEmailAndPassword,
-
     updateProfile,
-
+    deleteUser,
     signOut
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 
 import {
-
     collection,
-
     query,
-
     where,
-
     getDocs,
-
     doc,
-
     setDoc,
-
     updateDoc,
-
+    deleteDoc,
     serverTimestamp
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 
 import {
-
     auth,
-
     db
-
-}
-from "./firebase-config.js";
+} from "./firebase-config.js";
 
 
 
@@ -67,51 +46,35 @@ from "./firebase-config.js";
 // ============================================================
 
 const form =
-    document.getElementById(
-        "parentRegisterForm"
-    );
+    document.getElementById("parentRegisterForm");
 
 
 const nameInput =
-    document.getElementById(
-        "name"
-    );
+    document.getElementById("name");
 
 
 const emailInput =
-    document.getElementById(
-        "email"
-    );
+    document.getElementById("email");
 
 
 const passwordInput =
-    document.getElementById(
-        "password"
-    );
+    document.getElementById("password");
 
 
 const confirmPasswordInput =
-    document.getElementById(
-        "confirmPassword"
-    );
+    document.getElementById("confirmPassword");
 
 
 const registerBtn =
-    document.getElementById(
-        "registerBtn"
-    );
+    document.getElementById("registerBtn");
 
 
 const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
+    document.getElementById("errorMessage");
 
 
 const successMessage =
-    document.getElementById(
-        "successMessage"
-    );
+    document.getElementById("successMessage");
 
 
 
@@ -120,47 +83,37 @@ const successMessage =
 // ============================================================
 
 if (!form) {
-
     console.error(
-        "parentRegisterForm was not found."
+        "Parent registration error: parentRegisterForm was not found."
     );
-
 }
 
 
 if (!nameInput) {
-
     console.error(
-        "name input was not found."
+        "Parent registration error: name input was not found."
     );
-
 }
 
 
 if (!emailInput) {
-
     console.error(
-        "email input was not found."
+        "Parent registration error: email input was not found."
     );
-
 }
 
 
 if (!passwordInput) {
-
     console.error(
-        "password input was not found."
+        "Parent registration error: password input was not found."
     );
-
 }
 
 
 if (!confirmPasswordInput) {
-
     console.error(
-        "confirmPassword input was not found."
+        "Parent registration error: confirmPassword input was not found."
     );
-
 }
 
 
@@ -171,6 +124,15 @@ if (!confirmPasswordInput) {
 
 function showError(message) {
 
+    if (successMessage) {
+
+        successMessage.textContent = "";
+
+        successMessage.style.display =
+            "none";
+    }
+
+
     if (errorMessage) {
 
         errorMessage.textContent =
@@ -179,16 +141,17 @@ function showError(message) {
         errorMessage.style.display =
             "block";
 
-    }
-
-
-    if (successMessage) {
-
-        successMessage.style.display =
-            "none";
+        errorMessage.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
 
     }
 
+    console.error(
+        "Parent registration message:",
+        message
+    );
 }
 
 
@@ -199,6 +162,15 @@ function showError(message) {
 
 function showSuccess(message) {
 
+    if (errorMessage) {
+
+        errorMessage.textContent = "";
+
+        errorMessage.style.display =
+            "none";
+    }
+
+
     if (successMessage) {
 
         successMessage.textContent =
@@ -207,22 +179,18 @@ function showSuccess(message) {
         successMessage.style.display =
             "block";
 
-    }
-
-
-    if (errorMessage) {
-
-        errorMessage.style.display =
-            "none";
+        successMessage.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
 
     }
-
 }
 
 
 
 // ============================================================
-// FIREBASE ERROR MESSAGE
+// GET FRIENDLY FIREBASE ERROR
 // ============================================================
 
 function getRegistrationError(error) {
@@ -233,35 +201,37 @@ function getRegistrationError(error) {
     );
 
 
-    switch (error.code) {
+    const code =
+        error?.code || "";
 
 
-        // ----------------------------------------------------
-        // EMAIL ALREADY EXISTS
-        // ----------------------------------------------------
+    const message =
+        error?.message || "";
+
+
+
+    // ========================================================
+    // FIREBASE AUTHENTICATION ERRORS
+    // ========================================================
+
+    switch (code) {
+
 
         case "auth/email-already-in-use":
 
             return (
-                "An account already exists with this email.\n\n" +
+                "An account already exists with this email address.\n\n" +
                 "Please use the Parent Login page instead."
             );
 
 
-        // ----------------------------------------------------
-        // INVALID EMAIL
-        // ----------------------------------------------------
-
         case "auth/invalid-email":
 
             return (
-                "Please enter a valid email address."
+                "The email address you entered is not valid.\n\n" +
+                "Please check the email and try again."
             );
 
-
-        // ----------------------------------------------------
-        // WEAK PASSWORD
-        // ----------------------------------------------------
 
         case "auth/weak-password":
 
@@ -271,54 +241,137 @@ function getRegistrationError(error) {
             );
 
 
-        // ----------------------------------------------------
-        // NETWORK
-        // ----------------------------------------------------
-
         case "auth/network-request-failed":
 
             return (
-                "Network error.\n\n" +
-                "Please check your internet connection."
+                "Unable to connect to the school system.\n\n" +
+                "Please check your internet connection and try again."
             );
 
 
-        // ----------------------------------------------------
-        // FIRESTORE PERMISSION
-        // ----------------------------------------------------
-
-        case "permission-denied":
+        case "auth/too-many-requests":
 
             return (
-                "Firestore permission denied.\n\n" +
-                "Please check your Firestore security rules."
+                "Too many registration attempts have been made.\n\n" +
+                "Please wait a few minutes and try again."
             );
 
 
-        // ----------------------------------------------------
-        // FIRESTORE UNAUTHENTICATED
-        // ----------------------------------------------------
-
-        case "unauthenticated":
+        case "auth/operation-not-allowed":
 
             return (
-                "Authentication is required to complete registration."
+                "Parent account registration is currently unavailable.\n\n" +
+                "Please contact the school administrator."
             );
 
 
-        // ----------------------------------------------------
-        // DEFAULT
-        // ----------------------------------------------------
-
-        default:
+        case "auth/invalid-api-key":
 
             return (
-                error.message ||
-                "Unable to create parent account."
+                "The school portal configuration is incorrect.\n\n" +
+                "Please contact the school administrator."
+            );
+
+
+        case "auth/app-not-authorized":
+
+            return (
+                "This website is not authorized to use the school authentication system.\n\n" +
+                "Please contact the school administrator."
+            );
+
+
+        case "auth/user-disabled":
+
+            return (
+                "This account has been disabled.\n\n" +
+                "Please contact the school administrator."
             );
 
     }
 
+
+
+    // ========================================================
+    // FIRESTORE PERMISSION ERRORS
+    // ========================================================
+
+    if (
+        code === "permission-denied" ||
+        code === "firestore/permission-denied" ||
+        message.toLowerCase().includes(
+            "missing or insufficient permissions"
+        )
+    ) {
+
+        return (
+            "The school system could not access the required student records.\n\n" +
+            "Please make sure the email address you used for registration " +
+            "matches the parent email registered by the school.\n\n" +
+            "If the problem continues, please contact the school administrator."
+        );
+    }
+
+
+
+    // ========================================================
+    // UNAUTHENTICATED
+    // ========================================================
+
+    if (
+        code === "unauthenticated"
+    ) {
+
+        return (
+            "Your registration session could not be verified.\n\n" +
+            "Please try registering again."
+        );
+    }
+
+
+
+    // ========================================================
+    // NOT FOUND
+    // ========================================================
+
+    if (
+        code === "not-found"
+    ) {
+
+        return (
+            "The required school record could not be found.\n\n" +
+            "Please contact the school administrator."
+        );
+    }
+
+
+
+    // ========================================================
+    // ALREADY EXISTS
+    // ========================================================
+
+    if (
+        code === "already-exists"
+    ) {
+
+        return (
+            "This parent record already exists.\n\n" +
+            "Please try logging in instead."
+        );
+    }
+
+
+
+    // ========================================================
+    // DEFAULT ERROR
+    // ========================================================
+
+    return (
+        "We could not complete your parent registration.\n\n" +
+        "Please check your information and internet connection, " +
+        "then try again.\n\n" +
+        "If the problem continues, please contact the school administrator."
+    );
 }
 
 
@@ -326,53 +379,48 @@ function getRegistrationError(error) {
 // ============================================================
 // FIND STUDENTS USING PARENT EMAIL
 // ============================================================
-//
-// IMPORTANT:
-//
-// This function is called AFTER Firebase Authentication
-// has successfully created the parent account.
-//
-// Therefore request.auth is no longer null.
-//
-// It searches:
-//
-// students
-//    └── student document
-//          parentEmail: "parent@gmail.com"
-//
-// ============================================================
 
-async function findStudentsForParent(
-    email
-) {
+async function findStudentsForParent(email) {
 
-    const studentsCollection =
-        collection(
-            db,
-            "students"
+    try {
+
+        const studentsCollection =
+            collection(
+                db,
+                "students"
+            );
+
+
+        const parentQuery =
+            query(
+                studentsCollection,
+                where(
+                    "parentEmail",
+                    "==",
+                    email
+                )
+            );
+
+
+        const snapshot =
+            await getDocs(
+                parentQuery
+            );
+
+
+        return snapshot;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unable to find students:",
+            error
         );
 
-
-    const parentQuery =
-        query(
-            studentsCollection,
-
-            where(
-                "parentEmail",
-                "==",
-                email
-            )
-        );
-
-
-    const snapshot =
-        await getDocs(
-            parentQuery
-        );
-
-
-    return snapshot;
-
+        throw error;
+    }
 }
 
 
@@ -411,6 +459,9 @@ async function createParentProfile(
             role:
                 "parent",
 
+            active:
+                true,
+
             createdAt:
                 serverTimestamp(),
 
@@ -419,7 +470,6 @@ async function createParentProfile(
 
         }
     );
-
 }
 
 
@@ -433,8 +483,7 @@ async function linkStudentsToParent(
     parentUid
 ) {
 
-    const updatePromises =
-        [];
+    const updatePromises = [];
 
 
     studentsSnapshot.forEach(
@@ -449,7 +498,6 @@ async function linkStudentsToParent(
 
 
             updatePromises.push(
-
                 updateDoc(
                     studentRef,
                     {
@@ -462,7 +510,6 @@ async function linkStudentsToParent(
 
                     }
                 )
-
             );
 
         }
@@ -472,6 +519,80 @@ async function linkStudentsToParent(
     await Promise.all(
         updatePromises
     );
+}
+
+
+
+// ============================================================
+// CLEAN UP FAILED REGISTRATION
+// ============================================================
+
+async function cleanupFailedRegistration(
+    createdUser
+) {
+
+    if (!createdUser) {
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // DELETE FIRESTORE PROFILE
+    // --------------------------------------------------------
+
+    try {
+
+        await deleteDoc(
+            doc(
+                db,
+                "users",
+                createdUser.uid
+            )
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not delete parent Firestore profile:",
+            error
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // DELETE AUTH ACCOUNT
+    // --------------------------------------------------------
+
+    try {
+
+        await deleteUser(
+            createdUser
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not delete Firebase Authentication account:",
+            error
+        );
+
+
+        try {
+
+            await signOut(
+                auth
+            );
+
+        }
+
+        catch (_) {}
+
+    }
 
 }
 
@@ -483,11 +604,40 @@ async function linkStudentsToParent(
 
 if (form) {
 
+
     form.addEventListener(
         "submit",
         async function(event) {
 
+
             event.preventDefault();
+
+
+
+            // =================================================
+            // CLEAR OLD MESSAGES
+            // =================================================
+
+            if (errorMessage) {
+
+                errorMessage.textContent =
+                    "";
+
+                errorMessage.style.display =
+                    "none";
+
+            }
+
+
+            if (successMessage) {
+
+                successMessage.textContent =
+                    "";
+
+                successMessage.style.display =
+                    "none";
+
+            }
 
 
 
@@ -496,27 +646,34 @@ if (form) {
             // =================================================
 
             const name =
-                nameInput.value
-                    .trim();
+                nameInput
+                    ? nameInput.value.trim()
+                    : "";
 
 
             const email =
-                emailInput.value
-                    .trim()
-                    .toLowerCase();
+                emailInput
+                    ? emailInput.value
+                        .trim()
+                        .toLowerCase()
+                    : "";
 
 
             const password =
-                passwordInput.value;
+                passwordInput
+                    ? passwordInput.value
+                    : "";
 
 
             const confirmPassword =
-                confirmPasswordInput.value;
+                confirmPasswordInput
+                    ? confirmPasswordInput.value
+                    : "";
 
 
 
             // =================================================
-            // VALIDATION
+            // VALIDATE REQUIRED FIELDS
             // =================================================
 
             if (
@@ -527,11 +684,29 @@ if (form) {
             ) {
 
                 showError(
-                    "Please complete all fields."
+                    "Please complete all required fields."
                 );
 
                 return;
+            }
 
+
+
+            // =================================================
+            // NAME VALIDATION
+            // =================================================
+
+            if (
+                name.length < 2
+            ) {
+
+                showError(
+                    "Please enter your full name."
+                );
+
+                nameInput.focus();
+
+                return;
             }
 
 
@@ -557,7 +732,6 @@ if (form) {
                 emailInput.focus();
 
                 return;
-
             }
 
 
@@ -577,7 +751,6 @@ if (form) {
                 passwordInput.focus();
 
                 return;
-
             }
 
 
@@ -598,7 +771,6 @@ if (form) {
                 confirmPasswordInput.focus();
 
                 return;
-
             }
 
 
@@ -619,7 +791,13 @@ if (form) {
 
 
 
-            let createdUser = null;
+            // =================================================
+            // CREATED USER
+            // =================================================
+
+            let createdUser =
+                null;
+
 
 
             try {
@@ -627,15 +805,7 @@ if (form) {
 
                 // =================================================
                 // STEP 1
-                // CREATE FIREBASE AUTH ACCOUNT
-                // =================================================
-                //
-                // This MUST happen before accessing Firestore.
-                //
-                // After this succeeds:
-                //
-                // request.auth != null
-                //
+                // CREATE AUTH ACCOUNT
                 // =================================================
 
                 const credential =
@@ -653,16 +823,14 @@ if (form) {
 
                 // =================================================
                 // STEP 2
-                // UPDATE AUTH PROFILE
+                // UPDATE PROFILE
                 // =================================================
 
                 await updateProfile(
                     createdUser,
                     {
-
                         displayName:
                             name
-
                     }
                 );
 
@@ -670,73 +838,7 @@ if (form) {
 
                 // =================================================
                 // STEP 3
-                // FIND STUDENTS
-                // =================================================
-                //
-                // The parent is now authenticated.
-                //
-                // Therefore Firestore rules:
-                //
-                // allow read, write:
-                // if request.auth != null;
-                //
-                // will allow this request.
-                //
-                // =================================================
-
-                const studentsSnapshot =
-                    await findStudentsForParent(
-                        email
-                    );
-
-
-
-                // =================================================
-                // STEP 4
-                // CHECK WHETHER PARENT EMAIL EXISTS
-                // =================================================
-
-                if (
-                    studentsSnapshot.empty
-                ) {
-
-
-                    // ---------------------------------------------
-                    // IMPORTANT
-                    // ---------------------------------------------
-                    // The Auth account has already been created.
-                    //
-                    // Since no student was found, we sign the user
-                    // out rather than leaving them logged in.
-                    //
-                    // We cannot delete the Auth account from the
-                    // client using normal Firebase Authentication
-                    // unless recent authentication/re-authentication
-                    // requirements are satisfied.
-                    //
-                    // ---------------------------------------------
-
-                    await signOut(
-                        auth
-                    );
-
-
-                    throw new Error(
-
-                        "No student record was found using this email.\n\n" +
-
-                        "Please make sure you are using the same " +
-                        "email address that was provided to the school."
-
-                    );
-
-                }
-
-
-
-                // =================================================
-                // STEP 5
-                // CREATE FIRESTORE PARENT PROFILE
+                // CREATE PARENT PROFILE
                 // =================================================
 
                 await createParentProfile(
@@ -748,14 +850,91 @@ if (form) {
 
 
                 // =================================================
-                // STEP 6
-                // LINK ALL STUDENTS
+                // STEP 4
+                // FIND STUDENTS
                 // =================================================
 
-                await linkStudentsToParent(
-                    studentsSnapshot,
-                    createdUser.uid
-                );
+                let studentsSnapshot;
+
+
+                try {
+
+                    studentsSnapshot =
+                        await findStudentsForParent(
+                            email
+                        );
+
+                }
+
+                catch (error) {
+
+                    await cleanupFailedRegistration(
+                        createdUser
+                    );
+
+                    createdUser =
+                        null;
+
+                    throw error;
+                }
+
+
+
+                // =================================================
+                // STEP 5
+                // CHECK STUDENTS
+                // =================================================
+
+                if (
+                    studentsSnapshot.empty
+                ) {
+
+                    await cleanupFailedRegistration(
+                        createdUser
+                    );
+
+                    createdUser =
+                        null;
+
+
+                    throw new Error(
+                        "NO_STUDENT_RECORD"
+                    );
+                }
+
+
+
+                // =================================================
+                // STEP 6
+                // LINK STUDENTS
+                // =================================================
+
+                try {
+
+                    await linkStudentsToParent(
+                        studentsSnapshot,
+                        createdUser.uid
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Unable to link students:",
+                        error
+                    );
+
+
+                    await cleanupFailedRegistration(
+                        createdUser
+                    );
+
+                    createdUser =
+                        null;
+
+                    throw error;
+                }
 
 
 
@@ -799,7 +978,7 @@ if (form) {
 
                 // =================================================
                 // STEP 9
-                // REDIRECT TO LOGIN
+                // REDIRECT
                 // =================================================
 
                 setTimeout(
@@ -812,8 +991,8 @@ if (form) {
                     1800
                 );
 
-
             }
+
 
             catch(error) {
 
@@ -824,16 +1003,50 @@ if (form) {
                 );
 
 
-                showError(
-                    getRegistrationError(
-                        error
-                    )
-                );
 
+                // =================================================
+                // NO STUDENT RECORD ERROR
+                // =================================================
+
+                if (
+                    error.message ===
+                    "NO_STUDENT_RECORD"
+                ) {
+
+                    showError(
+
+                        "No student record was found for this email address.\n\n" +
+
+                        "Please make sure you are using the same email " +
+                        "address that was provided to the school.\n\n" +
+
+                        "If you believe your email is correct, please contact " +
+                        "the school administrator."
+
+                    );
+
+                }
+
+
+                else {
+
+                    showError(
+                        getRegistrationError(
+                            error
+                        )
+                    );
+
+                }
 
             }
 
+
             finally {
+
+
+                // =================================================
+                // RESTORE BUTTON
+                // =================================================
 
                 if (registerBtn) {
 

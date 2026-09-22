@@ -1,113 +1,60 @@
 /* =========================================================
-   ADMISSION FORM
-   WEB3FORMS + SWEETALERT2
-   PHILIP / EBENEZER DAY STAR ACADEMY
+   EBENEZER DAY STAR ACADEMY
+   PUBLIC ADMISSION APPLICATION
+   Saves applications to Firestore Messages
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+import {
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-    /* =====================================================
-       GET ADMISSION FORM
-    ===================================================== */
+import {
+    db
+} from "./firebase-config.js";
 
-    const admissionForm =
-        document.getElementById("admissionForm");
-
-
-    /* =====================================================
-       GET CLASS DROPDOWN
-    ===================================================== */
-
-    const classApplying =
-        document.getElementById("classApplying");
+import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/+esm";
 
 
-    /* =====================================================
-       CLASS LIST
-       EACH CLASS APPEARS ONLY ONCE
-    ===================================================== */
+/* =========================================================
+   GET FORM ELEMENTS
+========================================================= */
 
-    const schoolClasses = [
-        "Nursery",
-        "Primary 1",
-        "Primary 2",
-        "Primary 3",
-        "Primary 4",
-        "JSS 1",
-        "JSS 2"
-    ];
+const admissionForm = document.getElementById("admissionForm");
 
+const submitButton =
+    document.getElementById("admissionSubmitBtn");
 
-    /* =====================================================
-       LOAD CLASS OPTIONS
-       CLEAR FIRST TO PREVENT DUPLICATES
-    ===================================================== */
+const buttonText =
+    document.getElementById("admissionButtonText");
 
-    function loadAdmissionClasses() {
+const spinner =
+    document.getElementById("admissionSpinner");
 
-        if (!classApplying) {
-            return;
-        }
+const formMessage =
+    document.getElementById("admissionFormMessage");
 
 
-        /*
-         * IMPORTANT:
-         * Clear all existing options before adding
-         * the classes again.
-         */
+/* =========================================================
+   CHECK FORM
+========================================================= */
 
-        classApplying.innerHTML =
-            '<option value="">Select Class</option>';
+if (!admissionForm) {
 
+    console.error(
+        "Admission form was not found."
+    );
 
-        /*
-         * Use a Set so the same class can never
-         * be inserted twice.
-         */
+} else {
 
-        const uniqueClasses =
-            [...new Set(schoolClasses)];
-
-
-        uniqueClasses.forEach(className => {
-
-            const option =
-                document.createElement("option");
-
-
-            option.value =
-                className;
-
-
-            option.textContent =
-                className;
-
-
-            classApplying.appendChild(option);
-
-        });
-
-    }
+    console.log(
+        "Admission form JavaScript is working."
+    );
 
 
     /* =====================================================
-       LOAD CLASSES ONCE
-    ===================================================== */
-
-    loadAdmissionClasses();
-
-
-    /* =====================================================
-       STOP HERE IF FORM DOES NOT EXIST
-    ===================================================== */
-
-    if (!admissionForm) {
-        return;
-    }
-
-
-    /* =====================================================
-       ADMISSION FORM SUBMISSION
+       SUBMIT APPLICATION
     ===================================================== */
 
     admissionForm.addEventListener(
@@ -116,280 +63,453 @@ document.addEventListener("DOMContentLoaded", () => {
 
             event.preventDefault();
 
+            console.log(
+                "Admission form submitted."
+            );
 
-            /* =============================================
-               GET IMPORTANT FIELDS
-            ============================================= */
+
+            /* =================================================
+               GET VALUES
+            ================================================= */
 
             const firstName =
                 document
                     .getElementById("studentFirstName")
-                    ?.value
+                    .value
                     .trim();
-
 
             const lastName =
                 document
                     .getElementById("studentLastName")
-                    ?.value
+                    .value
                     .trim();
-
 
             const dob =
                 document
                     .getElementById("studentDob")
-                    ?.value;
-
+                    .value
+                    .trim();
 
             const gender =
                 document
                     .getElementById("studentGender")
-                    ?.value;
+                    .value
+                    .trim();
 
-
-            const selectedClass =
+            const classApplying =
                 document
                     .getElementById("classApplying")
-                    ?.value;
+                    .value
+                    .trim();
 
+            const previousSchool =
+                document
+                    .getElementById("previousSchool")
+                    .value
+                    .trim();
 
             const parentName =
                 document
                     .getElementById("parentName")
-                    ?.value
+                    .value
                     .trim();
-
 
             const parentPhone =
                 document
                     .getElementById("parentPhone")
-                    ?.value
+                    .value
                     .trim();
-
 
             const parentEmail =
                 document
                     .getElementById("parentEmail")
-                    ?.value
-                    .trim();
-
+                    .value
+                    .trim()
+                    .toLowerCase();
 
             const relationship =
                 document
                     .getElementById("relationship")
-                    ?.value;
-
+                    .value
+                    .trim();
 
             const address =
                 document
                     .getElementById("address")
-                    ?.value
+                    .value
                     .trim();
 
 
-            /* =============================================
+            /* =================================================
                VALIDATION
-            ============================================= */
+            ================================================= */
 
-            if (
-                !firstName ||
-                !lastName ||
-                !dob ||
-                !gender ||
-                !selectedClass ||
-                !parentName ||
-                !parentPhone ||
-                !parentEmail ||
-                !relationship ||
-                !address
-            ) {
+            if (!firstName) {
 
-                showWarning(
-                    "Incomplete Application",
-                    "Please complete all required fields before submitting your application."
+                showError(
+                    "Please enter the student's first name."
                 );
 
                 return;
             }
 
 
-            /* =============================================
-               EMAIL VALIDATION
-            ============================================= */
+            if (!lastName) {
 
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-            if (!emailPattern.test(parentEmail)) {
-
-                showWarning(
-                    "Invalid Email",
-                    "Please enter a valid parent or guardian email address."
+                showError(
+                    "Please enter the student's last name."
                 );
 
                 return;
             }
 
 
-            /* =============================================
-               PHONE VALIDATION
-            ============================================= */
+            if (!dob) {
 
-            const phonePattern =
-                /^[0-9+\-\s()]{7,20}$/;
-
-
-            if (!phonePattern.test(parentPhone)) {
-
-                showWarning(
-                    "Invalid Phone Number",
-                    "Please enter a valid parent or guardian phone number."
+                showError(
+                    "Please enter the student's date of birth."
                 );
 
                 return;
             }
 
 
-            /* =============================================
-               GET ALL FORM DATA
-            ============================================= */
+            if (!gender) {
 
-            const formData =
-                new FormData(admissionForm);
+                showError(
+                    "Please select the student's gender."
+                );
 
-
-            /* =============================================
-               MAKE SURE THE CLASS VALUE IS CORRECT
-            ============================================= */
-
-            formData.set(
-                "classApplying",
-                selectedClass
-            );
+                return;
+            }
 
 
-            /* =============================================
-               SHOW LOADING
-            ============================================= */
+            if (!classApplying) {
 
-            showLoading(
-                "Submitting Application...",
-                "Please wait while your admission application is being submitted."
-            );
+                showError(
+                    "Please select the class the student is applying for."
+                );
 
+                return;
+            }
+
+
+            if (!parentName) {
+
+                showError(
+                    "Please enter the parent or guardian's name."
+                );
+
+                return;
+            }
+
+
+            if (!parentPhone) {
+
+                showError(
+                    "Please enter the parent or guardian's phone number."
+                );
+
+                return;
+            }
+
+
+            if (!parentEmail) {
+
+                showError(
+                    "Please enter the parent or guardian's email address."
+                );
+
+                return;
+            }
+
+
+            if (!relationship) {
+
+                showError(
+                    "Please select the parent/guardian relationship."
+                );
+
+                return;
+            }
+
+
+            if (!address) {
+
+                showError(
+                    "Please enter the residential address."
+                );
+
+                return;
+            }
+
+
+            /* =================================================
+               LOADING STATE
+            ================================================= */
+
+            submitButton.disabled = true;
+
+            buttonText.textContent =
+                "Submitting...";
+
+            if (spinner) {
+                spinner.style.display = "inline-block";
+            }
+
+            if (formMessage) {
+                formMessage.textContent = "";
+            }
+
+
+            /* =================================================
+               SAVE TO FIRESTORE
+            ================================================= */
 
             try {
 
-                /* =========================================
-                   SUBMIT TO WEB3FORMS
-                ========================================= */
+                const applicationData = {
 
-                const response =
-                    await fetch(
-                        "https://api.web3forms.com/submit",
-                        {
-                            method: "POST",
-                            body: formData
-                        }
-                    );
+                    /* -----------------------------------------
+                       MESSAGE IDENTIFICATION
+                    ----------------------------------------- */
 
+                    messageType:
+                        "admission",
 
-                /* =========================================
-                   CHECK HTTP RESPONSE
-                ========================================= */
+                    category:
+                        "Admission Application",
 
-                if (!response.ok) {
+                    subject:
+                        `New Admission Application - ${firstName} ${lastName}`,
 
-                    throw new Error(
-                        `HTTP Error: ${response.status}`
-                    );
-
-                }
+                    status:
+                        "unread",
 
 
-                /* =========================================
-                   READ RESPONSE
-                ========================================= */
+                    /* -----------------------------------------
+                       STUDENT INFORMATION
+                    ----------------------------------------- */
 
-                const result =
-                    await response.json();
+                    studentFirstName:
+                        firstName,
 
+                    studentLastName:
+                        lastName,
 
-                /* =========================================
-                   CLOSE LOADING
-                ========================================= */
+                    studentFullName:
+                        `${firstName} ${lastName}`,
 
-                Swal.close();
+                    studentDateOfBirth:
+                        dob,
 
+                    studentGender:
+                        gender,
 
-                /* =========================================
-                   SUCCESS
-                ========================================= */
+                    classApplyingFor:
+                        classApplying,
 
-                if (result.success) {
-
-                    admissionForm.reset();
-
-
-                    /*
-                     * Restore the class dropdown
-                     * after form.reset()
-                     */
-
-                    loadAdmissionClasses();
+                    previousSchool:
+                        previousSchool,
 
 
-                    await showSuccess(
-                        "Application Submitted!",
-                        "Thank you! Your child's admission application has been received successfully."
-                    );
+                    /* -----------------------------------------
+                       PARENT INFORMATION
+                    ----------------------------------------- */
+
+                    parentName:
+                        parentName,
+
+                    parentPhone:
+                        parentPhone,
+
+                    parentEmail:
+                        parentEmail,
+
+                    relationship:
+                        relationship,
 
 
-                    return;
-                }
+                    /* -----------------------------------------
+                       ADDRESS
+                    ----------------------------------------- */
+
+                    residentialAddress:
+                        address,
 
 
-                /* =========================================
-                   WEB3FORMS ERROR
-                ========================================= */
+                    /* -----------------------------------------
+                       MESSAGE DISPLAY FIELDS
+                    ----------------------------------------- */
 
-                showError(
-                    "Application Not Submitted",
-                    result.message ||
-                    "We could not submit your application. Please try again."
+                    name:
+                        parentName,
+
+                    email:
+                        parentEmail,
+
+                    phone:
+                        parentPhone,
+
+                    message:
+                        `ADMISSION APPLICATION
+
+Student:
+${firstName} ${lastName}
+
+Date of Birth:
+${dob}
+
+Gender:
+${gender}
+
+Class Applying For:
+${classApplying}
+
+Previous School:
+${previousSchool || "Not provided"}
+
+Parent/Guardian:
+${parentName}
+
+Relationship:
+${relationship}
+
+Phone:
+${parentPhone}
+
+Email:
+${parentEmail}
+
+Residential Address:
+${address}`,
+
+                    reply:
+                        "",
+
+                    createdAt:
+                        serverTimestamp(),
+
+                    updatedAt:
+                        serverTimestamp()
+                };
+
+
+                await addDoc(
+                    collection(db, "messages"),
+                    applicationData
                 );
 
-            }
+
+                console.log(
+                    "Admission application saved successfully."
+                );
 
 
-            catch (error) {
+                /* =================================================
+                   RESET FORM
+                ================================================= */
+
+                admissionForm.reset();
+
+
+                /* =================================================
+                   SUCCESS MESSAGE
+                ================================================= */
+
+                await Swal.fire({
+
+                    icon: "success",
+
+                    title:
+                        "Application Submitted!",
+
+                    text:
+                        "Thank you. Your child's admission application has been received by Ebenezer Day Star Academy.",
+
+                    confirmButtonText:
+                        "OK",
+
+                    confirmButtonColor:
+                        "#0b1f3a"
+                });
+
+
+            } catch (error) {
 
                 console.error(
-                    "Web3Forms admission error:",
+                    "Error submitting admission application:",
                     error
                 );
 
 
-                /* =========================================
-                   CLOSE LOADING
-                ========================================= */
+                /* =================================================
+                   ERROR MESSAGE
+                ================================================= */
 
-                Swal.close();
+                await Swal.fire({
+
+                    icon: "error",
+
+                    title:
+                        "Application Not Submitted",
+
+                    text:
+                        "We could not submit your application. Please check your internet connection and try again.",
+
+                    confirmButtonText:
+                        "Try Again",
+
+                    confirmButtonColor:
+                        "#0b1f3a"
+                });
 
 
-                /* =========================================
-                   CONNECTION ERROR
-                ========================================= */
+            } finally {
 
-                showError(
-                    "Connection Error",
-                    "Unable to connect to the admission service. Please check your internet connection and try again."
-                );
+                /* =================================================
+                   RESTORE BUTTON
+                ================================================= */
+
+                submitButton.disabled = false;
+
+                buttonText.textContent =
+                    "Submit Application";
+
+                if (spinner) {
+                    spinner.style.display = "none";
+                }
 
             }
 
         }
     );
 
-});
+}
+
+
+/* =========================================================
+   ERROR HELPER
+========================================================= */
+
+function showError(message) {
+
+    Swal.fire({
+
+        icon: "warning",
+
+        title:
+            "Incomplete Application",
+
+        text:
+            message,
+
+        confirmButtonText:
+            "OK",
+
+        confirmButtonColor:
+            "#0b1f3a"
+
+    });
+
+}

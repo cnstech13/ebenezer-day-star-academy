@@ -1,16 +1,210 @@
 /* =========================================================
-   Ebenezer Day Star Academy
-   REPORT CARD PAGE
-   PROFESSIONAL MODERN DESIGN
+   EBENEZER DAY STAR ACADEMY
+   REPORT CARD
 ========================================================= */
+
+:root {
+
+    --school-navy: #0b1f3a;
+    --school-navy-light: #16345d;
+
+    --school-gold: #d4af37;
+    --school-gold-light: #f4d35e;
+
+    --white: #ffffff;
+
+    --light-bg: #f5f7fb;
+
+    --border: #dfe4ec;
+
+    --text: #1e293b;
+
+    --muted: #64748b;
+
+}
 
 
 /* =========================================================
-   PAGE
+   ADMIN LAYOUT
 ========================================================= */
 
-.admin-content {
-    padding-bottom: 60px;
+.admin-layout {
+
+    min-height: 100vh;
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.admin-sidebar {
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--school-navy),
+            #07172b
+        );
+
+}
+
+
+.admin-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.logo-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--school-gold-light),
+            var(--school-gold)
+        );
+
+    color: var(--school-navy);
+
+    font-weight: 900;
+
+    font-size: 12px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,.2);
+
+}
+
+
+.logo-icon span {
+
+    letter-spacing: .5px;
+
+}
+
+
+.admin-nav {
+
+    margin-top: 25px;
+
+}
+
+
+.admin-nav a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.admin-nav a.active {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(244,211,94,.25),
+            rgba(212,175,55,.12)
+        );
+
+    color: var(--school-gold-light);
+
+    border-left:
+        4px solid
+        var(--school-gold);
+
+}
+
+
+.admin-nav .logout-link {
+
+    margin-top: 20px;
+
+    color: #ffb4b4;
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.admin-main {
+
+    background:
+        var(--light-bg);
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+}
+
+
+.admin-header > div:first-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.admin-header small {
+
+    color: var(--muted);
+
+}
+
+
+.admin-header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-weight: 600;
+
 }
 
 
@@ -19,108 +213,221 @@
 ========================================================= */
 
 .admin-title {
-    margin-bottom: 25px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+
 }
+
+
+.page-label {
+
+    display: inline-block;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    color: var(--school-gold);
+
+    margin-bottom: 6px;
+
+}
+
 
 .admin-title h1 {
-    margin: 0 0 8px;
-    font-size: 28px;
-    font-weight: 700;
-    color: #172033;
+
+    margin: 0;
+
+    color: var(--school-navy);
+
 }
 
+
 .admin-title p {
-    margin: 0;
-    color: #718096;
-    font-size: 14px;
+
+    margin-top: 8px;
+
+    color: var(--muted);
+
 }
 
 
 /* =========================================================
-   SELECTION CARD
+   CARD
 ========================================================= */
 
 .admin-card {
-    background: rgba(255, 255, 255, 0.5);
-    color: #000;
-    border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 30px;
 
-    border: 1px solid #e7ebf2;
-    
+    background: var(--white);
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    border:
+        1px solid
+        var(--border);
+
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.06);
+        0 10px 35px
+        rgba(11,31,58,.06);
+
+    margin-bottom: 25px;
+
+}
+
+
+.selection-card {
+
+    border-top:
+        4px solid
+        var(--school-gold);
+
+}
+
+
+.card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.card-header h2 {
+
+    margin: 0;
+
+    color: var(--school-navy);
+
+}
+
+
+.card-header p {
+
+    margin: 6px 0 0;
+
+    color: var(--muted);
+
+}
+
+
+.card-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(212,175,55,.12);
+
+    font-size: 22px;
+
 }
 
 
 /* =========================================================
-   FORM GRID
+   FORM
 ========================================================= */
 
 .form-grid {
-    display: grid;
-    
-    background: rgba(255, 255, 255, 0.5);
-    color: #000;
-    grid-template-columns:
-        repeat(4, 1fr);
 
-    gap: 20px;
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
+
+    gap: 18px;
+
 }
 
 
 .form-group {
+
     display: flex;
+
     flex-direction: column;
+
     gap: 8px;
+
 }
 
 
 .form-group label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #374151;
+
+    font-weight: 700;
+
+    color: var(--text);
+
+    font-size: 14px;
+
 }
 
 
 .form-group select,
-.form-group input {
+.form-group input,
+.form-group textarea {
 
     width: 100%;
 
-    padding: 12px 14px;
+    min-height: 46px;
 
-    border: 1px solid #d9dee8;
+    padding: 11px 13px;
 
-    border-radius: 9px;
+    border:
+        1px solid
+        var(--border);
 
-    background: #ffffff;
+    border-radius: 10px;
 
-    color: #1f2937;
+    background: #fff;
 
-    font-size: 14px;
+    color: var(--text);
 
     outline: none;
 
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+    font: inherit;
+
+    box-sizing: border-box;
+
 }
 
 
 .form-group select:focus,
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus {
 
-    border-color: #2563eb;
+    border-color:
+        var(--school-gold);
 
     box-shadow:
-        0 0 0 3px rgba(
-            37,
-            99,
-            235,
-            0.10
-        );
+        0 0 0 3px
+        rgba(212,175,55,.12);
+
 }
 
 
@@ -128,47 +435,89 @@
    GENERATE BUTTON
 ========================================================= */
 
-#generateReportBtn {
+.generate-area {
+
+    margin-top: 22px;
+
+}
+
+
+.btn {
 
     border: none;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
-    padding: 12px 22px;
+    padding: 12px 20px;
 
-    font-size: 14px;
-
-    font-weight: 600;
+    min-height: 44px;
 
     cursor: pointer;
 
+    font-weight: 700;
+
+    font-size: 14px;
+
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+
 }
 
 
-#generateReportBtn:hover {
+.btn:hover {
 
-    transform: translateY(-1px);
+    transform:
+        translateY(-1px);
 
-    box-shadow:
-        0 6px 15px rgba(
-            37,
-            99,
-            235,
-            0.20
-        );
 }
 
 
-#generateReportBtn:disabled {
+.btn:disabled {
 
-    opacity: 0.6;
+    opacity: .65;
 
     cursor: not-allowed;
 
     transform: none;
+
+}
+
+
+.btn-primary {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--school-navy),
+            var(--school-navy-light)
+        );
+
+    color: #fff;
+
+    box-shadow:
+        0 7px 18px
+        rgba(11,31,58,.2);
+
+}
+
+
+.btn-secondary {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--school-gold-light),
+            var(--school-gold)
+        );
+
+    color: var(--school-navy);
+
+    box-shadow:
+        0 7px 18px
+        rgba(212,175,55,.2);
+
 }
 
 
@@ -178,27 +527,24 @@
 
 .report-card {
 
-    width: 100%;
+    background: #fff;
 
-    max-width: 1200px;
-
-    margin: 0 auto;
-
-    background: #ffffff;
+    border:
+        1px solid
+        #d9dee8;
 
     border-radius: 18px;
 
-    padding: 35px;
-
-    border: 1px solid #e3e7ee;
+    overflow: hidden;
 
     box-shadow:
-        0 12px 40px rgba(
-            15,
-            23,
-            42,
-            0.08
-        );
+        0 12px 40px
+        rgba(11,31,58,.08);
+
+    padding: 30px;
+
+    margin-top: 30px;
+
 }
 
 
@@ -218,19 +564,26 @@
 
     text-align: center;
 
-    padding-bottom: 25px;
+    padding-bottom: 22px;
 
-    border-bottom: 3px solid #1d4ed8;
+    border-bottom:
+        3px solid
+        var(--school-gold);
 
-    position: relative;
 }
 
 
 .school-logo {
 
-    width: 78px;
+    width: 86px;
 
-    height: 78px;
+    height: 86px;
+
+    min-width: 86px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
 
     display: flex;
 
@@ -238,60 +591,76 @@
 
     justify-content: center;
 
-    border-radius: 50%;
-
     background:
         linear-gradient(
             135deg,
-            #1d4ed8,
-            #2563eb
+            var(--school-navy),
+            var(--school-navy-light)
         );
 
-    color: #ffffff;
+    border:
+        4px solid
+        var(--school-gold);
 
-    font-size: 25px;
+    color: var(--school-gold-light);
 
-    font-weight: 800;
+    font-size: 14px;
 
-    box-shadow:
-        0 8px 20px rgba(
-            37,
-            99,
-            235,
-            0.25
-        );
+    font-weight: 900;
+
 }
 
 
-.report-school-header h1 {
+.school-logo img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+
+.logo-fallback {
+
+    display: flex;
+
+}
+
+
+.school-header-text h1 {
 
     margin: 0;
 
-    color: #111827;
+    color: var(--school-navy);
 
     font-size: 27px;
 
-    letter-spacing: 1px;
-
-    font-weight: 800;
 }
 
 
-.report-school-header p {
+.school-header-text p {
 
-    margin: 5px 0;
+    margin: 4px 0;
 
-    color: #667085;
+    color: #4b5563;
 
     font-size: 13px;
+
 }
 
 
-.report-school-header p:first-of-type {
+.school-header-text .school-motto {
 
-    color: #1d4ed8;
+    color: var(--school-gold);
 
-    font-weight: 600;
+    font-weight: 800;
+
+    font-style: italic;
+
+    font-size: 15px;
+
 }
 
 
@@ -303,33 +672,34 @@
 
     text-align: center;
 
-    padding: 22px 10px;
+    padding:
+        22px 10px;
 
-    margin-bottom: 22px;
 }
 
 
 .report-title h2 {
 
-    margin: 0 0 8px;
+    margin: 0;
+
+    color: var(--school-navy);
 
     font-size: 20px;
 
-    color: #172033;
+    letter-spacing: .7px;
 
-    letter-spacing: 1px;
 }
 
 
 .report-title p {
 
-    margin: 0;
+    margin:
+        7px 0 0;
 
-    font-size: 14px;
+    color: var(--school-gold);
 
-    color: #64748b;
+    font-weight: 800;
 
-    font-weight: 600;
 }
 
 
@@ -342,53 +712,92 @@
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
 
-    gap: 12px;
+    gap: 0;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    overflow: hidden;
 
     margin-bottom: 25px;
+
 }
 
 
 .student-report-info > div {
 
-    background: #f8fafc;
-
-    border: 1px solid #e5eaf1;
-
-    border-radius: 10px;
-
     padding: 13px 15px;
 
-    min-height: 55px;
+    border-bottom:
+        1px solid
+        var(--border);
+
+}
+
+
+.student-report-info > div:nth-child(
+    odd
+) {
+
+    border-right:
+        1px solid
+        var(--border);
+
 }
 
 
 .student-report-info strong {
 
-    display: block;
+    display: inline-block;
 
-    margin-bottom: 5px;
+    color: var(--school-navy);
 
-    font-size: 11px;
+    margin-right: 5px;
 
-    color: #64748b;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.5px;
 }
 
 
 .student-report-info span {
 
-    display: block;
+    color: #475569;
 
-    color: #172033;
+}
 
-    font-size: 14px;
 
-    font-weight: 600;
+/* =========================================================
+   SECTION
+========================================================= */
+
+.report-section {
+
+    margin-top: 25px;
+
+}
+
+
+.report-section h3 {
+
+    color: var(--school-navy);
+
+    margin:
+        0 0 13px;
+
+    padding-bottom: 9px;
+
+    border-bottom:
+        2px solid
+        var(--school-gold);
+
+    font-size: 17px;
+
 }
 
 
@@ -396,114 +805,164 @@
    TABLE WRAPPER
 ========================================================= */
 
-.report-table-wrapper {
+.report-table-wrapper,
+.conduct-table-wrapper {
 
     width: 100%;
 
     overflow-x: auto;
 
-    border-radius: 10px;
+    -webkit-overflow-scrolling: touch;
 
-    border: 1px solid #dfe5ed;
-
-    margin-bottom: 25px;
 }
 
 
 /* =========================================================
-   RESULT TABLE
+   RESULTS TABLE
 ========================================================= */
 
 .report-table {
 
     width: 100%;
 
-    min-width: 1000px;
+    min-width: 950px;
 
     border-collapse: collapse;
 
-    background: #ffffff;
-
     font-size: 12px;
+
 }
 
 
 .report-table th {
 
     background:
-        linear-gradient(
-            135deg,
-            #172554,
-            #1d4ed8
-        );
+        var(--school-navy);
 
-    color: #ffffff;
+    color: #fff;
 
-    padding: 12px 8px;
+    padding: 10px 7px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.2);
 
     text-align: center;
 
-    font-size: 11px;
+    white-space: nowrap;
 
-    font-weight: 700;
-
-    border-right:
-        1px solid rgba(
-            255,
-            255,
-            255,
-            0.15
-        );
 }
 
 
 .report-table th small {
 
-    font-size: 9px;
+    opacity: .85;
 
-    opacity: 0.8;
+    font-size: 10px;
+
 }
 
 
 .report-table td {
 
-    padding: 11px 8px;
+    padding: 9px 7px;
+
+    border:
+        1px solid
+        var(--border);
 
     text-align: center;
 
-    border-bottom:
-        1px solid #e8edf3;
+    color: var(--text);
 
-    color: #344054;
 }
 
 
-.report-table td:nth-child(2) {
+.report-table tbody tr:nth-child(
+    even
+) {
 
-    text-align: left;
+    background: #f8fafc;
 
-    font-weight: 600;
-
-    color: #172033;
-}
-
-
-.report-table tbody tr {
-
-    transition:
-        background 0.15s ease;
 }
 
 
 .report-table tbody tr:hover {
 
-    background: #f8fafc;
+    background:
+        rgba(212,175,55,.08);
+
 }
 
 
-.report-table tbody tr:nth-child(even) {
+.report-table .subject-name {
 
-    background: #fbfcfe;
+    text-align: left;
+
+    font-weight: 700;
+
+    min-width: 150px;
+
+}
+
+
+.report-table .total-cell {
+
+    font-weight: 800;
+
+}
+
+
+.grade-cell {
+
+    font-weight: 900;
+
+}
+
+
+/* =========================================================
+   GRADE STYLES
+========================================================= */
+
+.grade-A {
+
+    color: #15803d;
+
+}
+
+
+.grade-B {
+
+    color: #2563eb;
+
+}
+
+
+.grade-C {
+
+    color: #ca8a04;
+
+}
+
+
+.grade-D {
+
+    color: #ea580c;
+
+}
+
+
+.grade-E {
+
+    color: #b45309;
+
+}
+
+
+.grade-F {
+
+    color: #dc2626;
+
 }
 
 
@@ -516,27 +975,33 @@
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
 
-    gap: 15px;
+    gap: 12px;
 
-    margin: 25px 0;
+    margin-top: 20px;
+
 }
 
 
 .report-summary > div {
 
-    position: relative;
+    background:
+        #f8fafc;
 
-    background: #f8fafc;
-
-    border: 1px solid #e4e9f0;
+    border:
+        1px solid
+        var(--border);
 
     border-radius: 12px;
 
-    padding: 18px;
+    padding: 15px;
 
     text-align: center;
+
 }
 
 
@@ -544,15 +1009,12 @@
 
     display: block;
 
-    color: #64748b;
+    color: var(--muted);
 
-    font-size: 11px;
+    font-size: 12px;
 
-    text-transform: uppercase;
+    margin-bottom: 7px;
 
-    letter-spacing: 0.5px;
-
-    margin-bottom: 8px;
 }
 
 
@@ -560,49 +1022,12 @@
 
     display: block;
 
-    color: #172033;
+    color: var(--school-navy);
 
-    font-size: 22px;
+    font-size: 21px;
 
-    font-weight: 800;
-}
+    font-weight: 900;
 
-
-.report-summary > div:nth-child(4) span {
-
-    color: #1d4ed8;
-}
-
-
-/* =========================================================
-   REPORT SECTIONS
-========================================================= */
-
-.report-section {
-
-    margin-top: 28px;
-
-    padding: 22px;
-
-    border: 1px solid #e4e9f0;
-
-    border-radius: 14px;
-
-    background: #ffffff;
-}
-
-
-.report-section h3 {
-
-    margin: 0 0 18px;
-
-    font-size: 16px;
-
-    color: #172033;
-
-    padding-bottom: 12px;
-
-    border-bottom: 2px solid #eef2f7;
 }
 
 
@@ -615,23 +1040,31 @@
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
 
-    gap: 15px;
+    gap: 14px;
+
 }
 
 
 .attendance-grid > div {
 
-    background: #f8fafc;
+    border:
+        1px solid
+        var(--border);
 
-    border: 1px solid #e5eaf1;
+    border-radius: 12px;
 
-    border-radius: 10px;
-
-    padding: 16px;
+    padding: 17px;
 
     text-align: center;
+
+    background:
+        #f8fafc;
+
 }
 
 
@@ -639,33 +1072,25 @@
 
     display: block;
 
-    font-size: 12px;
-
-    color: #64748b;
+    color: var(--muted);
 
     margin-bottom: 7px;
+
+    font-size: 13px;
+
 }
 
 
 .attendance-grid span {
 
+    display: block;
+
     font-size: 24px;
 
-    font-weight: 800;
+    font-weight: 900;
 
-    color: #172033;
-}
+    color: var(--school-navy);
 
-
-.attendance-grid > div:nth-child(2) span {
-
-    color: #15803d;
-}
-
-
-.attendance-grid > div:nth-child(3) span {
-
-    color: #dc2626;
 }
 
 
@@ -679,43 +1104,40 @@
 
     border-collapse: collapse;
 
-    border: 1px solid #e3e8ef;
-
-    border-radius: 10px;
-
-    overflow: hidden;
 }
 
 
 .conduct-table th {
 
-    padding: 12px;
+    background:
+        var(--school-navy);
 
-    background: #f1f5f9;
+    color: #fff;
 
-    color: #334155;
+    padding: 11px;
 
     text-align: left;
 
-    font-size: 12px;
 }
 
 
 .conduct-table td {
 
-    padding: 10px 12px;
+    border:
+        1px solid
+        var(--border);
 
-    border-top: 1px solid #e8edf3;
+    padding: 9px;
 
-    color: #344054;
-
-    font-size: 13px;
 }
 
 
-.conduct-table td:last-child {
+.conduct-table td:first-child {
 
-    width: 220px;
+    font-weight: 600;
+
+    color: var(--text);
+
 }
 
 
@@ -723,33 +1145,30 @@
 
     width: 100%;
 
-    padding: 9px 10px;
+    min-height: 40px;
 
-    border: 1px solid #d6dce5;
+    padding: 8px 10px;
 
-    border-radius: 7px;
+    border:
+        1px solid
+        var(--border);
 
-    background: #ffffff;
+    border-radius: 8px;
 
-    font-size: 13px;
+    background: #fff;
 
-    color: #344054;
+    color: var(--text);
 
-    outline: none;
 }
 
 
 .conduct-rating:focus {
 
-    border-color: #2563eb;
+    outline: none;
 
-    box-shadow:
-        0 0 0 3px rgba(
-            37,
-            99,
-            235,
-            0.10
-        );
+    border-color:
+        var(--school-gold);
+
 }
 
 
@@ -762,11 +1181,15 @@
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
 
-    gap: 20px;
+    gap: 18px;
 
     margin-top: 28px;
+
 }
 
 
@@ -776,17 +1199,17 @@
 
     flex-direction: column;
 
-    gap: 9px;
+    gap: 8px;
+
 }
 
 
 .comment-box label {
 
-    font-size: 13px;
+    font-weight: 800;
 
-    font-weight: 700;
+    color: var(--school-navy);
 
-    color: #374151;
 }
 
 
@@ -794,39 +1217,36 @@
 
     width: 100%;
 
-    min-height: 110px;
+    min-height: 100px;
 
     resize: vertical;
 
     padding: 12px;
 
-    border-radius: 9px;
+    border:
+        1px solid
+        var(--border);
 
-    border: 1px solid #d7dde6;
+    border-radius: 10px;
 
-    font-family: inherit;
-
-    font-size: 13px;
-
-    color: #1f2937;
-
-    outline: none;
+    font: inherit;
 
     box-sizing: border-box;
+
 }
 
 
 .comment-box textarea:focus {
 
-    border-color: #2563eb;
+    outline: none;
+
+    border-color:
+        var(--school-gold);
 
     box-shadow:
-        0 0 0 3px rgba(
-            37,
-            99,
-            235,
-            0.10
-        );
+        0 0 0 3px
+        rgba(212,175,55,.1);
+
 }
 
 
@@ -839,33 +1259,42 @@
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
 
-    gap: 100px;
+    gap: 80px;
 
-    margin-top: 45px;
+    margin-top: 55px;
+
+}
+
+
+.signature-section > div {
 
     text-align: center;
+
 }
 
 
 .signature-line {
 
-    height: 1px;
-
-    background: #374151;
+    border-top:
+        1px solid
+        #334155;
 
     margin-bottom: 8px;
+
 }
 
 
 .signature-section span {
 
-    font-size: 12px;
+    font-size: 13px;
 
-    font-weight: 600;
+    color: var(--muted);
 
-    color: #475467;
 }
 
 
@@ -875,245 +1304,92 @@
 
 .promotion-box {
 
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
     margin-top: 30px;
 
-    padding: 17px;
+    padding: 15px;
 
-    background: #f8fafc;
+    background:
+        #f8fafc;
 
-    border: 1px solid #e2e8f0;
+    border:
+        1px solid
+        var(--border);
 
-    border-radius: 10px;
+    border-radius: 12px;
+
 }
 
 
 .promotion-box label {
 
-    display: block;
+    font-weight: 800;
 
-    margin-bottom: 8px;
+    color: var(--school-navy);
 
-    font-size: 13px;
-
-    font-weight: 700;
-
-    color: #374151;
 }
 
 
 .promotion-box select {
 
-    width: 100%;
+    min-height: 42px;
 
-    max-width: 300px;
+    padding:
+        8px 12px;
 
-    padding: 10px 12px;
-
-    border: 1px solid #d6dce5;
+    border:
+        1px solid
+        var(--border);
 
     border-radius: 8px;
 
-    background: #ffffff;
+    background: #fff;
 
-    font-size: 13px;
-
-    outline: none;
-}
-
-
-.promotion-box select:focus {
-
-    border-color: #2563eb;
 }
 
 
 /* =========================================================
-   REPORT ACTIONS
+   ACTIONS
 ========================================================= */
 
 .report-actions {
 
     display: flex;
 
-    justify-content: flex-end;
+    justify-content: center;
 
-    gap: 12px;
+    gap: 14px;
 
     margin-top: 30px;
 
-    padding-top: 20px;
+    padding-top: 22px;
 
-    border-top: 1px solid #e5eaf1;
-}
-
-
-.report-actions button {
-
-    border: none;
-
-    border-radius: 9px;
-
-    padding: 12px 20px;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-#saveReportCardBtn {
-
-    background: #15803d;
-
-    color: #ffffff;
-}
-
-
-#printReportBtn {
-
-    background: #1d4ed8;
-
-    color: #ffffff;
-}
-
-
-.report-actions button:hover {
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 6px 15px rgba(
-            15,
-            23,
-            42,
-            0.15
-        );
-}
-
-
-/* =========================================================
-   RESPONSIVE — TABLET
-========================================================= */
-
-@media (max-width: 1000px) {
-
-    .form-grid {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-    }
-
-
-    .student-report-info {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-    }
-
-
-    .report-summary {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-    }
+    border-top:
+        1px solid
+        var(--border);
 
 }
 
 
 /* =========================================================
-   RESPONSIVE — MOBILE
+   MOBILE
 ========================================================= */
 
-@media (max-width: 650px) {
-
-    .admin-content {
-
-        padding: 15px;
-
-    }
-
-
-    .admin-title h1 {
-
-        font-size: 23px;
-
-    }
-
-
-    .admin-card {
-
-        padding: 18px;
-
-        border-radius: 12px;
-
-    }
-
+@media (
+    max-width: 800px
+) {
 
     .form-grid {
 
         grid-template-columns:
             1fr;
-
-        gap: 15px;
-
-    }
-
-
-    .report-card {
-
-        padding: 18px;
-
-        border-radius: 12px;
-
-    }
-
-
-    .report-school-header {
-
-        flex-direction: column;
-
-        gap: 12px;
-
-    }
-
-
-    .school-logo {
-
-        width: 65px;
-
-        height: 65px;
-
-        font-size: 20px;
-
-    }
-
-
-    .report-school-header h1 {
-
-        font-size: 21px;
-
-    }
-
-
-    .report-school-header p {
-
-        font-size: 11px;
-
-    }
-
-
-    .report-title h2 {
-
-        font-size: 17px;
 
     }
 
@@ -1126,33 +1402,22 @@
     }
 
 
+    .student-report-info > div:nth-child(
+        odd
+    ) {
+
+        border-right: none;
+
+    }
+
+
     .report-summary {
 
         grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 10px;
-
-    }
-
-
-    .report-summary > div {
-
-        padding: 13px 8px;
-
-    }
-
-
-    .report-summary span {
-
-        font-size: 19px;
-
-    }
-
-
-    .report-section {
-
-        padding: 15px;
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
 
     }
 
@@ -1178,7 +1443,30 @@
         grid-template-columns:
             1fr;
 
-        gap: 40px;
+        gap: 45px;
+
+    }
+
+
+    .report-school-header {
+
+        flex-direction: column;
+
+    }
+
+
+    .school-header-text h1 {
+
+        font-size: 22px;
+
+    }
+
+
+    .report-card {
+
+        padding: 18px;
+
+        border-radius: 12px;
 
     }
 
@@ -1190,14 +1478,76 @@
     }
 
 
-    .report-actions button {
+    .report-actions .btn {
 
         width: 100%;
 
     }
 
+}
 
-    #generateReportBtn {
+
+@media (
+    max-width: 500px
+) {
+
+    .report-summary {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .admin-card {
+
+        padding: 16px;
+
+    }
+
+
+    .school-logo {
+
+        width: 72px;
+
+        height: 72px;
+
+        min-width: 72px;
+
+    }
+
+
+    .school-header-text h1 {
+
+        font-size: 19px;
+
+    }
+
+
+    .school-header-text p {
+
+        font-size: 11px;
+
+    }
+
+
+    .report-title h2 {
+
+        font-size: 16px;
+
+    }
+
+
+    .promotion-box {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .promotion-box select {
 
         width: 100%;
 
@@ -1207,14 +1557,23 @@
 
 
 /* =========================================================
-   PRINT STYLES
+   PRINT
 ========================================================= */
 
 @media print {
 
+    @page {
+
+        size: A4 portrait;
+
+        margin: 10mm;
+
+    }
+
+
     body {
 
-        background: #ffffff !important;
+        background: #fff !important;
 
     }
 
@@ -1222,7 +1581,7 @@
     .admin-sidebar,
     .admin-header,
     .admin-title,
-    .admin-card,
+    .selection-card,
     .report-actions {
 
         display: none !important;
@@ -1230,25 +1589,19 @@
     }
 
 
-    .admin-layout {
+    .admin-layout,
+    .admin-main,
+    .admin-content {
 
         display: block !important;
 
-    }
-
-
-    .admin-main {
+        width: 100% !important;
 
         margin: 0 !important;
 
         padding: 0 !important;
 
-    }
-
-
-    .admin-content {
-
-        padding: 0 !important;
+        background: #fff !important;
 
     }
 
@@ -1257,13 +1610,13 @@
 
         display: block !important;
 
-        width: 100% !important;
-
-        max-width: none !important;
-
         margin: 0 !important;
 
-        padding: 15px !important;
+        padding: 8mm !important;
+
+        width: 100% !important;
+
+        box-sizing: border-box !important;
 
         border: none !important;
 
@@ -1276,81 +1629,68 @@
 
     .report-school-header {
 
-        border-bottom:
-            2px solid #000 !important;
+        page-break-inside: avoid;
+
+    }
+
+
+    .report-table-wrapper {
+
+        overflow: visible !important;
 
     }
 
 
     .report-table {
 
-        font-size: 9px !important;
+        min-width: 0 !important;
+
+        font-size: 8px !important;
 
     }
 
 
-    .report-table th {
-
-        background: #eeeeee !important;
-
-        color: #000 !important;
-
-        border:
-            1px solid #000 !important;
-
-    }
-
-
+    .report-table th,
     .report-table td {
 
-        border:
-            1px solid #000 !important;
-
-        padding: 5px !important;
+        padding: 4px 3px !important;
 
     }
 
 
-    .student-report-info > div,
-    .report-summary > div,
-    .report-section,
-    .promotion-box {
+    .report-section {
 
-        border:
-            1px solid #999 !important;
-
-        background: #ffffff !important;
+        page-break-inside: avoid;
 
     }
 
 
-    .conduct-table th,
-    .conduct-table td {
+    .comments-section {
 
-        border:
-            1px solid #999 !important;
+        page-break-inside: avoid;
 
     }
 
 
-    .comment-box textarea {
+    .signature-section {
 
-        border:
-            1px solid #999 !important;
+        page-break-inside: avoid;
 
     }
 
-}
 
+    .conduct-rating {
 
-/* =========================================================
-   PRINT PAGE SETTINGS
-========================================================= */
+        border: none !important;
 
-@page {
+        appearance: none;
 
-    size: A4 portrait;
+        -webkit-appearance: none;
 
-    margin: 10mm;
+        background: transparent !important;
+
+        padding: 0 !important;
+
+    }
 
 }

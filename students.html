@@ -9,34 +9,41 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-<meta name="theme-color" content="lightblue">
 
-    <title>Students | Students | Ebenezer Day Star Academy</title>
+    <meta name="theme-color" content="lightblue">
+
+    <title>Students | Ebenezer Day Star Academy</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="students.css">
     <link rel="stylesheet" href="admin-login.css">
+    <link rel="stylesheet" href="students.css">
 
-    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
+
 </head>
-
 
 <body>
 
-
 <div class="admin-layout">
 
-
-    <!-- ======================================================
+    <!-- =====================================================
          SIDEBAR
-    ======================================================= -->
+    ====================================================== -->
 
     <aside class="admin-sidebar">
 
         <div class="admin-brand">
 
             <div class="logo-icon">
-                PMS
+
+                <img
+                    src="badge.jpg"
+                    alt="Ebenezer Day Star Academy"
+                >
+
             </div>
 
             <div>
@@ -56,7 +63,6 @@
 
         <nav>
 
-           
             <a href="logout.html" id="logoutBtn">
                 🚪 Logout
             </a>
@@ -66,13 +72,11 @@
     </aside>
 
 
-
-    <!-- ======================================================
+    <!-- =====================================================
          MAIN CONTENT
-    ======================================================= -->
+    ====================================================== -->
 
     <main class="admin-main">
-
 
         <!-- HEADER -->
 
@@ -89,13 +93,11 @@
         </header>
 
 
-
-        <!-- ==================================================
+        <!-- =================================================
              PAGE CONTENT
-        =================================================== -->
+        ================================================== -->
 
         <section class="admin-content">
-
 
             <!-- PAGE HEADER -->
 
@@ -108,17 +110,16 @@
                     </h1>
 
                     <p>
-                        Manage all registered students and
-                        link parent portal accounts.
+                        Manage student records and information.
                     </p>
 
                 </div>
 
 
                 <button
+                    type="button"
                     class="btn btn-primary"
                     id="addStudentBtn"
-                    type="button"
                 >
                     + Add Student
                 </button>
@@ -126,39 +127,66 @@
             </div>
 
 
-
-            <!-- ==================================================
-                 SEARCH / FILTER
-            =================================================== -->
+            <!-- =================================================
+                 SEARCH AND FILTER
+            ================================================== -->
 
             <div class="student-toolbar">
+
+                <!-- SEARCH -->
 
                 <input
                     type="search"
                     id="studentSearch"
-                    placeholder="Search by name or student ID..."
+                    placeholder="Search students..."
+                    autocomplete="off"
                 >
 
 
+                <!-- CLASS FILTER -->
+
                 <select id="classFilter">
 
-<option value="Nursery">Nursery</option>
-<option value="Primary 1">Primary 1</option>
-<option value="Primary 2">Primary 2</option>
-<option value="Primary 3">Primary 3</option>
-<option value="Primary 4">Primary 4</option>
-<option value="JSS 1">JSS 1</option>
-<option value="JSS 2">JSS 2</option>
+                    <option value="">
+                        All Levels
+                    </option>
+
+                    <option value="Nursery">
+                        Nursery
+                    </option>
+
+                    <option value="Primary 1">
+                        Primary 1
+                    </option>
+
+                    <option value="Primary 2">
+                        Primary 2
+                    </option>
+
+                    <option value="Primary 3">
+                        Primary 3
+                    </option>
+
+                    <option value="Primary 4">
+                        Primary 4
+                    </option>
+
+                    <option value="JSS 1">
+                        JSS 1
+                    </option>
+
+                    <option value="JSS 2">
+                        JSS 2
+                    </option>
 
                 </select>
 
             </div>
 
 
-
-            <!-- ==================================================
+            <!-- =================================================
                  STUDENTS TABLE
-            =================================================== -->
+            ================================================== -->
 
             <div class="admin-table-container">
 
@@ -188,8 +216,6 @@
                                 Parent Phone
                             </th>
 
-                            
-
                             <th>
                                 Status
                             </th>
@@ -204,11 +230,12 @@
 
 
                     <tbody id="studentsTableBody">
-
                     </tbody>
 
                 </table>
 
+
+                <!-- EMPTY STATE -->
 
                 <div
                     id="emptyStudents"
@@ -224,21 +251,18 @@
                     </h3>
 
                     <p>
-                        Add your first student to begin
-                        managing student records.
+                        Add your first student.
                     </p>
 
                 </div>
 
             </div>
 
-
         </section>
 
     </main>
 
 </div>
-
 
 
 <!-- =========================================================
@@ -249,7 +273,6 @@
     class="modal"
     id="studentModal"
 >
-
 
     <div class="modal-content">
 
@@ -265,16 +288,17 @@
                 </h2>
 
                 <p>
-                    Enter the student's information.
+                    Enter student information.
                 </p>
 
             </div>
 
 
             <button
+                type="button"
                 class="modal-close"
                 id="closeStudentModal"
-                type="button"
+                aria-label="Close"
             >
                 ×
             </button>
@@ -282,29 +306,18 @@
         </div>
 
 
-
-        <!-- ==================================================
+        <!-- =================================================
              STUDENT FORM
-        =================================================== -->
+        ================================================== -->
 
         <form id="studentForm">
 
-
-            <!-- FIRESTORE DOCUMENT ID -->
+            <!-- EDITING FIRESTORE ID -->
 
             <input
                 type="hidden"
                 id="editingStudentId"
             >
-
-
-            <!-- PARENT FIREBASE UID -->
-
-            <input
-                type="hidden"
-                id="parentUid"
-            >
-
 
 
             <div class="form-grid">
@@ -321,11 +334,12 @@
                     <input
                         type="text"
                         id="firstName"
+                        placeholder="Enter first name"
+                        autocomplete="given-name"
                         required
                     >
 
                 </div>
-
 
 
                 <!-- LAST NAME -->
@@ -339,11 +353,12 @@
                     <input
                         type="text"
                         id="lastName"
+                        placeholder="Enter last name"
+                        autocomplete="family-name"
                         required
                     >
 
                 </div>
-
 
 
                 <!-- DATE OF BIRTH -->
@@ -363,7 +378,6 @@
                 </div>
 
 
-
                 <!-- GENDER -->
 
                 <div class="form-group">
@@ -377,7 +391,11 @@
                         required
                     >
 
-                        <option value="">
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
                             Select Gender
                         </option>
 
@@ -394,7 +412,6 @@
                 </div>
 
 
-
                 <!-- CLASS -->
 
                 <div class="form-group">
@@ -408,18 +425,45 @@
                         required
                     >
 
-<option value="Nursery">Nursery</option>
-<option value="Primary 1">Primary 1</option>
-<option value="Primary 2">Primary 2</option>
-<option value="Primary 3">Primary 3</option>
-<option value="Primary 4">Primary 4</option>
-<option value="JSS 1">JSS 1</option>
-<option value="JSS 2">JSS 2</option>
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
+                            Select Level
+                        </option>
 
-                </select>
+                        <option value="Nursery">
+                            Nursery
+                        </option>
+
+                        <option value="Primary 1">
+                            Primary 1
+                        </option>
+
+                        <option value="Primary 2">
+                            Primary 2
+                        </option>
+
+                        <option value="Primary 3">
+                            Primary 3
+                        </option>
+
+                        <option value="Primary 4">
+                            Primary 4
+                        </option>
+
+                        <option value="JSS 1">
+                            JSS 1
+                        </option>
+
+                        <option value="JSS 2">
+                            JSS 2
+                        </option>
+
+                    </select>
 
                 </div>
-
 
 
                 <!-- ADMISSION DATE -->
@@ -439,7 +483,6 @@
                 </div>
 
 
-
                 <!-- PARENT NAME -->
 
                 <div class="form-group">
@@ -451,11 +494,12 @@
                     <input
                         type="text"
                         id="parentName"
+                        placeholder="Enter parent name"
+                        autocomplete="name"
                         required
                     >
 
                 </div>
-
 
 
                 <!-- PARENT PHONE -->
@@ -463,17 +507,18 @@
                 <div class="form-group">
 
                     <label for="parentPhone">
-                        Parent Phone *
+                        Parent / Guardian Phone *
                     </label>
 
                     <input
                         type="tel"
                         id="parentPhone"
+                        placeholder="e.g. 08012345678"
+                        autocomplete="tel"
                         required
                     >
 
                 </div>
-
 
 
                 <!-- PARENT EMAIL -->
@@ -488,25 +533,23 @@
                         type="email"
                         id="parentEmail"
                         placeholder="parent@example.com"
+                        autocomplete="email"
                     >
+
+                    <small>
+                        Use the same email the parent will use
+                        when registering for the Parent Portal.
+                    </small>
 
                 </div>
 
 
-
-                <!-- ==================================================
-                     PARENT ACCOUNT LINK
-                =================================================== -->
-
-                
-
-
-                <!-- STUDENT STATUS -->
+                <!-- STATUS -->
 
                 <div class="form-group">
 
                     <label for="studentStatus">
-                        Student Status
+                        Status
                     </label>
 
                     <select id="studentStatus">
@@ -524,33 +567,31 @@
                 </div>
 
 
-
                 <!-- ADDRESS -->
 
                 <div
                     class="form-group"
-                    style="grid-column:1 / -1;"
+                    style="grid-column: 1 / -1;"
                 >
 
                     <label for="studentAddress">
-                        Address
+                        Home Address
                     </label>
 
                     <textarea
                         id="studentAddress"
                         rows="3"
+                        placeholder="Enter student's home address"
                     ></textarea>
 
                 </div>
 
-
             </div>
 
 
-
-            <!-- ==================================================
+            <!-- =================================================
                  MODAL ACTIONS
-            =================================================== -->
+            ================================================== -->
 
             <div class="modal-actions">
 
@@ -572,7 +613,6 @@
 
             </div>
 
-
         </form>
 
     </div>
@@ -580,14 +620,18 @@
 </div>
 
 
-
 <!-- =========================================================
      SCRIPTS
 ========================================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="sweetalert.js"></script>
 
-<script type="module" src="admin-login.js"></script>
+<script
+    type="module"
+    src="admin-login.js"
+></script>
 
 <script
     type="module"

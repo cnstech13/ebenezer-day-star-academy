@@ -1,42 +1,27 @@
-import { goBackOr } from "./back-navigation.js";
 // ============================================================
 // PARENT RESULTS
 // Ebenezer Day Star Academy
 // ============================================================
 
+import { goBackOr } from "./back-navigation.js";
+
 import {
     collection,
     getDocs,
     query,
-    where
+    where,
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 import {
-    getAuth,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 import {
+    auth,
     db
 } from "./firebase-config.js";
-
-
-// ============================================================
-// FIREBASE AUTH
-// ============================================================
-
-const auth = getAuth();
-
-
-// ============================================================
-// COLLECTIONS
-// ============================================================
-
-const studentsCollection =
-    collection(db, "students");
-
-const resultsCollection =
-    collection(db, "results");
 
 
 // ============================================================
@@ -44,24 +29,16 @@ const resultsCollection =
 // ============================================================
 
 const container =
-    document.getElementById(
-        "childrenResultsContainer"
-    );
+    document.getElementById("childrenResultsContainer");
 
 const loadingMessage =
-    document.getElementById(
-        "loadingMessage"
-    );
+    document.getElementById("loadingMessage");
 
 const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
+    document.getElementById("errorMessage");
 
 const backBtn =
-    document.getElementById(
-        "backBtn"
-    );
+    document.getElementById("backBtn");
 
 
 // ============================================================
@@ -70,14 +47,11 @@ const backBtn =
 
 if (backBtn) {
 
-    backBtn.addEventListener(
-        "click",
-        function () {
+    backBtn.addEventListener("click", () => {
 
-            goBackOr("parent-dashboard.html");
+        goBackOr("parent-dashboard.html");
 
-        }
-    );
+    });
 
 }
 
@@ -103,6 +77,8 @@ function escapeHTML(value) {
 // ============================================================
 
 function showError(message) {
+
+    console.error(message);
 
     if (errorMessage) {
 
@@ -162,81 +138,135 @@ function getStudentClass(student) {
 
 
 // ============================================================
-// LOAD CHILDREN
+// VERIFY PARENT ACCOUNT
 // ============================================================
 
-async function loadChildren(parentEmail) {
+async function verifyParent(user) {
 
-    const snapshot =
-        await getDocs(
-            studentsCollection
+    const userRef =
+        doc(
+            db,
+            "users",
+            user.uid
         );
 
+    const userSnapshot =
+        await getDoc(userRef);
 
-    const allStudents =
-        snapshot.docs.map(
-            studentDoc => ({
 
-                firestoreId:
-                    studentDoc.id,
+    if (!userSnapshot.exists()) {
 
-                ...studentDoc.data()
-
-            })
+        throw new Error(
+            "Your parent account profile was not found."
         );
 
-
-    // --------------------------------------------------------
-    // FIND STUDENTS BELONGING TO THIS PARENT
-    // --------------------------------------------------------
-
-    const children =
-        allStudents.filter(
-            student => {
-
-                const email =
-                    String(
-                        student.parentEmail ||
-                        student.parent ||
-                        student.guardianEmail ||
-                        ""
-                    )
-                    .trim()
-                    .toLowerCase();
+    }
 
 
-                return (
-                    email ===
-                    parentEmail
-                        .trim()
-                        .toLowerCase()
-                );
+    const userData =
+        userSnapshot.data();
 
-            }
+
+    if (
+        userData.role !== "parent"
+    ) {
+
+        throw new Error(
+            "This account is not registered as a parent."
         );
 
+    }
 
-    return children;
+
+    if (
+        userData.active === false
+    ) {
+
+        throw new Error(
+            "This parent account has been disabled."
+        );
+
+    }
+
+
+    return userData;
 
 }
 
 
 // ============================================================
-// LOAD RESULTS FOR CHILD
+// LOAD CHILDREN
+// ============================================================
+
+async function loadChildren(parentUid) {
+
+    const studentsCollection =
+        collection(
+            db,
+            "students"
+        );
+
+
+    const childrenQuery =
+        query(
+
+            studentsCollection,
+
+            where(
+                "parentUid",
+                "==",
+                parentUid
+            )
+
+        );
+
+
+    const snapshot =
+        await getDocs(
+            childrenQuery
+        );
+
+
+    return snapshot.docs.map(
+        studentDoc => ({
+
+            firestoreId:
+                studentDoc.id,
+
+            ...studentDoc.data()
+
+        })
+    );
+
+}
+
+
+// ============================================================
+// LOAD RESULTS FOR ONE CHILD
 // ============================================================
 
 async function loadChildResults(
     studentId
 ) {
 
+    const resultsCollection =
+        collection(
+            db,
+            "results"
+        );
+
+
     const resultQuery =
         query(
+
             resultsCollection,
+
             where(
                 "studentId",
                 "==",
                 studentId
             )
+
         );
 
 
@@ -293,7 +323,7 @@ function renderChildResults(
                     <p>
                         Class:
                         ${escapeHTML(
-                            studentClass
+                            studentClass || "N/A"
                         )}
                     </p>
 
@@ -304,14 +334,24 @@ function renderChildResults(
     `;
 
 
+    // ========================================================
+    // NO RESULTS
+    // ========================================================
+
     if (results.length === 0) {
 
         html += `
 
             <div class="empty-results">
 
-                No academic results have been entered
-                for this student yet.
+                <h3>
+                    No Academic Results
+                </h3>
+
+                <p>
+                    No academic results have been
+                    entered for this student yet.
+                </p>
 
             </div>
 
@@ -324,224 +364,249 @@ function renderChildResults(
     }
 
 
-    // --------------------------------------------------------
-    // GROUP RESULTS BY SESSION + TERM
-    // --------------------------------------------------------
+    // ========================================================
+    // GROUP BY SESSION + TERM
+    // ========================================================
 
     const groups = {};
 
 
-    results.forEach(
-        result => {
+    results.forEach(result => {
 
-            const session =
-                result.session ||
-                result.academicSession ||
-                "Unknown Session";
-
-
-            const term =
-                result.term ||
-                "Unknown Term";
+        const session =
+            result.session ||
+            result.academicSession ||
+            "Unknown Session";
 
 
-            const key =
-                `${session}|||${term}`;
+        const term =
+            result.term ||
+            "Unknown Term";
 
 
-            if (!groups[key]) {
-
-                groups[key] = {
-
-                    session,
-                    term,
-                    results: []
-
-                };
-
-            }
+        const key =
+            `${session}|||${term}`;
 
 
-            groups[key].results.push(
-                result
-            );
+        if (!groups[key]) {
+
+            groups[key] = {
+
+                session,
+                term,
+                results: []
+
+            };
 
         }
-    );
 
 
-    Object.values(groups)
-        .forEach(
-            group => {
-
-                html += `
-
-                    <div class="result-period">
-
-                        <h3>
-
-                            ${escapeHTML(
-                                group.session
-                            )}
-
-                            -
-
-                            ${escapeHTML(
-                                group.term
-                            )}
-
-                        </h3>
-
-
-                        <div class="table-wrapper">
-
-                            <table>
-
-                                <thead>
-
-                                    <tr>
-
-                                        <th>
-                                            Subject
-                                        </th>
-
-                                        <th>
-                                            CW1
-                                        </th>
-
-                                        <th>
-                                            CW2
-                                        </th>
-
-                                        <th>
-                                            Ass 1
-                                        </th>
-
-                                        <th>
-                                            Ass 2
-                                        </th>
-
-                                        <th>
-                                            CA1
-                                        </th>
-
-                                        <th>
-                                            CA2
-                                        </th>
-
-                                        <th>
-                                            Exam
-                                        </th>
-
-                                        <th>
-                                            Total
-                                        </th>
-
-                                        <th>
-                                            Grade
-                                        </th>
-
-                                        <th>
-                                            Remark
-                                        </th>
-
-                                    </tr>
-
-                                </thead>
-
-
-                                <tbody>
-
-                `;
-
-
-                group.results
-                    .forEach(
-                        result => {
-
-                            html += `
-
-                                <tr>
-
-                                    <td>
-                                        ${escapeHTML(
-                                            result.subject ||
-                                            ""
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        ${result.classWork1 ?? 0}
-                                    </td>
-
-                                    <td>
-                                        ${result.classWork2 ?? 0}
-                                    </td>
-
-                                    <td>
-                                        ${result.assignment1 ?? 0}
-                                    </td>
-
-                                    <td>
-                                        ${result.assignment2 ?? 0}
-                                    </td>
-
-                                    <td>
-                                        ${result.ca1 ?? 0}
-                                    </td>
-
-                                    <td>
-                                        ${result.ca2 ?? 0}
-                                    </td>
-
-                                    <td>
-                                        ${result.exam ?? 0}
-                                    </td>
-
-                                    <td>
-                                        <strong>
-                                            ${result.total ?? 0}
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        <strong>
-                                            ${escapeHTML(
-                                                result.grade ||
-                                                ""
-                                            )}
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        ${escapeHTML(
-                                            result.remark ||
-                                            ""
-                                        )}
-                                    </td>
-
-                                </tr>
-
-                            `;
-
-                        }
-                    );
-
-
-                html += `
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
+        groups[key].results.push(
+            result
         );
+
+    });
+
+
+    // ========================================================
+    // RENDER GROUPS
+    // ========================================================
+
+    Object.values(groups).forEach(group => {
+
+        html += `
+
+            <div class="result-period">
+
+                <h3>
+
+                    ${escapeHTML(
+                        group.session
+                    )}
+
+                    -
+
+                    ${escapeHTML(
+                        group.term
+                    )}
+
+                </h3>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Subject
+                                </th>
+
+                                <th>
+                                    CW1
+                                </th>
+
+                                <th>
+                                    CW2
+                                </th>
+
+                                <th>
+                                    Ass 1
+                                </th>
+
+                                <th>
+                                    Ass 2
+                                </th>
+
+                                <th>
+                                    CA1
+                                </th>
+
+                                <th>
+                                    CA2
+                                </th>
+
+                                <th>
+                                    Exam
+                                </th>
+
+                                <th>
+                                    Total
+                                </th>
+
+                                <th>
+                                    Grade
+                                </th>
+
+                                <th>
+                                    Remark
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+        `;
+
+
+        group.results.forEach(result => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(
+                            result.subject ||
+                            result.subjectName ||
+                            ""
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.classWork1 ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.classWork2 ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.assignment1 ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.assignment2 ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.ca1 ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.ca2 ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.exam ?? 0
+                        )}
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            ${escapeHTML(
+                                result.total ?? 0
+                            )}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            ${escapeHTML(
+                                result.grade || ""
+                            )}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            result.remark || ""
+                        )}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        html += `
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
 
 
     html += `</section>`;
@@ -553,49 +618,49 @@ function renderChildResults(
 
 
 // ============================================================
-// LOAD PAGE
+// LOAD PARENT RESULTS
 // ============================================================
 
-async function loadParentResults(
-    user
-) {
+async function loadParentResults(user) {
 
     try {
 
-        if (loadingMessage) {
-
-            loadingMessage.style.display =
-                "block";
-
-        }
+        console.log(
+            "Loading parent results..."
+        );
 
 
         // ----------------------------------------------------
-        // GET LOGGED-IN PARENT EMAIL
+        // VERIFY PARENT
         // ----------------------------------------------------
 
-        const parentEmail =
-            user.email;
+        await verifyParent(user);
 
 
-        if (!parentEmail) {
-
-            throw new Error(
-                "The logged-in parent has no email address."
-            );
-
-        }
+        console.log(
+            "Parent account verified."
+        );
 
 
         // ----------------------------------------------------
-        // FIND CHILDREN
+        // LOAD ONLY THIS PARENT'S CHILDREN
         // ----------------------------------------------------
 
         const children =
             await loadChildren(
-                parentEmail
+                user.uid
             );
 
+
+        console.log(
+            "Children found:",
+            children.length
+        );
+
+
+        // ----------------------------------------------------
+        // NO CHILDREN
+        // ----------------------------------------------------
 
         if (children.length === 0) {
 
@@ -605,8 +670,14 @@ async function loadParentResults(
 
                     <div class="empty-results">
 
-                        No children are currently
-                        linked to this parent account.
+                        <h3>
+                            No Children Linked
+                        </h3>
+
+                        <p>
+                            No student has been linked
+                            to this parent account yet.
+                        </p>
 
                     </div>
 
@@ -620,35 +691,88 @@ async function loadParentResults(
 
 
         // ----------------------------------------------------
-        // LOAD RESULTS
+        // LOAD EACH CHILD'S RESULTS
         // ----------------------------------------------------
 
-        let finalHTML = "";
+        const resultsHTML = [];
 
 
         for (
             const child of children
         ) {
 
-            const childResults =
-                await loadChildResults(
-                    child.firestoreId
+            try {
+
+                const childResults =
+                    await loadChildResults(
+                        child.firestoreId
+                    );
+
+
+                resultsHTML.push(
+
+                    renderChildResults(
+                        child,
+                        childResults
+                    )
+
+                );
+
+            }
+
+            catch (childError) {
+
+                console.error(
+                    "Result error for child:",
+                    child.firestoreId,
+                    childError
                 );
 
 
-            finalHTML +=
-                renderChildResults(
-                    child,
-                    childResults
-                );
+                resultsHTML.push(`
+
+                    <section
+                        class="child-result-card"
+                    >
+
+                        <div class="empty-results">
+
+                            <h3>
+                                Unable to Load Results
+                            </h3>
+
+                            <p>
+                                ${escapeHTML(
+                                    getStudentName(child)
+                                )}
+                            </p>
+
+                            <small>
+                                ${escapeHTML(
+                                    childError.message ||
+                                    "Permission denied."
+                                )}
+                            </small>
+
+                        </div>
+
+                    </section>
+
+                `);
+
+            }
 
         }
 
 
+        // ----------------------------------------------------
+        // DISPLAY
+        // ----------------------------------------------------
+
         if (container) {
 
             container.innerHTML =
-                finalHTML;
+                resultsHTML.join("");
 
         }
 
@@ -662,10 +786,25 @@ async function loadParentResults(
         );
 
 
-        showError(
-            "Unable to load your children's results. " +
-            error.message
-        );
+        if (
+            error.code ===
+            "permission-denied"
+        ) {
+
+            showError(
+                "Firebase denied access to your children's results. Check the Firestore rules for parent result access."
+            );
+
+        }
+
+        else {
+
+            showError(
+                "Unable to load your children's results. " +
+                (error.message || "")
+            );
+
+        }
 
     }
 
@@ -684,12 +823,18 @@ async function loadParentResults(
 
 
 // ============================================================
-// AUTH STATE
+// FIREBASE AUTH STATE
 // ============================================================
 
 onAuthStateChanged(
     auth,
     user => {
+
+        console.log(
+            "Parent results authentication:",
+            user
+        );
+
 
         if (!user) {
 

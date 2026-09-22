@@ -1,92 +1,48 @@
 // ============================================================
 // PARENT LOGIN
-// Ebenezer Day Star Academy
-// Firebase Authentication + Firestore
+// EBENEZER DAY STAR ACADEMY
+//
+// IMPORTANT:
+// 1. Parent email verification is NOT required.
+// 2. Dashboard redirect happens ONLY after pressing Login.
+// 3. Existing Firebase sessions do NOT automatically redirect.
 // ============================================================
 
-
 import {
-
     signInWithEmailAndPassword,
-
-    onAuthStateChanged,
-
     sendPasswordResetEmail,
-
     signOut
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 import {
-
     doc,
-
     getDoc
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
-
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
 import {
-
     auth,
-
     db
-
-}
-from "./firebase-config.js";
-
+} from "./firebase-config.js";
 
 
 // ============================================================
 // ELEMENTS
 // ============================================================
 
-const form =
-    document.getElementById(
-        "parentLoginForm"
-    );
+const form = document.getElementById("parentLoginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const errorMessage = document.getElementById("errorMessage");
+const successMessage = document.getElementById("successMessage");
+const forgotPassword = document.getElementById("forgotPassword");
 
 
-const emailInput =
-    document.getElementById(
-        "email"
-    );
+// ============================================================
+// LOGIN STATE
+// ============================================================
 
-
-const passwordInput =
-    document.getElementById(
-        "password"
-    );
-
-
-const loginBtn =
-    document.getElementById(
-        "loginBtn"
-    );
-
-
-const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
-
-
-const successMessage =
-    document.getElementById(
-        "successMessage"
-    );
-
-
-const forgotPassword =
-    document.getElementById(
-        "forgotPassword"
-    );
-
+let loginInProgress = false;
 
 
 // ============================================================
@@ -95,17 +51,16 @@ const forgotPassword =
 
 function showError(message) {
 
-    errorMessage.textContent =
-        message;
+    if (errorMessage) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+    }
 
-    errorMessage.style.display =
-        "block";
-
-    successMessage.style.display =
-        "none";
-
+    if (successMessage) {
+        successMessage.textContent = "";
+        successMessage.style.display = "none";
+    }
 }
-
 
 
 // ============================================================
@@ -114,308 +69,514 @@ function showError(message) {
 
 function showSuccess(message) {
 
-    successMessage.textContent =
-        message;
+    if (successMessage) {
+        successMessage.textContent = message;
+        successMessage.style.display = "block";
+    }
 
-    successMessage.style.display =
-        "block";
-
-    errorMessage.style.display =
-        "none";
-
+    if (errorMessage) {
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+    }
 }
 
 
+// ============================================================
+// HIDE MESSAGES
+// ============================================================
+
+function hideMessages() {
+
+    if (errorMessage) {
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+    }
+
+    if (successMessage) {
+        successMessage.textContent = "";
+        successMessage.style.display = "none";
+    }
+}
+
 
 // ============================================================
-// GET FIREBASE ERROR
+// FIREBASE ERROR MESSAGE
 // ============================================================
 
 function getLoginError(error) {
 
-    switch (error.code) {
+    switch (error?.code) {
 
         case "auth/invalid-credential":
-
             return "Incorrect email or password.";
 
         case "auth/user-not-found":
-
             return "No account exists with this email.";
 
         case "auth/wrong-password":
-
-            return "Incorrect password.";
+            return "Incorrect email or password.";
 
         case "auth/too-many-requests":
-
             return "Too many login attempts. Please try again later.";
 
         case "auth/network-request-failed":
+            return "Network error. Please check your internet connection.";
 
-            return "Network error. Check your internet connection.";
+        case "auth/user-disabled":
+            return "This Firebase account has been disabled.";
+
+        case "auth/invalid-email":
+            return "Please enter a valid email address.";
 
         default:
-
-            return (
-                error.message ||
-                "Unable to login."
-            );
-
+            return error?.message || "Unable to login. Please try again.";
     }
-
 }
 
 
-
 // ============================================================
-// VERIFY PARENT ACCOUNT
+// VERIFY PARENT PROFILE
 // ============================================================
 
 async function verifyParentAccount(user) {
 
-    const userRef =
-        doc(
-            db,
-            "users",
-            user.uid
-        );
-
-
-    const userSnapshot =
-        await getDoc(
-            userRef
-        );
-
-
-    if (!userSnapshot.exists()) {
-
-        await signOut(auth);
-
-        throw new Error(
-            "Your parent profile has not been created yet."
-        );
-
+    if (!user) {
+        throw new Error("No authenticated user was found.");
     }
 
 
-    const userData =
-        userSnapshot.data();
+    console.log(
+        "Checking parent profile:",
+        user.uid
+    );
 
 
-    if (
-        userData.role !==
-        "parent"
-    ) {
+    const userRef = doc(
+        db,
+        "users",
+        user.uid
+    );
 
-        await signOut(auth);
+
+    const snapshot = await getDoc(userRef);
+
+
+    // ========================================================
+    // NO USERS DOCUMENT
+    // ========================================================
+
+    if (!snapshot.exists()) {
+
+        throw new Error(
+            "Your parent profile has not been created yet. Please contact the school."
+        );
+    }
+
+
+    const userData = snapshot.data();
+
+
+    console.log(
+        "Parent profile found:",
+        userData
+    );
+
+
+    // ========================================================
+    // CHECK ROLE
+    // ========================================================
+
+    const role = String(
+        userData.role || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+    if (role !== "parent") {
 
         throw new Error(
             "This account is not registered as a parent account."
         );
-
     }
 
 
-    return userData;
+    // ========================================================
+    // CHECK ACTIVE STATUS
+    // ========================================================
 
+    if (userData.active === false) {
+
+        throw new Error(
+            "Your parent account has been deactivated. Please contact the school."
+        );
+    }
+
+
+    // ========================================================
+    // IMPORTANT
+    //
+    // NO emailVerified CHECK.
+    // ========================================================
+
+    return userData;
 }
 
 
-
 // ============================================================
-// LOGIN
+// LOGIN FORM
 // ============================================================
 
-form.addEventListener(
-    "submit",
-    async function(event) {
+if (!form) {
 
-        event.preventDefault();
+    console.error(
+        "Parent login form #parentLoginForm was not found."
+    );
 
+} else {
 
-        const email =
-            emailInput.value
-                .trim()
-                .toLowerCase();
+    form.addEventListener(
+        "submit",
 
+        async function(event) {
 
-        const password =
-            passwordInput.value;
-
-
-        if (!email || !password) {
-
-            showError(
-                "Please enter your email and password."
-            );
-
-            return;
-
-        }
+            event.preventDefault();
 
 
-        loginBtn.disabled =
-            true;
+            // Prevent double-click
+            if (loginInProgress) {
+                return;
+            }
 
-        loginBtn.textContent =
-            "Logging in...";
+
+            hideMessages();
 
 
-        try {
+            // =================================================
+            // CHECK INPUTS
+            // =================================================
 
-            const credential =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
+            if (!emailInput || !passwordInput) {
+
+                showError(
+                    "Login form is incomplete. Please contact the school."
+                );
+
+                return;
+            }
+
+
+            const email =
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const password =
+                passwordInput.value;
+
+
+            // =================================================
+            // VALIDATE
+            // =================================================
+
+            if (!email) {
+
+                showError(
+                    "Please enter your email address."
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            if (!password) {
+
+                showError(
+                    "Please enter your password."
+                );
+
+                passwordInput.focus();
+
+                return;
+            }
+
+
+            // =================================================
+            // START LOGIN
+            // =================================================
+
+            loginInProgress = true;
+
+
+            if (loginBtn) {
+
+                loginBtn.disabled = true;
+                loginBtn.textContent = "Logging in...";
+            }
+
+
+            let firebaseUser = null;
+
+
+            try {
+
+                console.log(
+                    "Parent login started..."
                 );
 
 
-            await verifyParentAccount(
-                credential.user
-            );
+                // =================================================
+                // AUTHENTICATE
+                // =================================================
+
+                const credential =
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
 
 
-            showSuccess(
-                "Login successful. Opening your portal..."
-            );
+                firebaseUser =
+                    credential.user;
 
 
-            setTimeout(
-                function() {
+                console.log(
+                    "Firebase authentication successful:",
+                    firebaseUser.uid
+                );
 
-                    window.location.href =
-                        "parent-dashboard.html";
 
-                },
-                700
-            );
+                // =================================================
+                // VERIFY FIRESTORE PARENT PROFILE
+                // =================================================
+
+                await verifyParentAccount(
+                    firebaseUser
+                );
+
+
+                // =================================================
+                // SUCCESS
+                // =================================================
+
+                showSuccess(
+                    "Login successful. Opening Parent Portal..."
+                );
+
+
+                console.log(
+                    "Parent verified. Redirecting..."
+                );
+
+
+                // =================================================
+                // REDIRECT ONLY HERE
+                // =================================================
+
+                setTimeout(
+                    () => {
+
+                        window.location.replace(
+                            "parent-dashboard.html"
+                        );
+
+                    },
+                    500
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Parent login failed:",
+                    error
+                );
+
+
+                // =================================================
+                // IMPORTANT:
+                // If authentication succeeded but Firestore
+                // parent verification failed, sign out.
+                // =================================================
+
+                if (firebaseUser) {
+
+                    try {
+
+                        await signOut(auth);
+
+                    } catch (signOutError) {
+
+                        console.error(
+                            "Sign out after failed parent verification:",
+                            signOutError
+                        );
+                    }
+                }
+
+
+                // =================================================
+                // SHOW ERROR
+                // =================================================
+
+                if (error?.code) {
+
+                    showError(
+                        getLoginError(error)
+                    );
+
+                } else {
+
+                    showError(
+                        error?.message ||
+                        "Unable to login. Please try again."
+                    );
+                }
+
+            }
+
+            finally {
+
+                loginInProgress = false;
+
+
+                if (loginBtn) {
+
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = "Login";
+                }
+            }
 
         }
-
-        catch(error) {
-
-            console.error(
-                "Parent login error:",
-                error
-            );
-
-
-            showError(
-                getLoginError(error)
-            );
-
-        }
-
-        finally {
-
-            loginBtn.disabled =
-                false;
-
-            loginBtn.textContent =
-                "Login";
-
-        }
-
-    }
-);
-
+    );
+}
 
 
 // ============================================================
 // FORGOT PASSWORD
 // ============================================================
 
-forgotPassword.addEventListener(
-    "click",
-    async function() {
+if (forgotPassword) {
 
-        const email =
-            emailInput.value
-                .trim()
-                .toLowerCase();
+    forgotPassword.addEventListener(
+        "click",
+
+        async function() {
+
+            hideMessages();
 
 
-        if (!email) {
+            if (!emailInput) {
 
-            showError(
-                "Enter your email address first."
-            );
+                showError(
+                    "Email field was not found."
+                );
 
-            emailInput.focus();
+                return;
+            }
 
-            return;
 
+            const email =
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if (!email) {
+
+                showError(
+                    "Enter your email address first."
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            try {
+
+                await sendPasswordResetEmail(
+                    auth,
+                    email
+                );
+
+
+                showSuccess(
+                    "Password reset instructions have been sent to your email."
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Password reset error:",
+                    error
+                );
+
+
+                switch (error?.code) {
+
+                    case "auth/user-not-found":
+
+                        showError(
+                            "No account exists with this email."
+                        );
+
+                        break;
+
+
+                    case "auth/invalid-email":
+
+                        showError(
+                            "Please enter a valid email address."
+                        );
+
+                        break;
+
+
+                    case "auth/network-request-failed":
+
+                        showError(
+                            "Network error. Please check your internet connection."
+                        );
+
+                        break;
+
+
+                    default:
+
+                        showError(
+                            "Unable to send password reset email."
+                        );
+                }
+            }
         }
-
-
-        try {
-
-            await sendPasswordResetEmail(
-                auth,
-                email
-            );
-
-
-            showSuccess(
-                "Password reset instructions have been sent to your email."
-            );
-
-        }
-
-        catch(error) {
-
-            console.error(
-                error
-            );
-
-
-            showError(
-                "Unable to send password reset email."
-            );
-
-        }
-
-    }
-);
-
+    );
+}
 
 
 // ============================================================
-// CHECK EXISTING LOGIN
+// IMPORTANT
+// ============================================================
+//
+// THERE IS NO onAuthStateChanged() HERE.
+//
+// This is intentional.
+//
+// A Firebase session already existing on the device will NOT
+// automatically redirect the user to parent-dashboard.html.
+//
+// The user must explicitly press LOGIN.
+//
 // ============================================================
 
-onAuthStateChanged(
-    auth,
-    async function(user) {
-
-        if (!user) {
-
-            return;
-
-        }
-
-
-        try {
-
-            await verifyParentAccount(
-                user
-            );
-
-
-            window.location.href =
-                "parent-dashboard.html";
-
-        }
-
-        catch(error) {
-
-            console.error(
-                error
-            );
-
-        }
-
-    }
+console.log(
+    "Parent login page JavaScript loaded successfully."
 );

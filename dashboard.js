@@ -1,4 +1,5 @@
 import { adminReady, withTimeout } from "./admin-guard.js";
+
 /* =========================================================
    Ebenezer Day Star Academy
    DASHBOARD.JS
@@ -63,9 +64,9 @@ async function getCollectionCount(
     try {
 
         const snapshot =
-            await withTimeout(getDocs(
-                collectionRef
-            ));
+            await withTimeout(
+                getDocs(collectionRef)
+            );
 
         console.log(
             `${collectionName}:`,
@@ -173,6 +174,405 @@ async function updateDashboardStats() {
 
 
 /* =========================================================
+   CLASS ENROLLMENT
+   SHOWS:
+
+   JSS 1
+   2 / 40 students
+========================================================= */
+
+async function updateClassEnrollment() {
+
+    const container =
+        document.getElementById(
+            "classEnrollmentList"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    try {
+
+        /* =========================================
+           LOAD CLASSES
+        ========================================= */
+
+        const classesSnapshot =
+            await withTimeout(
+                getDocs(classesCollection)
+            );
+
+
+        /* =========================================
+           LOAD STUDENTS
+        ========================================= */
+
+        const studentsSnapshot =
+            await withTimeout(
+                getDocs(studentsCollection)
+            );
+
+
+        const classes = [];
+
+
+        classesSnapshot.forEach(
+            documentSnapshot => {
+
+                const data =
+                    documentSnapshot.data();
+
+
+                classes.push({
+
+                    id:
+                        documentSnapshot.id,
+
+                    ...data
+
+                });
+
+            }
+        );
+
+
+        const students = [];
+
+
+        studentsSnapshot.forEach(
+            documentSnapshot => {
+
+                const data =
+                    documentSnapshot.data();
+
+
+                students.push({
+
+                    id:
+                        documentSnapshot.id,
+
+                    ...data
+
+                });
+
+            }
+        );
+
+
+        /* =========================================
+           NO CLASSES
+        ========================================= */
+
+        if (classes.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="class-empty">
+
+                    <span>🏫</span>
+
+                    <strong>
+                        No classes created yet
+                    </strong>
+
+                    <small>
+                        Create classes to see
+                        student enrollment here.
+                    </small>
+
+                    <a
+                        href="classes.html"
+                        class="class-manage-btn"
+                    >
+                        Create Class
+                    </a>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        /* =========================================
+           SORT CLASSES
+        ========================================= */
+
+        classes.sort(
+            (a, b) => {
+
+                const nameA =
+                    String(
+                        a.name ||
+                        a.className ||
+                        a.title ||
+                        a.id ||
+                        ""
+                    ).toLowerCase();
+
+
+                const nameB =
+                    String(
+                        b.name ||
+                        b.className ||
+                        b.title ||
+                        b.id ||
+                        ""
+                    ).toLowerCase();
+
+
+                return nameA.localeCompare(
+                    nameB,
+                    undefined,
+                    {
+                        numeric: true
+                    }
+                );
+
+            }
+        );
+
+
+        /* =========================================
+           CREATE CLASS CARDS
+        ========================================= */
+
+        container.innerHTML =
+            classes.map(
+                classItem => {
+
+                    const className =
+                        classItem.name ||
+                        classItem.className ||
+                        classItem.title ||
+                        classItem.id;
+
+
+                    /*
+                     * Your students.js stores:
+                     *
+                     * student.studentClass
+                     *
+                     * So we compare that value with
+                     * the class name.
+                     */
+
+                    const studentCount =
+                        students.filter(
+                            student => {
+
+                                return String(
+                                    student.studentClass ||
+                                    ""
+                                )
+                                .trim()
+                                .toLowerCase()
+                                ===
+                                String(
+                                    className
+                                )
+                                .trim()
+                                .toLowerCase();
+
+                            }
+                        ).length;
+
+
+                    /*
+                     * Use maxStudents from the
+                     * Firestore class document.
+                     *
+                     * If it doesn't exist,
+                     * default to 40.
+                     */
+
+                    const capacity =
+                        Number(
+                            classItem.maxStudents
+                        ) || 40;
+
+
+                    const percentage =
+                        capacity > 0
+
+                            ? Math.min(
+                                100,
+                                Math.round(
+                                    (
+                                        studentCount /
+                                        capacity
+                                    ) * 100
+                                )
+                            )
+
+                            : 0;
+
+
+                    const remaining =
+                        Math.max(
+                            0,
+                            capacity -
+                            studentCount
+                        );
+
+
+                    let progressClass =
+                        "normal";
+
+
+                    if (
+                        percentage >= 100
+                    ) {
+
+                        progressClass =
+                            "full";
+
+                    }
+
+                    else if (
+                        percentage >= 80
+                    ) {
+
+                        progressClass =
+                            "almost-full";
+
+                    }
+
+
+                    return `
+
+                        <div
+                            class="class-enrollment-item"
+                        >
+
+                            <div
+                                class="class-enrollment-top"
+                            >
+
+                                <div>
+
+                                    <strong>
+                                        ${escapeHTML(
+                                            className
+                                        )}
+                                    </strong>
+
+                                    <small>
+                                        ${studentCount}
+                                        ${
+                                            studentCount === 1
+                                                ? "student"
+                                                : "students"
+                                        }
+                                    </small>
+
+                                </div>
+
+
+                                <div
+                                    class="class-count"
+                                >
+
+                                    <strong>
+                                        ${studentCount}
+                                    </strong>
+
+                                    <span>
+                                        / ${capacity}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="class-progress"
+                            >
+
+                                <div
+                                    class="
+                                        class-progress-bar
+                                        ${progressClass}
+                                    "
+                                    style="
+                                        width:
+                                        ${percentage}%;
+                                    "
+                                ></div>
+
+                            </div>
+
+
+                            <div
+                                class="class-enrollment-bottom"
+                            >
+
+                                <span>
+                                    ${percentage}% occupied
+                                </span>
+
+                                <span>
+                                    ${remaining}
+                                    ${
+                                        remaining === 1
+                                            ? "space"
+                                            : "spaces"
+                                    }
+                                    available
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("");
+
+
+        console.log(
+            "Class enrollment updated:",
+            {
+                classes: classes.length,
+                students: students.length
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error loading class enrollment:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="class-error">
+
+                Unable to load class enrollment.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
    CURRENT DATE
 ========================================================= */
 
@@ -215,9 +615,11 @@ async function updateTodayAttendance() {
 
 
         const snapshot =
-            await withTimeout(getDocs(
-                attendanceCollection
-            ));
+            await withTimeout(
+                getDocs(
+                    attendanceCollection
+                )
+            );
 
 
         const today =
@@ -527,6 +929,11 @@ async function initializeDashboard() {
     /* Load Firestore statistics */
 
     await updateDashboardStats();
+
+
+    /* Load class enrollment */
+
+    await updateClassEnrollment();
 
 
     /* Load today's attendance */
